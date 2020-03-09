@@ -1,0 +1,29 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "お告げの勇者",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "HelloWorldIntent",
+                    "slots": [],
+                    "samples": [
+                        "こんにちは"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}
