@@ -24,7 +24,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         speech_text = "はじめまして神様！あなたの勇者をご紹介します。" \
-                      "勇者：「初めまして神様！本日からあなたへの忠誠を誓います。それでは、また明日。」"
+                      "初めまして神様！本日からあなたへの忠誠を誓います。それでは、また明日。"
         handler_input.response_builder.speak(speech_text).ask(speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
