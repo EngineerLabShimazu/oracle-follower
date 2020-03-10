@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 # This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK.
+import json
 import logging
+
+import oracle_follower
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
@@ -17,20 +20,23 @@ logger.setLevel(logging.INFO)
 
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("LaunchRequest")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speech_text = "はじめまして神様！あなたの勇者をご紹介します。" \
-                      "初めまして神様！本日からあなたへの忠誠を誓います。それでは、また明日。"
-        handler_input.response_builder.speak(speech_text).ask(speech_text).set_should_end_session(True)
+        response = json.loads(oracle_follower.main())
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 
 class HelloWorldIntentHandler(AbstractRequestHandler):
     """Handler for Hello World Intent."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_intent_name("HelloWorldIntent")(handler_input)
@@ -38,12 +44,14 @@ class HelloWorldIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         speech_text = "Hello World!"
-        handler_input.response_builder.speak(speech_text).set_should_end_session(True)
+        handler_input.response_builder.speak(
+            speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_intent_name("AMAZON.HelpIntent")(handler_input)
@@ -57,6 +65,7 @@ class HelpIntentHandler(AbstractRequestHandler):
 
 class CancelOrStopIntentHandler(AbstractRequestHandler):
     """Single handler for Cancel and Stop Intent."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return (is_intent_name("AMAZON.CancelIntent")(handler_input) or
@@ -71,6 +80,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """Handler for Session End."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("SessionEndedRequest")(handler_input)
@@ -86,6 +96,7 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
 # handler chain below.
 class IntentReflectorHandler(AbstractRequestHandler):
     """Handler for Hello World Intent."""
+
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("IntentRequest")(handler_input)
@@ -94,7 +105,8 @@ class IntentReflectorHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         intent_name = handler_input.request_envelope.request.intent.name
         speech_text = ("You just triggered {}").format(intent_name)
-        handler_input.response_builder.speak(speech_text).set_should_end_session(True)
+        handler_input.response_builder.speak(
+            speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 
@@ -105,6 +117,7 @@ class ErrorHandler(AbstractExceptionHandler):
     """Catch-all exception handler, log exception and
     respond with custom message.
     """
+
     def can_handle(self, handler_input, exception):
         # type: (HandlerInput, Exception) -> bool
         return True
@@ -126,7 +139,8 @@ sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
-sb.add_request_handler(IntentReflectorHandler()) # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+sb.add_request_handler(
+    IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 
 sb.add_exception_handler(ErrorHandler())
 
