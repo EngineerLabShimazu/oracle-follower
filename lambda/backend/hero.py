@@ -10,5 +10,4 @@ def get_appreciate_message() -> str:
 
 
 def message():
-    message = f"こんにちは神様。本日も{get_appreciate_message()}、ありがとうございます。"
-    return message
+    return f"こんにちは神様。本日も{get_appreciate_message()}、ありがとうございます。"
