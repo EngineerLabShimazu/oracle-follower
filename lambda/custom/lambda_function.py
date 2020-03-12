@@ -12,10 +12,15 @@ from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 
+
 from ask_sdk_model import Response
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+
+def get_user_id(handler_input):
+    return handler_input.request_envelope.context.system.user.user_id
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -27,7 +32,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        response = json.loads(oracle_follower.main())
+        info = json.dumps({'user_id': get_user_id(handler_input)})
+        response = json.loads(oracle_follower.main(info))
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(True)
