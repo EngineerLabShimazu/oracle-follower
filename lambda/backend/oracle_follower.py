@@ -7,10 +7,10 @@ import user
 def main(info):
     loaded_info = json.loads(info)
 
-    if user.is_first_launch():
-        user.increase_follower()
+    _user = user.get_user(alexa_user_id=loaded_info['alexa_user_id'])
+    if _user.is_first_launch_today:
+        _user.increase_follower()
 
-    # user.set_user(loaded_info['user_id'], {})
     response_text = hero.message()
     response = {"response_text": response_text}
     return json.dumps(response)
