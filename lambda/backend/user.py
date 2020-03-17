@@ -1,9 +1,9 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
-import datetime
 import random
 
 from dynamo_ctl import DynamoCtl, set_attr
+from util import iso_formatted_date
 
 dynamo = boto3.client('dynamodb')
 
@@ -22,7 +22,13 @@ class User:
         self._when = when
 
     def __del__(self):
-        set_user(self.alexa_user_id, self.__dict__, self._when)
+        print('del')
+        print(self.__dict__)
+        d = {}
+        for k, v in self.__dict__.items():
+            if v:
+                d[k] = v
+        set_user(self.alexa_user_id, d, self._when)
 
     @property
     def attributes(self) -> dict:
@@ -30,7 +36,7 @@ class User:
 
     @property
     def is_first_launch_today(self) -> bool:
-        today = datetime.date.today().isoformat()
+        today = iso_formatted_date
         last_launch = self.last_launch_date
         if today != last_launch:
             return True
@@ -47,6 +53,17 @@ def serialize_attribute(attributes):
 
 def get_user(alexa_user_id) -> User:
     attr = DynamoCtl(alexa_user_id).attr
+    if not attr:
+        attr = {
+            'when': {
+                iso_formatted_date: {
+                    'follower_increase': 0,
+                    'follower_total_amount': 0,
+                    'destination': '',
+                }
+            },
+            'last_launch_date': iso_formatted_date
+        }
     return User(alexa_user_id, attr)
 
 

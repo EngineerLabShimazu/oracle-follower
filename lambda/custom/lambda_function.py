@@ -31,7 +31,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        info = json.dumps({'user_id': get_user_id(handler_input)})
+        info = json.dumps({'alexa_user_id': get_user_id(handler_input)})
         response = json.loads(oracle_follower.main(info))
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
@@ -131,7 +131,7 @@ class ErrorHandler(AbstractExceptionHandler):
         # type: (HandlerInput, Exception) -> Response
         logger.error(exception, exc_info=True)
         speech_text = "Sorry, I couldn't understand what you said. Please try again."
-        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        handler_input.response_builder.speak(speech_text).ask(speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 
