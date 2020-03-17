@@ -72,11 +72,10 @@ def set_user(alexa_user_id, user_attr, when=''):
     attr = {
         'when': {
             _when: {
-                'follower_increase': user_attr['follower_increase'],
-                'follower_total_amount': user_attr['follower_total_amount'],
-                'destination': user_attr['destination'],
-            }
-        },
+                }
+            },
         'last_launch_date': user_attr['last_launch_date']
-    }
+        }
+    for attribute in user_attr.keys():
+        attr['when'][_when][attribute] = attribute
     set_attr(alexa_user_id, attr)
