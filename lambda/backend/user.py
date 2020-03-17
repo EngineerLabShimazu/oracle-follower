@@ -1,53 +1,65 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
 import datetime
+import random
+
+from dynamo_ctl import DynamoCtl, set_attr
 
 dynamo = boto3.client('dynamodb')
 
 
-def _get_attr(user_id):
-    item = dynamo.get_item(TableName='funDom-oracle-follower-user',
-                           Key={'alexa_user_id': {'S': user_id}}
-                           )['Item']
-    return dynamodb_types.TypeDeserializer().deserialize(item['attributes'])
-
-
-def _get_user(user_id, date):
-    attr = _get_attr(user_id)
-    return attr[date]
-
-
-def _set_user(alexa_user_id, attributes):
-    item = {'alexa_user_id': serialize_attribute(alexa_user_id),
-            'attributes': serialize_attribute(attributes)}
-    dynamo.put_item(TableName='funDom-oracle-follower-user',
-                    Item=item)
-
-
-def serialize_attribute(attributes):
-    return dynamodb_types.TypeSerializer().serialize(attributes)
-
-
 class User:
-    def __init__(self, alexa_user_id):
+    def __init__(self, alexa_user_id, attr, when=''):
         self.alexa_user_id = alexa_user_id
-        _user = _get_user(alexa_user_id)
-        self.follower_increase = _user['follower_increase']
-        self.follower_total_amount = _user['follower_total_amount']
-        self.destination = _user['destination']
-        self.last_launch_date = _user['last_launch_date']
+        self.last_launch_date = attr['last_launch_date']
+
+        _attr = attr['when'][when] if when \
+            else attr['when'][self.last_launch_date]
+
+        self.follower_increase: int = _attr['follower_increase']
+        self.follower_total_amount: int = _attr['follower_total_amount']
+        self.destination: str = _attr['destination']
+        self._when = when
 
     def __del__(self):
-        _set_user(self.alexa_user_id, {self.__dict__})
+        set_user(self.alexa_user_id, self.__dict__, self._when)
 
-    def get_attributes(self):
+    @property
+    def attributes(self) -> dict:
         return {'attr': self.__dict__}
 
-    def is_first_launch(self):
+    @property
+    def is_first_launch_today(self) -> bool:
         today = datetime.date.today().isoformat()
         last_launch = self.last_launch_date
         if today != last_launch:
             return True
         return False
 
-# def increase_follower(self):
+    def increase_follower(self):
+        self.follower_increase = random.choice([i for i in range(1, 10)])
+        self.follower_total_amount += self.follower_increase
+
+
+def serialize_attribute(attributes):
+    return dynamodb_types.TypeSerializer().serialize(attributes)
+
+
+def get_user(alexa_user_id) -> User:
+    attr = DynamoCtl(alexa_user_id).attr
+    return User(alexa_user_id, attr)
+
+
+def set_user(alexa_user_id, user_attr, when=''):
+    _when = when if when else user_attr['last_launch_date']
+    attr = {
+        'when': {
+            _when: {
+                'follower_increase': user_attr['follower_increase'],
+                'follower_total_amount': user_attr['follower_total_amount'],
+                'destination': user_attr['destination'],
+            }
+        },
+        'last_launch_date': user_attr['last_launch_date']
+    }
+    set_attr(alexa_user_id, attr)
