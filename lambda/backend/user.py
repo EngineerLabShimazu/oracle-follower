@@ -3,6 +3,8 @@ import boto3.dynamodb.types as dynamodb_types
 import datetime
 import random
 
+from dynamo_ctl import DynamoCtl, set_attr
+
 dynamo = boto3.client('dynamodb')
 
 
@@ -17,9 +19,10 @@ class User:
         self.follower_increase: int = _attr['follower_increase']
         self.follower_total_amount: int = _attr['follower_total_amount']
         self.destination: str = _attr['destination']
+        self._when = when
 
     def __del__(self):
-        _set_user(self.alexa_user_id, {self.__dict__})
+        set_user(self.alexa_user_id, self.__dict__, self._when)
 
     @property
     def attributes(self) -> dict:
@@ -42,33 +45,21 @@ def serialize_attribute(attributes):
     return dynamodb_types.TypeSerializer().serialize(attributes)
 
 
-def _get_attr(user_id):
-    """
-    :return:
-        attr = {
-            'when': {
-                'YYYY-mm-dd': {
-                    'follower_increase': -1,
-                    'follower_total_amount': -1,
-                    'destination': 'village_a',
-                    }
-                },
-            'last_launch_date': 'YYYY-mm-dd'
-            }
-    """
-    item = dynamo.get_item(TableName='funDom-oracle-follower-user',
-                           Key={'alexa_user_id': {'S': user_id}}
-                           )['Item']
-    return dynamodb_types.TypeDeserializer().deserialize(item['attributes'])
-
-
 def get_user(alexa_user_id) -> User:
-    attr = _get_attr(alexa_user_id)
+    attr = DynamoCtl(alexa_user_id).attr
     return User(alexa_user_id, attr)
 
 
-def _set_user(alexa_user_id, attributes):
-    item = {'alexa_user_id': serialize_attribute(alexa_user_id),
-            'attributes': serialize_attribute(attributes)}
-    dynamo.put_item(TableName='funDom-oracle-follower-user',
-                    Item=item)
+def set_user(alexa_user_id, user_attr, when=''):
+    _when = when if when else user_attr['last_launch_date']
+    attr = {
+        'when': {
+            _when: {
+                'follower_increase': user_attr['follower_increase'],
+                'follower_total_amount': user_attr['follower_total_amount'],
+                'destination': user_attr['destination'],
+            }
+        },
+        'last_launch_date': user_attr['last_launch_date']
+    }
+    set_attr(alexa_user_id, attr)
