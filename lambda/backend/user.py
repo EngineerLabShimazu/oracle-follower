@@ -36,9 +36,7 @@ class User:
 
     @property
     def is_first_launch_today(self) -> bool:
-        today = iso_formatted_date_today
-        last_launch = self.last_launch_date
-        if today != last_launch:
+        if iso_formatted_date_today != self.last_launch_date:
             return True
         return False
 
@@ -62,7 +60,7 @@ def get_user(alexa_user_id) -> User:
                     'destination': '',
                 }
             },
-            'last_launch_date': iso_formatted_date_today
+            'last_launch_date': ''
         }
     return User(alexa_user_id, attr)
 
