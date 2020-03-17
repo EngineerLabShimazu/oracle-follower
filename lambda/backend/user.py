@@ -3,7 +3,7 @@ import boto3.dynamodb.types as dynamodb_types
 import random
 
 from dynamo_ctl import DynamoCtl, set_attr
-from util import iso_formatted_date
+from util import iso_formatted_date_today
 
 dynamo = boto3.client('dynamodb')
 
@@ -36,7 +36,7 @@ class User:
 
     @property
     def is_first_launch_today(self) -> bool:
-        today = iso_formatted_date
+        today = iso_formatted_date_today
         last_launch = self.last_launch_date
         if today != last_launch:
             return True
@@ -56,13 +56,13 @@ def get_user(alexa_user_id) -> User:
     if not attr:
         attr = {
             'when': {
-                iso_formatted_date: {
+                iso_formatted_date_today: {
                     'follower_increase': 0,
                     'follower_total_amount': 0,
                     'destination': '',
                 }
             },
-            'last_launch_date': iso_formatted_date
+            'last_launch_date': iso_formatted_date_today
         }
     return User(alexa_user_id, attr)
 
