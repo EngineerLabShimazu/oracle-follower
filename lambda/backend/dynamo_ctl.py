@@ -30,7 +30,9 @@ def _get_attr(user_id):
     """
     item = dynamo.get_item(TableName='funDom-oracle-follower-user',
                            Key={'alexa_user_id': {'S': user_id}}
-                           )['Item']
+                           ).get('Item')
+    if not item:
+        return None
     return dynamodb_types.TypeDeserializer().deserialize(item['attributes'])
 
 
