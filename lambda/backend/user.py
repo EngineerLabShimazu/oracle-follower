@@ -57,14 +57,15 @@ def get_user(alexa_user_id) -> User:
 
 
 def set_user(alexa_user_id, user_attr, when=''):
-    _when = when if when else user_attr['last_launch_date']
+    last_launch_date = when if when \
+        else user_attr.get('last_launch_date', iso_formatted_date_today)
     attr = {
         'when': {
-            _when: {
+            last_launch_date: {
                 }
             },
-        'last_launch_date': user_attr['last_launch_date']
+        'last_launch_date': last_launch_date
         }
     for attribute in user_attr.keys():
-        attr['when'][_when][attribute] = attribute
+        attr['when'][last_launch_date][attribute] = attribute
     set_attr(alexa_user_id, attr)
