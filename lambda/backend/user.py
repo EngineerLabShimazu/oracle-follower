@@ -10,15 +10,17 @@ dynamo = boto3.client('dynamodb')
 
 class User:
     def __init__(self, alexa_user_id, attr, when=''):
-        self.alexa_user_id = alexa_user_id
-        self.last_launch_date = attr.get('last_launch_date')
+        # 記録
+        if attr.get('last_launch_date', '') == iso_formatted_date_today:
+            # 今日すでに情報を持っていたら取りたい
+            today_attr = attr['when'][iso_formatted_date_today]
+            self.follower_increase: int = today_attr.get('follower_increase', 0)
+            self.destination: str = today_attr.get('destination', '')
 
-        _attr = attr['when'][when] if when \
-            else attr['when'][iso_formatted_date_today]
-
-        self.follower_increase: int = _attr.get('follower_increase', 0)
-        self.follower_total_amount: int = _attr.get('follower_total_amount', 0)
-        self.destination: str = _attr.get('destination', '')
+        # 永続
+        self.alexa_user_id: str = alexa_user_id
+        self.follower_total_amount: int = attr.get('follower_total_amount', 0)
+        self.last_launch_date: str = attr.get('last_launch_date', '')
         self._when = when
 
     def __del__(self):
@@ -28,7 +30,7 @@ class User:
         for k, v in self.__dict__.items():
             if v:
                 d[k] = v
-        set_user(self.alexa_user_id, d, self._when)
+        set_user(self.alexa_user_id, d)
 
     @property
     def attributes(self) -> dict:
@@ -56,16 +58,15 @@ def get_user(alexa_user_id) -> User:
     return User(alexa_user_id, attr)
 
 
-def set_user(alexa_user_id, user_attr, when=''):
-    last_launch_date = when if when \
-        else user_attr.get('last_launch_date', iso_formatted_date_today)
+def set_user(alexa_user_id, user_attr):
     attr = {
         'when': {
-            last_launch_date: {
+            iso_formatted_date_today: {
                 }
             },
-        'last_launch_date': last_launch_date
+        'last_launch_date': iso_formatted_date_today,
+        'follower_total_amount': user_attr['follower_total_amount']
         }
-    for attribute in user_attr.keys():
-        attr['when'][last_launch_date][attribute] = attribute
+    for attribute, value in user_attr.items():
+        attr['when'][iso_formatted_date_today][attribute] = value
     set_attr(alexa_user_id, attr)
