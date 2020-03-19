@@ -1,13 +1,27 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
 
+from util import iso_formatted_date_today
+
 dynamo = boto3.client('dynamodb')
 
 
 class DynamoCtl:
     def __init__(self, alexa_user_id):
         self.alexa_user_id = alexa_user_id
-        self.attr = _get_attr(alexa_user_id)
+
+        _attr = _get_attr(alexa_user_id)
+        if not _attr:
+            _attr = {
+                'when': {
+                    iso_formatted_date_today: {
+                        'follower_increase': 0,
+                        'follower_total_amount': 0,
+                        'destination': '',
+                        }
+                    }
+                }
+        self.attr = _attr
 
 
 def serialize_attribute(attributes):
