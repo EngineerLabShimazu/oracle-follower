@@ -11,14 +11,14 @@ dynamo = boto3.client('dynamodb')
 class User:
     def __init__(self, alexa_user_id, attr, when=''):
         self.alexa_user_id = alexa_user_id
-        self.last_launch_date = attr['last_launch_date']
+        self.last_launch_date = attr.get('last_launch_date')
 
         _attr = attr['when'][when] if when \
-            else attr['when'][self.last_launch_date]
+            else attr['when'][iso_formatted_date_today]
 
-        self.follower_increase: int = _attr['follower_increase']
-        self.follower_total_amount: int = _attr['follower_total_amount']
-        self.destination: str = _attr['destination']
+        self.follower_increase: int = _attr.get('follower_increase', 0)
+        self.follower_total_amount: int = _attr.get('follower_total_amount', 0)
+        self.destination: str = _attr.get('destination', '')
         self._when = when
 
     def __del__(self):
@@ -36,6 +36,8 @@ class User:
 
     @property
     def is_first_launch_today(self) -> bool:
+        if not self.last_launch_date:
+            return True
         if iso_formatted_date_today != self.last_launch_date:
             return True
         return False
@@ -51,17 +53,6 @@ def serialize_attribute(attributes):
 
 def get_user(alexa_user_id) -> User:
     attr = DynamoCtl(alexa_user_id).attr
-    if not attr:
-        attr = {
-            'when': {
-                iso_formatted_date_today: {
-                    'follower_increase': 0,
-                    'follower_total_amount': 0,
-                    'destination': '',
-                }
-            },
-            'last_launch_date': ''
-        }
     return User(alexa_user_id, attr)
 
 
