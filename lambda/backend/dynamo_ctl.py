@@ -25,6 +25,19 @@ class DynamoCtl:
                 }
         self.attr = _attr
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        save_attr(self.alexa_user_id, self.attr)
+
+    def set_attr(self, today_attr: dict):
+        d = {}
+        for k, v in today_attr.items():
+            if v:
+                d[k] = v
+        self.attr['when'][iso_formatted_date_today] = d
+
 
 def _serialize_attribute(attributes):
     return dynamodb_types.TypeSerializer().serialize(attributes)
@@ -53,7 +66,7 @@ def _get_attr(user_id):
     return dynamodb_types.TypeDeserializer().deserialize(item['attributes'])
 
 
-def set_attr(alexa_user_id, attributes):
+def save_attr(alexa_user_id, attributes):
     item = {'alexa_user_id': _serialize_attribute(alexa_user_id),
             'attributes': _serialize_attribute(attributes)}
     dynamo.put_item(TableName='funDom-oracle-follower-user',

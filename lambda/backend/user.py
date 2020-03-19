@@ -2,7 +2,7 @@ import boto3
 import boto3.dynamodb.types as dynamodb_types
 import random
 
-from dynamo_ctl import DynamoCtl, set_attr
+# from dynamo_ctl import DynamoCtl, set_attr
 from util import iso_formatted_date_today
 
 dynamo = boto3.client('dynamodb')
@@ -30,7 +30,14 @@ class User:
         for k, v in self.__dict__.items():
             if v:
                 d[k] = v
-        set_user(self.alexa_user_id, d)
+        # set_user(self.alexa_user_id, d)
+
+    @property
+    def when_attr(self):
+        return {
+            'follower_increase': self.follower_increase,
+            'destination': self.destination
+            }
 
     @property
     def attributes(self) -> dict:
@@ -53,20 +60,19 @@ def serialize_attribute(attributes):
     return dynamodb_types.TypeSerializer().serialize(attributes)
 
 
-def get_user(alexa_user_id) -> User:
-    attr = DynamoCtl(alexa_user_id).attr
+def get_user(alexa_user_id, attr) -> User:
     return User(alexa_user_id, attr)
 
 
-def set_user(alexa_user_id, user_attr):
-    attr = {
-        'when': {
-            iso_formatted_date_today: {
-                }
-            },
-        'last_launch_date': iso_formatted_date_today,
-        'follower_total_amount': user_attr['follower_total_amount']
-        }
-    for attribute, value in user_attr.items():
-        attr['when'][iso_formatted_date_today][attribute] = value
-    set_attr(alexa_user_id, attr)
+# def set_user(alexa_user_id, user_attr):
+#     attr = {
+#         'when': {
+#             iso_formatted_date_today: {
+#                 }
+#             },
+#         'last_launch_date': iso_formatted_date_today,
+#         'follower_total_amount': user_attr['follower_total_amount']
+#         }
+#     for attribute, value in user_attr.items():
+#         attr['when'][iso_formatted_date_today][attribute] = value
+#     set_attr(alexa_user_id, attr)
