@@ -19,7 +19,9 @@ class DynamoCtl:
                         'follower_total_amount': 0,
                         'destination': '',
                         }
-                    }
+                    },
+                'last_launch_date': '',
+                'follower_total_amount': 0
                 }
         self.attr = _attr
 
@@ -39,7 +41,8 @@ def _get_attr(user_id):
                     'destination': 'village_a',
                     }
                 },
-            'last_launch_date': 'YYYY-mm-dd'
+            'last_launch_date': 'YYYY-mm-dd',
+            'follower_total_amount': -1
             }
     """
     item = dynamo.get_item(TableName='funDom-oracle-follower-user',
