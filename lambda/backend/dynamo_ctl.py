@@ -24,7 +24,7 @@ class DynamoCtl:
         self.attr = _attr
 
 
-def serialize_attribute(attributes):
+def _serialize_attribute(attributes):
     return dynamodb_types.TypeSerializer().serialize(attributes)
 
 
@@ -51,7 +51,7 @@ def _get_attr(user_id):
 
 
 def set_attr(alexa_user_id, attributes):
-    item = {'alexa_user_id': serialize_attribute(alexa_user_id),
-            'attributes': serialize_attribute(attributes)}
+    item = {'alexa_user_id': _serialize_attribute(alexa_user_id),
+            'attributes': _serialize_attribute(attributes)}
     dynamo.put_item(TableName='funDom-oracle-follower-user',
                     Item=item)
