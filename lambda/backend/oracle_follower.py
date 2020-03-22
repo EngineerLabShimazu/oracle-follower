@@ -19,8 +19,6 @@ def main(info):
                                                         _user.follower_total_amount))
 
         response = {"response_text": "".join(response_text)}
-
-        # その日の記録
-        dynamo_ctl.set_attr(_user.when_attr)
+        dynamo_ctl.attr = _user.attributes
 
     return json.dumps(response)
