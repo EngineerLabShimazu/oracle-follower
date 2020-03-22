@@ -15,8 +15,8 @@ def main(info):
 
         if _user.is_first_launch_today:
             _user.increase_follower()
-            response_text.append(hero.increase_follower(_user.follower_increase,
-                                                        _user.follower_total_amount))
+            response_text.append(hero.increase_follower(
+                _user.follower_increase, _user.follower_total_amount))
 
         response = {"response_text": "".join(response_text)}
         dynamo_ctl.attr = _user.attr
