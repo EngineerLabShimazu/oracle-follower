@@ -15,7 +15,7 @@ class User:
         self.follower_increase = attr.get('follower_increase', 0)
 
     @property
-    def attributes(self) -> dict:
+    def attr(self) -> dict:
         _attr = dict(self.__dict__)
         _attr['last_launch_date'] = iso_formatted_date_today
         return _attr
