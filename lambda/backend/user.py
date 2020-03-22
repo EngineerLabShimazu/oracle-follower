@@ -1,38 +1,30 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
-import datetime
 import random
 
-from dynamo_ctl import DynamoCtl, set_attr
+from util import iso_formatted_date_today
 
 dynamo = boto3.client('dynamodb')
 
 
 class User:
-    def __init__(self, alexa_user_id, attr, when=''):
-        self.alexa_user_id = alexa_user_id
-        self.last_launch_date = attr['last_launch_date']
-
-        _attr = attr['when'][when] if when \
-            else attr['when'][self.last_launch_date]
-
-        self.follower_increase: int = _attr['follower_increase']
-        self.follower_total_amount: int = _attr['follower_total_amount']
-        self.destination: str = _attr['destination']
-        self._when = when
-
-    def __del__(self):
-        set_user(self.alexa_user_id, self.__dict__, self._when)
+    def __init__(self, alexa_user_id, attr):
+        self.alexa_user_id: str = alexa_user_id
+        self.follower_total_amount: int = attr.get('follower_total_amount', 0)
+        self.last_launch_date: str = attr.get('last_launch_date', '')
+        self.follower_increase = attr.get('follower_increase', 0)
 
     @property
     def attributes(self) -> dict:
-        return {'attr': self.__dict__}
+        _attr = dict(self.__dict__)
+        _attr['last_launch_date'] = iso_formatted_date_today
+        return _attr
 
     @property
     def is_first_launch_today(self) -> bool:
-        today = datetime.date.today().isoformat()
-        last_launch = self.last_launch_date
-        if today != last_launch:
+        if not self.last_launch_date:
+            return True
+        if iso_formatted_date_today != self.last_launch_date:
             return True
         return False
 
@@ -45,21 +37,5 @@ def serialize_attribute(attributes):
     return dynamodb_types.TypeSerializer().serialize(attributes)
 
 
-def get_user(alexa_user_id) -> User:
-    attr = DynamoCtl(alexa_user_id).attr
+def get_user(alexa_user_id, attr) -> User:
     return User(alexa_user_id, attr)
-
-
-def set_user(alexa_user_id, user_attr, when=''):
-    _when = when if when else user_attr['last_launch_date']
-    attr = {
-        'when': {
-            _when: {
-                'follower_increase': user_attr['follower_increase'],
-                'follower_total_amount': user_attr['follower_total_amount'],
-                'destination': user_attr['destination'],
-            }
-        },
-        'last_launch_date': user_attr['last_launch_date']
-    }
-    set_attr(alexa_user_id, attr)
