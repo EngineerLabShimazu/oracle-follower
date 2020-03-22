@@ -16,6 +16,7 @@ class User:
 
     @property
     def attributes(self) -> dict:
+        self.last_launch_date = iso_formatted_date_today
         return self.__dict__
 
     @property
