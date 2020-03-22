@@ -16,8 +16,9 @@ class User:
 
     @property
     def attributes(self) -> dict:
-        self.last_launch_date = iso_formatted_date_today
-        return self.__dict__
+        _attr = dict(self.__dict__)
+        _attr['last_launch_date'] = iso_formatted_date_today
+        return _attr
 
     @property
     def is_first_launch_today(self) -> bool:
