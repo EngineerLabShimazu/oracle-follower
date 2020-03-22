@@ -19,6 +19,6 @@ def main(info):
                                                         _user.follower_total_amount))
 
         response = {"response_text": "".join(response_text)}
-        dynamo_ctl.attr = _user.attributes
+        dynamo_ctl.attr = _user.attr
 
     return json.dumps(response)
