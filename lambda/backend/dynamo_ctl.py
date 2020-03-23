@@ -1,8 +1,6 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
 
-from util import iso_formatted_date_today
-
 dynamo = boto3.client('dynamodb')
 
 
