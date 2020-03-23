@@ -18,7 +18,12 @@ def main(info):
             response_text.append(hero.increase_follower(
                 _user.follower_increase, _user.follower_total_amount))
 
+        if not _user.has_todays_oracle:
+            response_text.append(hero.ask_oracle())
+
         response = {"response_text": "".join(response_text)}
+
+
         dynamo_ctl.attr = _user.attr
 
     return json.dumps(response)
