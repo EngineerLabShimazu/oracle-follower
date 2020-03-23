@@ -1,4 +1,5 @@
 import random
+from assets.villages import villages
 
 
 def get_appreciate_message() -> str:
@@ -15,3 +16,9 @@ def message():
 
 def increase_follower(follower_increase, total_follower):
     return f"昨日、信者の数が{follower_increase}人増えました。現在の合計は{total_follower}人です。"
+
+
+def ask_oracle(separator='と'):
+    destinations = separator.join(random.sample(villages, 2))
+    ask_oracle_text = f"本日は、{destinations}のどちらへ向かえばよろしいでしょうか？"
+    return ask_oracle_text

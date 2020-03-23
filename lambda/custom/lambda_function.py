@@ -39,6 +39,15 @@ class LaunchRequestHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class DestinationIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
+        return is_intent_name("DestinationIntent")(handler_input)
+
+    def handle(self,
+               handler_input):  # type: (HandlerInput) -> Union[None, Response]
+        pass
+
+
 class HelloWorldIntentHandler(AbstractRequestHandler):
     """Handler for Hello World Intent."""
 
@@ -131,7 +140,8 @@ class ErrorHandler(AbstractExceptionHandler):
         # type: (HandlerInput, Exception) -> Response
         logger.error(exception, exc_info=True)
         speech_text = "Sorry, I couldn't understand what you said. Please try again."
-        handler_input.response_builder.speak(speech_text).ask(speech_text).set_should_end_session(True)
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 

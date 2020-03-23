@@ -12,7 +12,8 @@ class User:
         self.alexa_user_id: str = alexa_user_id
         self.follower_total_amount: int = attr.get('follower_total_amount', 0)
         self.last_launch_date: str = attr.get('last_launch_date', '')
-        self.follower_increase = attr.get('follower_increase', 0)
+        self.follower_increase: int = attr.get('follower_increase', 0)
+        self.destination: str = attr.get('destination', '')
 
     @property
     def attr(self) -> dict:
@@ -31,6 +32,11 @@ class User:
     def increase_follower(self):
         self.follower_increase = random.choice([i for i in range(1, 10)])
         self.follower_total_amount += self.follower_increase
+
+    def has_todays_oracle(self):
+        if self.destination:
+            return True
+        return False
 
 
 def serialize_attribute(attributes):
