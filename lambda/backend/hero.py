@@ -22,3 +22,7 @@ def ask_oracle(separator='と'):
     destinations = separator.join(random.sample(villages, 2))
     ask_oracle_text = f"本日は、{destinations}のどちらへ向かえばよろしいでしょうか？"
     return ask_oracle_text
+
+
+def repeat_oracle(destination):
+    return f'{destination}へ行くのですね！ありがとうございます！'
