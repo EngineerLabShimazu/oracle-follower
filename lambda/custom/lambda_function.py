@@ -22,6 +22,31 @@ def get_user_id(handler_input):
     return handler_input.request_envelope.context.system.user.user_id
 
 
+def execute_backend_sfn(start_execution_input):
+    import os
+    import json
+    import time
+    import boto3
+    fof_sfn_arn = os.getenv('BACKEND_SFN_ARN')
+    client = boto3.client('stepfunctions')
+    start_res = client.start_execution(
+        stateMachineArn=fof_sfn_arn, input=json.dumps(start_execution_input))
+
+    while True:
+        des_res = client.describe_execution(
+            executionArn=start_res['executionArn'])
+        if 'output' in des_res:
+            break
+        else:
+            time.sleep(0.1)
+            print('describe_execution response has not exists "output" key. '
+                  'retry...')
+            continue
+    output = des_res["output"]
+    print(f'output: {output}')
+    return json.loads(output)
+
+
 class LaunchRequestHandler(AbstractRequestHandler):
     """Handler for Skill Launch."""
 
@@ -32,7 +57,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         info = json.dumps({'alexa_user_id': get_user_id(handler_input)})
-        response = json.loads(oracle_follower.main(info))
+        # response = json.loads(oracle_follower.main(info))
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': 'launch'
+            }
+        response = execute_backend_sfn(fof_sfn_input)
+        print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(True)
