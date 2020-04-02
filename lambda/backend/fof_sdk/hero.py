@@ -1,5 +1,5 @@
 import random
-from assets.villages import villages
+from fof_sdk.assets.villages import villages
 
 
 def get_appreciate_message() -> str:

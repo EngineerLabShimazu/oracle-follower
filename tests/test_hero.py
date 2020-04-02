@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-import hero
+from fof_sdk import hero
 from unittest.mock import patch
 
 

@@ -1,8 +1,6 @@
 from __future__ import print_function
-import json
 
-import hero
-from dynamo_ctl import DynamoCtl
+from fof_sdk import hero
 
 
 def main(intent, destination):

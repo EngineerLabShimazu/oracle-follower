@@ -1,11 +1,11 @@
 import datetime
 
-import user
+from fof_sdk import user
 
 from unittest import TestCase
 from unittest.mock import patch
 
-from user import User
+from fof_sdk.user import User
 
 
 class TestUser(TestCase):
