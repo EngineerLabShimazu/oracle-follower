@@ -2,7 +2,7 @@ import boto3
 import boto3.dynamodb.types as dynamodb_types
 import random
 
-from util import iso_formatted_date_today
+from fof_sdk.util import iso_formatted_date_today
 
 dynamo = boto3.client('dynamodb')
 

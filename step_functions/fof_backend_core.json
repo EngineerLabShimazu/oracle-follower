@@ -57,7 +57,9 @@
       "Launch": {
           "Type": "Task",
           "Resource": "arn:aws:lambda:ap-northeast-1:576160388846:function:fof_state_launch",
-          "Next": "PostProcess"
+          "Result": "oracle",
+          "ResultPath": "$.state",
+        "Next": "PostProcess"
       },
       "Oracle": {
           "Type": "Task",

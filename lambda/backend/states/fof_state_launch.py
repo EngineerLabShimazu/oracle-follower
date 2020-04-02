@@ -1,13 +1,11 @@
 from __future__ import print_function
-import json
 
-import user
-import hero
-from dynamo_ctl import DynamoCtl
+from fof_sdk import hero, user
+from fof_sdk.dynamo_ctl import DynamoCtl
 
 
 def main(alexa_user_id):
-    response = {}
+    action = {'type': 'launch'}
     response_text = [hero.message()]
 
     with DynamoCtl(alexa_user_id) as dynamo_ctl:
@@ -19,13 +17,16 @@ def main(alexa_user_id):
                 _user.follower_increase, _user.follower_total_amount))
 
         if not _user.has_todays_oracle:
-            response_text.append(hero.ask_oracle())
-            response['state'] = 'oracle'
-
+            action = {
+                'type': 'ask_oracle',
+                'text': response_text.append(hero.ask_oracle())
+                }
         dynamo_ctl.attr = _user.attr
 
-    response['response_text'] = ''.join(response_text)
-    return response
+    # post process
+    # response['response_text'] = ''.join(response_text)
+
+    return action
 
 
 def lambda_handler(event, context):
