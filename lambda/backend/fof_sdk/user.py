@@ -33,6 +33,7 @@ class User:
         self.follower_increase = random.choice([i for i in range(1, 10)])
         self.follower_total_amount += self.follower_increase
 
+    @property
     def has_todays_oracle(self):
         if self.destination:
             return True
