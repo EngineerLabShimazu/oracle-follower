@@ -64,6 +64,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
             'state': 'launch'
             }
         response = execute_backend_sfn(fof_sfn_input)
+        handler_input.attributes_manager.session_attributes['state'] = response['state']
         print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
@@ -77,7 +78,20 @@ class DestinationIntentHandler(AbstractRequestHandler):
 
     def handle(self,
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
-        pass
+        village = handler_input.request_envelope.request.intent.slots[
+            'village'].value
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'destination': village,
+            'state': handler_input.attributes_manager.session_attributes['state']
+            }
+        response = execute_backend_sfn(fof_sfn_input)
+        print(f'response: {response}, type: {type(response)}')
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text).set_should_end_session(True)
+        return handler_input.response_builder.response
 
 
 class HelloWorldIntentHandler(AbstractRequestHandler):
