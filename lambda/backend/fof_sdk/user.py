@@ -15,6 +15,9 @@ class User:
         self.follower_increase: int = attr.get('follower_increase', 0)
         self.destination: str = attr.get('destination', '')
 
+        if self.is_first_launch_today:
+            self.destination = ''
+
     @property
     def attr(self) -> dict:
         _attr = dict(self.__dict__)
