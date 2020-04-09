@@ -62,13 +62,15 @@ class LaunchRequestHandler(AbstractRequestHandler):
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': 'launch'
-            }
+        }
         response = execute_backend_sfn(fof_sfn_input)
-        handler_input.attributes_manager.session_attributes['state'] = response['state']
+        handler_input.attributes_manager.session_attributes['state'] = \
+            response['state']
         print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
-            speech_text).set_should_end_session(True)
+            speech_text).set_should_end_session(
+            response.get('set_should_end_session', True))
         return handler_input.response_builder.response
 
 
@@ -83,11 +85,10 @@ class DestinationIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'destination': village,
-            'state': handler_input.attributes_manager.session_attributes['state']
-            }
+            'state': 'Oracle',
+            'destination': village
+        }
         response = execute_backend_sfn(fof_sfn_input)
-        print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(True)
@@ -197,6 +198,7 @@ class ErrorHandler(AbstractExceptionHandler):
 sb = SkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(HelloWorldIntentHandler())
+sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())

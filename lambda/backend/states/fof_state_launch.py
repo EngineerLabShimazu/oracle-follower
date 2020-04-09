@@ -18,7 +18,8 @@ def main(alexa_user_id):
 
         if not _user.has_todays_oracle:
             response_texts.append(hero.ask_oracle())
-            action = {'type': 'ask_oracle'}
+            action = {'type': 'ask_oracle',
+                      'set_should_end_session': False }
         dynamo_ctl.attr = _user.attr
 
     # post process
