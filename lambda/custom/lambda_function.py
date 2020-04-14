@@ -91,7 +91,8 @@ class DestinationIntentHandler(AbstractRequestHandler):
         response = execute_backend_sfn(fof_sfn_input)
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
-            speech_text).set_should_end_session(True)
+            speech_text).set_should_end_session(
+            response.get('set_should_end_session', True))
         return handler_input.response_builder.response
 
 
