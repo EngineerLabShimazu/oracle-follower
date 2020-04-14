@@ -6,6 +6,11 @@ from fof_sdk import user
 
 
 def main(destination, alexa_user_id):
+    if not destination:
+        return {'type': 'oracle',
+                'response_text': '大変申し訳ございません。わたくしの理解が及ばず、、、もう一度お告げを頂戴したく存じます。',
+                'set_should_end_session': False}
+
     action = {'type': 'end'}
     response_text = [hero.repeat_oracle(destination)]
     action["response_text"] = "".join(response_text)
