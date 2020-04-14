@@ -95,21 +95,6 @@ class DestinationIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class HelloWorldIntentHandler(AbstractRequestHandler):
-    """Handler for Hello World Intent."""
-
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("HelloWorldIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        speech_text = "Hello World!"
-        handler_input.response_builder.speak(
-            speech_text).set_should_end_session(True)
-        return handler_input.response_builder.response
-
-
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -197,7 +182,6 @@ class ErrorHandler(AbstractExceptionHandler):
 # defined are included below. The order matters - they're processed top to bottom.
 sb = SkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
-sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
