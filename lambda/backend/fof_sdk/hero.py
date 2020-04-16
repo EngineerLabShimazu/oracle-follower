@@ -25,4 +25,4 @@ def ask_oracle(separator='と'):
 
 
 def repeat_oracle(destination):
-    return f'{destination}へ行くのですね！ありがとうございます！'
+    return f'{destination}へ行くのですね！ありがとうございます！また明日、結果を報告します！'
