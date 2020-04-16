@@ -58,12 +58,18 @@ class LaunchRequestHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         info = json.dumps({'alexa_user_id': get_user_id(handler_input)})
         # response = json.loads(oracle_follower.main(info))
+        ask_oracle_text = handler_input.attributes_manager.session_attributes.get(
+            'ask_oracle_text')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'launch'
+            'state': 'launch',
+            'ask_oracle_text': ask_oracle_text
         }
         response = execute_backend_sfn(fof_sfn_input)
+        if response.get('ask_oracle_text'):
+            handler_input.attributes_manager.session_attributes[
+                'ask_oracle_text'] = response['ask_oracle_text']
         handler_input.attributes_manager.session_attributes['state'] = \
             response['state']
         print(f'response: {response}, type: {type(response)}')
@@ -82,11 +88,14 @@ class DestinationIntentHandler(AbstractRequestHandler):
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
         village = handler_input.request_envelope.request.intent.slots[
             'village'].value
+        ask_oracle_text = handler_input.attributes_manager.session_attributes.get(
+            'ask_oracle_text')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': 'Oracle',
-            'destination': village
+            'destination': village,
+            'ask_oracle_text': ask_oracle_text
         }
         response = execute_backend_sfn(fof_sfn_input)
         speech_text = response["response_text"]

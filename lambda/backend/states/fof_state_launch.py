@@ -17,9 +17,11 @@ def main(alexa_user_id):
                 _user.follower_increase, _user.follower_total_amount))
 
         if not _user.has_todays_oracle:
-            response_texts.append(hero.ask_oracle())
+            ask_oracle_text = hero.ask_oracle()
+            response_texts.append(ask_oracle_text)
             action = {'type': 'ask_oracle',
-                      'set_should_end_session': False }
+                      'set_should_end_session': False,
+                      'ask_oracle_text': ask_oracle_text}
         dynamo_ctl.attr = _user.attr
 
     # post process
