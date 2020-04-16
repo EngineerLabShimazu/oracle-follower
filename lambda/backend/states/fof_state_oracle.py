@@ -5,10 +5,10 @@ from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 
 
-def main(destination, alexa_user_id):
+def main(destination, alexa_user_id, ask_oracle_text):
     if not destination:
         return {'type': 'oracle',
-                'response_text': '大変申し訳ございません。わたくしの理解が及ばず、、、もう一度お告げを頂戴したく存じます。',
+                'response_text': f'大変申し訳ございません。わたくしの理解が及ばず、、、もう一度お告げを頂戴したく存じます。{ask_oracle_text}',
                 'set_should_end_session': False}
 
     action = {'type': 'end'}
@@ -27,5 +27,6 @@ def main(destination, alexa_user_id):
 def lambda_handler(event, context):
     destination = event['destination']
     alexa_user_id = event['alexa_user_id']
-    response = main(destination, alexa_user_id)
+    ask_oracle_text = event['ask_oracle_text']
+    response = main(destination, alexa_user_id, ask_oracle_text)
     return response
