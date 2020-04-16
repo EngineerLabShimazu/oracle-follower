@@ -15,9 +15,6 @@ class User:
         self.follower_increase: int = attr.get('follower_increase', 0)
         self.destination: str = attr.get('destination', '')
 
-        if self.is_first_launch_today:
-            self.destination = ''
-
     @property
     def attr(self) -> dict:
         _attr = dict(self.__dict__)
@@ -41,6 +38,10 @@ class User:
         if self.destination:
             return True
         return False
+
+    def clear_destination(self):
+        if self.is_first_launch_today:
+            self.destination = ''
 
 
 def serialize_attribute(attributes):
