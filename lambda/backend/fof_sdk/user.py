@@ -1,7 +1,7 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
-import random
 
+from fof_sdk import util
 from fof_sdk.util import iso_formatted_date_today
 
 dynamo = boto3.client('dynamodb')
@@ -30,7 +30,9 @@ class User:
         return False
 
     def increase_follower(self):
-        self.follower_increase = random.choice([i for i in range(1, 10)])
+        rarity = util.gacha()
+        print(f'gacha result {rarity}, {self.alexa_user_id}')
+        self.follower_increase = util.follower_table.get(rarity, 5)
         self.follower_total_amount += self.follower_increase
 
     @property
