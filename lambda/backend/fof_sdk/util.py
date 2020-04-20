@@ -1,6 +1,7 @@
 import random
 import datetime
 
+from fof_sdk.assets.villages import villages
 
 iso_formatted_date_today = datetime.date.today().isoformat()
 """
@@ -22,7 +23,7 @@ hunt_table = {
     'B': ['ゴーレム', 'オーガ'],
     'C': ['ゴブリン', 'イエティ'],
     'D': ['コウモリ', 'スライム']
-    }
+}
 
 
 def gacha():
@@ -34,3 +35,9 @@ def gacha():
 
 def hunt(rarity):
     return hunt_table[rarity]
+
+
+def is_valid_destination(destination):
+    if destination in villages:
+        return True
+    return False
