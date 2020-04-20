@@ -14,12 +14,12 @@ def message():
     return f"こんにちは神様。本日も{get_appreciate_message()}、ありがとうございます。"
 
 
-def action_report(destination):
-    return f"昨日は{destination}へ行ったのですが、是非、神様を信仰させていただきたいと申す者共がおります。"
+def action_report(destination, monster):
+    return f"昨日は{destination}へ行き、{monster}を討伐してまいりました！"
 
 
 def increase_follower(follower_increase, total_follower):
-    return f"昨日、信者の数が{follower_increase}人増えました。現在の合計は{total_follower}人です。"
+    return f"その結果、神様を信仰させていただきたいと申す者共が新たに{follower_increase}人増えました。現在の合計は{total_follower}人です。"
 
 
 def ask_oracle(separator='と'):

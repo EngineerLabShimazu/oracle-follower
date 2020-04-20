@@ -3,6 +3,7 @@ import boto3.dynamodb.types as dynamodb_types
 
 from fof_sdk import util
 from fof_sdk.util import iso_formatted_date_today
+from fof_sdk.assets.villages import villages
 
 dynamo = boto3.client('dynamodb')
 
@@ -14,6 +15,7 @@ class User:
         self.last_launch_date: str = attr.get('last_launch_date', '')
         self.follower_increase: int = attr.get('follower_increase', 0)
         self.destination: str = attr.get('destination', '')
+        self.possible_events: attr = attr.get('possible_events', '')
 
     @property
     def attr(self) -> dict:
@@ -30,10 +32,18 @@ class User:
         return False
 
     def increase_follower(self):
-        rarity = util.gacha()
-        print(f'gacha result {rarity}, {self.alexa_user_id}')
-        self.follower_increase = util.follower_table.get(rarity, 5)
+        selected_event_rarity = self.possible_events[self.destination][
+            'rarity']
+        self.follower_increase = util.follower_table.get(
+            selected_event_rarity, 5)
         self.follower_total_amount += self.follower_increase
+
+    def set_event(self):
+        self.possible_events = dict((i, util.gacha()) for i in villages)
+
+    @property
+    def contents(self):
+        return self.possible_events[self.destination]['contents']
 
     @property
     def has_todays_oracle(self):
