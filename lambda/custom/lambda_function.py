@@ -4,8 +4,6 @@
 import json
 import logging
 
-import oracle_follower
-
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
