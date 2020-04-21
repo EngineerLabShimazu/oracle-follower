@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import random
+from fof_sdk.assets.villages import villages
 from fof_sdk import hero, user
 from fof_sdk.dynamo_ctl import DynamoCtl
 
@@ -24,12 +26,12 @@ def main(alexa_user_id):
 
         if not _user.has_todays_oracle:
             _user.set_event()
-
-            ask_oracle_text = hero.ask_oracle()
+            destinations = random.sample(villages, 2)
+            ask_oracle_text = hero.ask_oracle(destinations)
             response_texts.append(ask_oracle_text)
             action = {'type': 'ask_oracle',
                       'set_should_end_session': False,
-                      'ask_oracle_text': ask_oracle_text}
+                      'destinations': destinations}
         dynamo_ctl.attr = _user.attr
 
     # post process

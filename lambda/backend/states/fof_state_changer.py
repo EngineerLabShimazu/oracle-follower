@@ -6,6 +6,8 @@ def main(action):
         return 'expect_oracle'
     elif action['type'] == 'launch':
         return 'end'
+    elif action['type'] == 'help':
+        return 'oracle'
     return 'そんなステートないですよw'
 
 

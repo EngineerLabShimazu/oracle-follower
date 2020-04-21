@@ -6,10 +6,10 @@ from fof_sdk import user
 from fof_sdk import util
 
 
-def main(destination, alexa_user_id, ask_oracle_text):
+def main(destination, alexa_user_id, destinations):
     if not util.is_valid_destination(destination):
         return {'type': 'oracle',
-                'response_text': f'大変申し訳ございません。わたくしの理解が及ばず、、、もう一度お告げを頂戴したく存じます。{ask_oracle_text}',
+                'response_text': f'大変申し訳ございません。わたくしの理解が及ばず、、、もう一度お告げを頂戴したく存じます。{hero.ask_oracle(destinations)}',
                 'set_should_end_session': False}
 
     action = {'type': 'end'}
@@ -29,6 +29,6 @@ def main(destination, alexa_user_id, ask_oracle_text):
 def lambda_handler(event, context):
     destination = event['destination']
     alexa_user_id = event['alexa_user_id']
-    ask_oracle_text = event['ask_oracle_text']
-    response = main(destination, alexa_user_id, ask_oracle_text)
+    destinations = event['destinations']
+    response = main(destination, alexa_user_id, destinations)
     return response
