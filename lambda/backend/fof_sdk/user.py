@@ -31,6 +31,11 @@ class User:
             return True
         return False
 
+    def is_first_launch_skill(self) -> bool:
+        if not self.last_launch_date:
+            return True
+        return False
+
     def increase_follower(self):
         selected_event_rarity = self.possible_events[self.destination][
             'rarity']

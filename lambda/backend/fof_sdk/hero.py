@@ -1,5 +1,4 @@
 import random
-from fof_sdk.assets.villages import villages
 
 
 def get_appreciate_message() -> str:
@@ -22,9 +21,9 @@ def increase_follower(follower_increase, total_follower):
     return f"その結果、神様を信仰させていただきたいと申す者共が新たに{follower_increase}人増えました。現在の合計は{total_follower}人です。"
 
 
-def ask_oracle(separator='と'):
-    destinations = separator.join(random.sample(villages, 2))
-    ask_oracle_text = f"本日は、{destinations}のどちらへ向かえばよろしいでしょうか？"
+def ask_oracle(destinations, separator='と'):
+    destinations_text = separator.join(destinations)
+    ask_oracle_text = f"本日は、{destinations_text}のどちらへ向かえばよろしいでしょうか？"
     return ask_oracle_text
 
 
