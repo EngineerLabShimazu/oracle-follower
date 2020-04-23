@@ -134,8 +134,13 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speech_text = "Goodbye!"
-        handler_input.response_builder.speak(speech_text)
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': True,
+            'intent': 'CancelOrStopIntent',
+            }
+        response = execute_backend_sfn(fof_sfn_input)
+        handler_input.response_builder.speak(response["response_text"])
         return handler_input.response_builder.response
 
 
