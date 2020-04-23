@@ -14,7 +14,6 @@ def main(alexa_user_id):
         _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
 
         if _user.is_first_launch_today:
-
             if _user.destination:
                 response_texts.append(
                     hero.action_report(_user.destination, _user.contents))
@@ -23,9 +22,9 @@ def main(alexa_user_id):
                     _user.follower_increase, _user.follower_total_amount))
 
             _user.clear_destination()
+            _user.set_event()
 
         if not _user.has_todays_oracle:
-            _user.set_event()
             destinations = random.sample(villages, 2)
             ask_oracle_text = hero.ask_oracle(destinations)
             response_texts.append(ask_oracle_text)
