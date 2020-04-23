@@ -1,7 +1,12 @@
+import os
 import boto3
 import boto3.dynamodb.types as dynamodb_types
 
 dynamo = boto3.client('dynamodb')
+
+TABLE_NAME = 'fof_user_prd'
+if os.environ.get('AWS_LAMBDA_FUNCTION_VERSION') == '$LATEST':
+    TABLE_NAME = 'fof_user_stg'
 
 
 class DynamoCtl:
@@ -49,7 +54,9 @@ def _get_attr(user_id):
             'follower_increase': -1
             }
     """
-    item = dynamo.get_item(TableName='funDom-oracle-follower-user',
+    print(f'table_name {TABLE_NAME}')
+
+    item = dynamo.get_item(TableName=TABLE_NAME,
                            Key={'alexa_user_id': {'S': user_id}}
                            ).get('Item')
     if not item:
@@ -60,5 +67,5 @@ def _get_attr(user_id):
 def save_attr(alexa_user_id, attributes):
     item = {'alexa_user_id': _serialize_attribute(alexa_user_id),
             'attributes': _serialize_attribute(attributes)}
-    dynamo.put_item(TableName='funDom-oracle-follower-user',
+    dynamo.put_item(TableName=TABLE_NAME,
                     Item=item)
