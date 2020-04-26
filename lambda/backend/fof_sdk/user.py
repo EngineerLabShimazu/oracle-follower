@@ -3,7 +3,6 @@ import boto3.dynamodb.types as dynamodb_types
 
 from fof_sdk import util
 from fof_sdk.util import iso_formatted_date_today
-from fof_sdk.assets.villages import villages
 
 dynamo = boto3.client('dynamodb')
 
@@ -44,7 +43,8 @@ class User:
         self.follower_total_amount += self.follower_increase
 
     def set_event(self):
-        self.possible_events = dict((i, util.gacha()) for i in villages)
+        self.possible_events = dict(
+            (i, util.gacha()) for i in util.get_village_names())
 
     @property
     def contents(self):
