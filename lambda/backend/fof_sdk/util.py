@@ -37,7 +37,24 @@ def hunt(rarity):
     return hunt_table[rarity]
 
 
-def is_valid_destination(destination):
-    if destination in villages:
-        return True
-    return False
+def valid_destination(destination_intent) -> str:
+    """
+    :param destination_intent:
+    :return: village.actual_name
+    - ホワイトタウン
+    - ホワイトxxx
+    - xxxタウン
+    - ホワイト タウン
+    - ホワイト xxx
+    - xxx タウン
+    """
+    for i in villages.values():
+        for words in i['variation'].values():
+            for word in words:
+                if word in destination_intent:
+                    return i['actual_name']
+    return ''
+
+
+def get_village_names():
+    return [i['actual_name'] for i in villages.values()]

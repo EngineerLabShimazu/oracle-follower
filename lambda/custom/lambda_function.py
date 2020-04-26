@@ -31,19 +31,19 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        destinations = handler_input.attributes_manager.session_attributes.get(
-            'destinations')
+        destinations_choice = handler_input.attributes_manager.session_attributes.get(
+            'destinations_choice')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': 'launch',
-            'destinations': destinations,
+            'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
         }
         response = sfn_ctl.execute(fof_sfn_input)
-        if response.get('destinations'):
+        if response.get('destinations_choice'):
             handler_input.attributes_manager.session_attributes[
-                'destinations'] = response['destinations']
+                'destinations_choice'] = response['destinations_choice']
         handler_input.attributes_manager.session_attributes['state'] = \
             response['state']
         print(f'response: {response}, type: {type(response)}')
@@ -62,14 +62,14 @@ class DestinationIntentHandler(AbstractRequestHandler):
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
         village = handler_input.request_envelope.request.intent.slots[
             'village'].value
-        destinations = handler_input.attributes_manager.session_attributes.get(
-            'destinations')
+        destinations_choice = handler_input.attributes_manager.session_attributes.get(
+            'destinations_choice')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': 'Oracle',
             'destination': village,
-            'destinations': destinations,
+            'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
         }
         response = sfn_ctl.execute(fof_sfn_input)
