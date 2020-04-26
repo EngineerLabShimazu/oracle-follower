@@ -9,8 +9,10 @@ from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
-
 from ask_sdk_model import Response
+
+import sfn_ctl
+import util
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -18,31 +20,6 @@ logger.setLevel(logging.INFO)
 
 def get_user_id(handler_input):
     return handler_input.request_envelope.context.system.user.user_id
-
-
-def execute_backend_sfn(start_execution_input):
-    import os
-    import json
-    import time
-    import boto3
-    fof_sfn_arn = os.getenv('BACKEND_SFN_ARN')
-    client = boto3.client('stepfunctions')
-    start_res = client.start_execution(
-        stateMachineArn=fof_sfn_arn, input=json.dumps(start_execution_input))
-
-    while True:
-        des_res = client.describe_execution(
-            executionArn=start_res['executionArn'])
-        if 'output' in des_res:
-            break
-        else:
-            time.sleep(0.1)
-            print('describe_execution response has not exists "output" key. '
-                  'retry...')
-            continue
-    output = des_res["output"]
-    print(f'output: {output}')
-    return json.loads(output)
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -60,9 +37,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': 'launch',
-            'destinations': destinations
+            'destinations': destinations,
+            'env_type': util.get_env_type(handler_input)
         }
-        response = execute_backend_sfn(fof_sfn_input)
+        response = sfn_ctl.execute(fof_sfn_input)
         if response.get('destinations'):
             handler_input.attributes_manager.session_attributes[
                 'destinations'] = response['destinations']
@@ -91,9 +69,10 @@ class DestinationIntentHandler(AbstractRequestHandler):
             'IsPreResponse': False,
             'state': 'Oracle',
             'destination': village,
-            'destinations': destinations
+            'destinations': destinations,
+            'env_type': util.get_env_type(handler_input)
         }
-        response = execute_backend_sfn(fof_sfn_input)
+        response = sfn_ctl.execute(fof_sfn_input)
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
@@ -116,9 +95,10 @@ class HelpIntentHandler(AbstractRequestHandler):
             'intent': 'HelpIntent',
             'destinations':
                 handler_input.attributes_manager.session_attributes[
-                    'destinations']
-            }
-        response = execute_backend_sfn(fof_sfn_input)
+                    'destinations'],
+            'env_type': util.get_env_type(handler_input)
+        }
+        response = sfn_ctl.execute(fof_sfn_input)
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
@@ -138,8 +118,9 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,
             'intent': 'CancelOrStopIntent',
-            }
-        response = execute_backend_sfn(fof_sfn_input)
+            'env_type': util.get_env_type(handler_input)
+        }
+        response = sfn_ctl.execute(fof_sfn_input)
         handler_input.response_builder.speak(response["response_text"])
         return handler_input.response_builder.response
 
