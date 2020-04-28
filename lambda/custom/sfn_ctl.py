@@ -16,13 +16,13 @@ def execute(start_execution_input):
     start_res = client.start_execution(
         stateMachineArn=fof_sfn_arn, input=json.dumps(start_execution_input))
 
-    while True:
+    for i in [1.0, 2.0, 3.0]:
         des_res = client.describe_execution(
             executionArn=start_res['executionArn'])
         if 'output' in des_res:
             break
         else:
-            time.sleep(0.1)
+            time.sleep(i)
             print('describe_execution response has not exists "output" key. '
                   'retry...')
             continue
