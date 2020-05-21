@@ -131,3 +131,7 @@ dmypy.json
 # custom
 .idea/
 tools/
+
+# terraform
+*.tfvars
+*.tfbackend
