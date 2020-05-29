@@ -1,6 +1,6 @@
 data "archive_file" "fof_sdk" {
   type = "zip"
-  source_dir = "lambda/backend/fof_sdk/"
+  source_dir = "src/lambda_layer/python/fof_sdk/"
   output_path = "fof_sdk.zip"
 }
 
