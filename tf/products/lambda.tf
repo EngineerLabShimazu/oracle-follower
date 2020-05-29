@@ -8,6 +8,9 @@ module "fof_alexa_frontend" {
   function_name = "fof_alexa_frontend"
   memory = 128
   description = ""
+  environment = {
+    "stateMachineArn" = var.state_machine_arn
+  }
   layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
   role = var.lambda_role

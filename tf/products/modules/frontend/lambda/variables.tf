@@ -12,4 +12,5 @@ variable "timeout" {
 variable "reserved_concurrent_executions" {
   default = -1
 }
+variable "environment" {}
 variable "role" {}

@@ -18,6 +18,9 @@ resource "aws_lambda_function" "fof_states_lambda" {
   timeout = var.timeout
   reserved_concurrent_executions = var.reserved_concurrent_executions
   publish = true
+  environment {
+    variables = var.environment
+  }
   source_code_hash = data.archive_file.fof_frontend.output_base64sha256
   tags = {
     fof = "lambda"
