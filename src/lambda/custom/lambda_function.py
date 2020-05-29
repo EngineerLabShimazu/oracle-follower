@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 # This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK.
-import json
 import logging
 
 from ask_sdk_core.skill_builder import SkillBuilder
