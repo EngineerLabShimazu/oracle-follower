@@ -4,7 +4,7 @@ provider "aws" {
 
 module "fof_alexa_frontend" {
   env = var.env
-  source = "./modules/lambda/"
+  source = "./modules/frontend/lambda"
   function_name = "fof_alexa_frontend"
   memory = 128
   description = ""
