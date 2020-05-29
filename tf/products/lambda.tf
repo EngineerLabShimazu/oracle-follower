@@ -35,6 +35,17 @@ module "fof_state_changer" {
   role = var.lambda_role
 }
 
+module "fof_manual_handler" {
+  env = var.env
+  source = "./modules/lambda/"
+  function_name = "fof_manual_handler"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
+
 module "fof_sdk" {
   env = var.env
   source = "./modules/lambda_layer"
