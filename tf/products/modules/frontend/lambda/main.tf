@@ -7,7 +7,7 @@ data "archive_file" "fof_frontend" {
 resource "aws_lambda_function" "fof_states_lambda" {
   filename = data.archive_file.fof_frontend.output_path
   function_name = var.function_name
-  handler = "${var.function_name}.lambda_handler"
+  handler = "lambda_function.handler"
   role = var.role
   description = var.description
   layers = [
