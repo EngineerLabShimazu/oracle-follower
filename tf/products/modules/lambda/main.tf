@@ -1,6 +1,6 @@
 data "archive_file" "fof_states" {
   type = "zip"
-  source_dir = "lambda/backend/${var.function_name}"
+  source_dir = "src/lambda/backend/${var.function_name}"
   output_path = "lambda_${var.function_name}.zip"
 }
 
