@@ -2,6 +2,17 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+module "fof_alexa_frontend" {
+  env = var.env
+  source = "./modules/lambda/"
+  function_name = "fof_alexa_frontend"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
+
 module "fof_state_launch" {
   env = var.env
   source = "./modules/lambda/"
