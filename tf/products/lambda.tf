@@ -63,7 +63,7 @@ module "fof_manual_handler" {
 
 module "fof_sdk" {
   env = var.env
-  source = "./modules/lambda_layer"
+  source = "./modules/lambda_layer/"
 }
 
 // TODO var.env 入れたい
