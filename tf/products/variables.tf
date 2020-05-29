@@ -1,4 +1,5 @@
 variable "env" {}
 variable "lambda_role" {}
 variable "lambda_environment_default" {}
-variable "state_machine_arn" {}
+variable "backend_sfn_arn" {}
+variable "backend_sfn_arn_prd" {}

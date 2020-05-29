@@ -9,7 +9,8 @@ module "fof_alexa_frontend" {
   memory = 128
   description = ""
   environment = {
-    "stateMachineArn" = var.state_machine_arn
+    "BACKEND_SFN_ARN" = var.backend_sfn_arn
+    "BACKEND_SFN_ARN_PRD" = var.backend_sfn_arn_prd
   }
   layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
