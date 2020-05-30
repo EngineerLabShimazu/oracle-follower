@@ -4,7 +4,7 @@ data "archive_file" "fof_frontend" {
   output_path = "lambda_${var.function_name}.zip"
 }
 
-resource "aws_lambda_function" "fof_states_lambda" {
+resource "aws_lambda_function" "fof_frontend" {
   filename = data.archive_file.fof_frontend.output_path
   function_name = var.function_name
   handler = "lambda_function.handler"

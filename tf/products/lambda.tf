@@ -12,6 +12,13 @@ data "aws_lambda_layer_version" "external_module_layer" {
   layer_name = "alexa-packages"
 }
 
+resource "aws_lambda_permission" "alexa_permission" {
+  action = "lambda:InvokeFunction"
+  function_name = module.fof_alexa_frontend.function_name
+  principal = "alexa-appkit.amazon.com"
+  event_source_token = var.event_source_token
+}
+
 module "fof_alexa_frontend" {
   env = var.env
   source = "./modules/frontend/lambda"
