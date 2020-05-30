@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR}
+      - aws s3 cp "s3://${TERRAFORM_BUCKET}/bin/terraform_0.12.25_linux_amd64.zip" ./terraform.zip
+      - unzip terraform.zip
+      - mv terraform /usr/bin
+
+  pre_build:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR}
+      # bucket name は 環境変数から? or ECRに用意?
+      - aws s3 cp "s3://${BUCKET}/oracle-follower/terraform/tfvars/stg.tfvars" "tf/products/stg.tfvars"
+      - aws s3 cp "s3://${BUCKET}/oracle-follower/terraform/tfbackends/stg.tfbackend" "tf/products/backends/stg.tfbackend"
+  build:
+    commands:
+      - terraform init -backend-config=tf/products/backends/stg.tfbackend tf/products
+      - terraform plan -var-file=tf/products/stg.tfvars tf/products/
