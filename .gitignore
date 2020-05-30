@@ -135,3 +135,6 @@ tools/
 # terraform
 *.tfvars
 *.tfbackend
+
+# vscode
+.vscode/
