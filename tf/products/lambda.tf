@@ -17,6 +17,9 @@ resource "aws_lambda_permission" "alexa_permission" {
   function_name = module.fof_alexa_frontend.function_name
   principal = "alexa-appkit.amazon.com"
   event_source_token = var.event_source_token
+
+  depends_on = [
+    module.fof_alexa_frontend]
 }
 
 module "fof_alexa_frontend" {
