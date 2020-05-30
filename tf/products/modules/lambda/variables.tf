@@ -7,7 +7,7 @@ variable "memory" {
   default = 128
 }
 variable "timeout" {
-  default = 3
+  default = 300
 }
 variable "reserved_concurrent_executions" {
   default = -1
