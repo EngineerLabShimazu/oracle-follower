@@ -58,3 +58,15 @@ def valid_destination(destination_intent) -> str:
 
 def get_village_names():
     return [i['actual_name'] for i in villages.values()]
+
+
+def is_support_display(handler_input):
+    try:
+        if hasattr(
+                handler_input.request_envelope.context.system.device.supported_interfaces,
+                'display'):
+            return (
+                    handler_input.request_envelope.context.system.device.
+                    supported_interfaces.display is not None)
+    except:
+        return False
