@@ -80,3 +80,14 @@ module "fof_manual_handler" {
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
   role = var.lambda_role
 }
+
+module "fof_state_tutorial" {
+  env = var.env
+  source = "./modules/lambda/"
+  function_name = "fof_state_tutorial"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
