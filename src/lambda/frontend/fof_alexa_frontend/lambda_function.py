@@ -9,6 +9,7 @@ from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
+from ask_sdk_model import ui
 
 import sfn_ctl
 import util
@@ -38,7 +39,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
             'state': 'launch',
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
-        }
+            }
         response = sfn_ctl.execute(fof_sfn_input)
         if response.get('destinations_choice'):
             handler_input.attributes_manager.session_attributes[
@@ -47,6 +48,20 @@ class LaunchRequestHandler(AbstractRequestHandler):
             response['state']
         print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
+
+        image_url = response.get('image_url')
+        if image_url:
+            handler_input.response_builder.set_card(
+                ui.StandardCard(
+                    title='title sample',
+                    text='text sample',
+                    image=ui.Image(
+                        small_image_url=image_url,
+                        large_image_url=image_url
+                        )
+                    )
+                )
+
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
             response.get('set_should_end_session', True))
@@ -70,9 +85,23 @@ class DestinationIntentHandler(AbstractRequestHandler):
             'destination': village,
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
-        }
+            }
         response = sfn_ctl.execute(fof_sfn_input)
         speech_text = response["response_text"]
+
+        image_url = response.get('image_url')
+        if image_url:
+            handler_input.response_builder.set_card(
+                ui.StandardCard(
+                    title='title sample',
+                    text='text sample',
+                    image=ui.Image(
+                        small_image_url=image_url,
+                        large_image_url=image_url
+                        )
+                    )
+                )
+
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
             response.get('set_should_end_session', True))
@@ -118,9 +147,23 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
             'IsPreResponse': True,
             'intent': 'CancelOrStopIntent',
             'env_type': util.get_env_type(handler_input)
-        }
+            }
         response = sfn_ctl.execute(fof_sfn_input)
         handler_input.response_builder.speak(response["response_text"])
+
+        image_url = response.get('image_url')
+        if image_url:
+            handler_input.response_builder.set_card(
+                ui.StandardCard(
+                    title='title sample',
+                    text='text sample',
+                    image=ui.Image(
+                        small_image_url=image_url,
+                        large_image_url=image_url
+                        )
+                    )
+                )
+
         return handler_input.response_builder.response
 
 
