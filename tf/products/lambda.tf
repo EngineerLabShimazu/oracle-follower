@@ -42,7 +42,7 @@ module "fof_state_translator" {
   source = "./modules/lambda/"
   function_name = "fof_state_translator"
   description = ""
-  layer_arn = ""
+  layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
   role = var.lambda_role
 }
