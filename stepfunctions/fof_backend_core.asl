@@ -1,10 +1,11 @@
 {
   "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
-  "StartAt": "PreProcess",
+  "StartAt": "StateTranslator",
   "States": {
-    "PreProcess": {
-      "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
-      "Type": "Pass",
+    "StateTranslator": {
+      "Comment": "新規ユーザーはTutorialを実行する。",
+      "Type": "Task",
+      "Resource": "${fof_state_translator_arn}",
       "Next": "文脈なしの返答すべき？"
     },
     "文脈なしの返答すべき？": {
@@ -50,9 +51,19 @@
           "Variable": "$.state",
           "StringEquals": "Oracle",
           "Next": "Oracle"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "Tutorial",
+          "Next": "Tutorial"
         }
       ],
       "Default": "Launch"
+    },
+    "Tutorial": {
+      "Type": "Task",
+      "Resource": "${fof_state_tutorial_arn}",
+      "Next": "StateChanger"
     },
     "Launch": {
       "Type": "Task",
