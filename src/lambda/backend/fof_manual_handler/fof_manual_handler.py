@@ -1,6 +1,7 @@
 from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 from fof_sdk import hero
+from fof_sdk import util
 
 
 def main(alexa_user_id, intent, destinations):
@@ -22,7 +23,8 @@ def main(alexa_user_id, intent, destinations):
         return {
             'type': 'cancel_or_stop',
             'response_text': f'本日も{hero.get_appreciate_message()}、ありがとうございました。'
-                             f'また信仰を捧げさせていただく機会を、どうか、お与えくださいませ。'
+                             f'また信仰を捧げさせていただく機会を、どうか、お与えくださいませ。',
+            'image_url': util.get_image('hero_anticipation')
             }
     return action
 

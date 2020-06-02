@@ -1,3 +1,4 @@
+import os
 import random
 import datetime
 
@@ -6,6 +7,11 @@ from fof_sdk.assets.villages import villages
 iso_formatted_date_today = datetime.date.today().isoformat()
 """
 YYYY-mm-dd
+"""
+
+_ASSETS_URL_PREFIX = os.getenv('ASSETS_URL_PREFIX')
+"""
+ex.) https://bucket_name.s3-region.amazonaws.com/oracle-follower/assets
 """
 
 follower_table = {'SS': 10,
@@ -70,3 +76,12 @@ def is_support_display(handler_input):
                     supported_interfaces.display is not None)
     except:
         return False
+
+
+def get_image(image_key: str, extension: str = '.jpg') -> str:
+    """
+    :param image_key: 関数内で小文字に変換します。ex) hero/hero_anticipation.jpg
+    :param extension:
+    :return: url ex.) https://bucket_name.s3-region.amazonaws.com/oracle-follower/assets/images/hero/hero_anticipation.jpg
+    """
+    return f'{_ASSETS_URL_PREFIX}/images/{image_key.lower()}{extension}'

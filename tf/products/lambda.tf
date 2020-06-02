@@ -39,13 +39,16 @@ module "fof_alexa_frontend" {
 
 module "fof_state_launch" {
   env = var.env
-  source = "./modules/lambda/"
+  source = "./modules/lambda_with_env/"
   function_name = "fof_state_launch"
   memory = 128
   description = ""
   layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
   role = var.lambda_role
+  environment = {
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
+  }
 }
 
 module "fof_state_oracle" {
