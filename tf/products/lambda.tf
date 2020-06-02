@@ -29,7 +29,7 @@ module "fof_alexa_frontend" {
   memory = 128
   description = ""
   environment = {
-    "BACKEND_SFN_ARN" = var.backend_sfn_arn_stg
+    "BACKEND_SFN_ARN_STG" = var.backend_sfn_arn_stg
     "BACKEND_SFN_ARN_PRD" = var.backend_sfn_arn_prd
   }
   layer_arn = module.fof_sdk.arn
