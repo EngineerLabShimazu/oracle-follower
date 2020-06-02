@@ -6,6 +6,7 @@
       "Comment": "新規ユーザーはTutorialを実行する。",
       "Type": "Task",
       "Resource": "${fof_state_translator_arn}",
+      "ResultPath": "$.state",
       "Next": "文脈なしの返答すべき？"
     },
     "文脈なしの返答すべき？": {
