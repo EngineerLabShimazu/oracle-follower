@@ -7,7 +7,7 @@ import boto3
 def get_sfn_arn(env_type):
     if env_type == 'prd':
         return os.getenv('BACKEND_SFN_ARN_PRD')
-    return os.getenv('BACKEND_SFN_ARN')
+    return os.getenv('BACKEND_SFN_ARN_STG')
 
 
 def execute(start_execution_input):
