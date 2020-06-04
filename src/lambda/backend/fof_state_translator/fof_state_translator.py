@@ -6,7 +6,7 @@ def main(alexa_user_id, state):
     with DynamoCtl(alexa_user_id) as dynamo_ctl:
         _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
         if _user.is_first_launch_skill():
-            return 'tutorial'
+            return 'Tutorial'
     return state
 
 
