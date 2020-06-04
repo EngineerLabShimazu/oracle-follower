@@ -89,8 +89,14 @@ class DestinationIntentHandler(AbstractRequestHandler):
             'state': 'Oracle',
             'destination': village,
             'destinations_choice': destinations_choice,
-            'env_type': util.get_env_type(handler_input)
+            'env_type': util.get_env_type(handler_input),
             }
+
+        node = handler_input.attributes_manager.session_attributes.get(
+            'node')
+        if node:
+            fof_sfn_input['node'] = node
+
         response = sfn_ctl.execute(fof_sfn_input)
         speech_text = response["response_text"]
 
