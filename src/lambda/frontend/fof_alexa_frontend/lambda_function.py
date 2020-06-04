@@ -46,6 +46,11 @@ class LaunchRequestHandler(AbstractRequestHandler):
                 'destinations_choice'] = response['destinations_choice']
         handler_input.attributes_manager.session_attributes['state'] = \
             response['state']
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
+
         print(f'response: {response}, type: {type(response)}')
         speech_text = response["response_text"]
 
@@ -88,6 +93,10 @@ class DestinationIntentHandler(AbstractRequestHandler):
             }
         response = sfn_ctl.execute(fof_sfn_input)
         speech_text = response["response_text"]
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
 
         image_url = response.get('image_url')
         if image_url:
