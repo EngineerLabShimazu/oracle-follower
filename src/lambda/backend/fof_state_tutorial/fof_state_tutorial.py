@@ -1,18 +1,28 @@
-from nodes import node_map
+import nodes
 from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 
 
-def main(alexa_user_id, node_key):
+def main(alexa_user_id, node_key, destination):
     action = {
         'type': 'tutorial',
         'set_should_end_session': False
         }
-    node = node_map.get(node_key)
-    action['response_text'] = ''.join(node['text'])
-    action['node'] = node.get('next_node', '')
+    if node_key == 'launch':
+        node = nodes.launch()
+    elif node_key == 'salvation':
+        node = nodes.salvation()
+    elif node_key == 'send_out':
+        node = nodes.send_out(destination)
+    else:
+        node = {
+            'original_text': {
+                'text': ''
+                }
+            }
+    action.update(node)
 
-    if node.get('end'):
+    if action.get('end'):
         action['set_should_end_session'] = True
 
         with DynamoCtl(alexa_user_id) as dynamo_ctl:
@@ -26,5 +36,6 @@ def main(alexa_user_id, node_key):
 def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     node_key = event.get('node', 'launch')
-    action = main(alexa_user_id, node_key)
+    destination = event.get('destination')
+    action = main(alexa_user_id, node_key, destination)
     return action
