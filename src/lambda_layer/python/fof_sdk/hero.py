@@ -1,7 +1,8 @@
 import random
+from typing import List
 
 
-def get_appreciate_message() -> str:
+def get_appreciate_message_legacy() -> str:
     messages = ["見守ってくださって",
                 "お気にかけてくださって",
                 "健やかに暮らさせていただき",
@@ -9,23 +10,79 @@ def get_appreciate_message() -> str:
     return random.choice(messages)
 
 
-def message():
+def get_appreciate_message() -> str:
+    messages = ["HERO_APPRECIATE_1",
+                "HERO_APPRECIATE_2",
+                "HERO_APPRECIATE_3",
+                "HERO_APPRECIATE_4"]
+    return random.choice(messages)
+
+
+def message_legacy():
     return f"こんにちは神様。本日も{get_appreciate_message()}、ありがとうございます。"
 
 
-def action_report(destination, monster):
+def message():
+    return {
+        'text': 'HERO_MESSAGE',
+        'kwargs': {
+            'appreciate': get_appreciate_message()
+            }
+        }
+
+
+def action_report_lecacy(destination, monster):
     return f"昨日は{destination}へ行き、{monster}を討伐してまいりました！"
 
 
-def increase_follower(follower_increase, total_follower):
+def action_report(destination, monster):
+    return {
+        'text': 'HERO_ACTION_REPORT',
+        'kwargs': {
+            'destination': destination,
+            'monster': monster
+            }
+        }
+
+
+def increase_follower_legacy(follower_increase, total_follower):
     return f"その結果、神様を信仰させていただきたいと申す者共が新たに{follower_increase}人増えました。現在の合計は{total_follower}人です。"
 
 
-def ask_oracle(destinations, separator='と'):
+def increase_follower(follower_increase, total_follower):
+    return {
+        'text': 'HERO_INCREASE_FOLLOWER',
+        'kwargs': {
+            'follower_increase': follower_increase,
+            'total_follower': total_follower
+            }
+        }
+
+
+def ask_oracle_legacy(destinations, separator='と'):
     destinations_text = separator.join(destinations)
     ask_oracle_text = f"本日は、{destinations_text}のどちらへ向かえばよろしいでしょうか？"
     return ask_oracle_text
 
 
-def repeat_oracle(destination):
+def ask_oracle(destinations: List[str]):
+    return {
+        'text': 'HERO_ASK_ORACLE',
+        'kwargs': {
+            'destination_a': destinations[0],
+            'destination_b': destinations[1]
+            }
+        }
+
+
+def repeat_oracle_legacy(destination):
     return f'{destination}へ行くのですね！ありがとうございます！また明日、結果を報告します！'
+
+
+def repeat_oracle(destination):
+    return {
+        'text': 'HERO_REPEAT_ORACLE',
+        'kwargs': {
+            'destination': destination
+            }
+        }
