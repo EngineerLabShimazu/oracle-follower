@@ -37,6 +37,16 @@ module "fof_alexa_frontend" {
   role = var.lambda_role
 }
 
+module "fof_text_translator" {
+  env = var.env
+  source = "./modules/lambda"
+  function_name = "fof_text_translator"
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
+
 module "fof_state_translator" {
   env = var.env
   source = "./modules/lambda/"
