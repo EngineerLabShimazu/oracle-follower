@@ -13,8 +13,9 @@ def translate_text(text_key: str, **kwargs) -> str:
     :param kwargs: ex.) ** {'destination': 'マゼンタコート'}
     """
     for text_map in text_maps:
-        base_text: str = text_map.get(text_key, '')
-        return base_text.format(**kwargs)
+        base_text: str = text_map.get(text_key)
+        if base_text:
+            return base_text.format(**kwargs)
     return ''
 
 
