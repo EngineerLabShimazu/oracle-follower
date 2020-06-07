@@ -1,10 +1,9 @@
 import tutorial
 import hero
 
-text_maps = [
-    tutorial.text_map,
-    hero.text_map
-    ]
+text_map = {}
+text_map.update(tutorial.text_map)
+text_map.update(hero.text_map)
 
 
 def translate_text(text_key: str, **kwargs) -> str:
@@ -12,11 +11,12 @@ def translate_text(text_key: str, **kwargs) -> str:
     :param text_key: TUTORIAL_SEND_OUT
     :param kwargs: ex.) ** {'destination': 'マゼンタコート'}
     """
-    for text_map in text_maps:
-        base_text: str = text_map.get(text_key)
-        if base_text:
-            return base_text.format(**kwargs)
-    return ''
+    parameters = {}
+    for k, kwarg in kwargs.items():
+        parameters[k] = text_map.get(kwarg, kwarg)
+
+    base_text: str = text_map.get(text_key, '')
+    return base_text.format(**parameters)
 
 
 def main(original_texts) -> str:

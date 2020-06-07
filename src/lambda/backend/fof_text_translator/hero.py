@@ -16,5 +16,9 @@ text_map = {
     """,
     'HERO_PARDON': """
     大変申し訳ございません。わたくしの理解が及ばず、、、。もう一度お告げを頂戴したく存じます。
-    """
+    """,
+    'HERO_APPRECIATE_1': '見守ってくださって',
+    'HERO_APPRECIATE_2': 'お気にかけてくださって',
+    'HERO_APPRECIATE_3': '健やかに暮らさせていただき',
+    'HERO_APPRECIATE_4': '祈りを受け入れてくださり',
     }
