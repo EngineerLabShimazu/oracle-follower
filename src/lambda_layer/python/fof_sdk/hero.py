@@ -86,3 +86,9 @@ def repeat_oracle(destination):
             'destination': destination
             }
         }
+
+
+def pardon():
+    return {
+        'text': 'HERO_PARDON'
+        }
