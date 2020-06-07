@@ -16,9 +16,11 @@ def main(alexa_user_id, node_key, destination):
         node = nodes.send_out(destination)
     else:
         node = {
-            'original_text': {
-                'text': ''
-                }
+            'original_texts': [
+                {
+                    'text': ''
+                    }
+                ]
             }
     action.update(node)
 
