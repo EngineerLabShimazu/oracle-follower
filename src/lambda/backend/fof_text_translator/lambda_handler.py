@@ -10,11 +10,17 @@ def translate_text(text_key: str, **kwargs) -> str:
     return base_text.format(**kwargs)
 
 
+def main(original_texts) -> str:
+    response_texts = []
+    for original_text in original_texts:
+        text_key = original_text.get('text')
+        parameters = original_text.get('kwargs', {})
+        translated_text = translate_text(text_key, **parameters)
+        response_texts.append(translated_text)
+    return ''.join(response_texts)
+
+
 def lambda_handler(event, context):
-    response_text = event.get('original_text')
-    text_key = response_text.get('text')
-    parameters = response_text.get('kwargs', {})
-    response_text = translate_text(text_key, **parameters)
-    if not response_text:
-        return text_key
+    original_texts = event.get('original_texts')
+    response_text = main(original_texts)
     return response_text
