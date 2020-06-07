@@ -38,7 +38,7 @@
       "Comment": "A Wait state delays the state machine from continuing for a specified time.",
       "Type": "Task",
       "Resource": "${fof_manual_handler_arn}",
-      "Next": "StateChanger"
+      "Next": "PostProcess"
     },
     "State?": {
       "Type": "Choice",
@@ -64,16 +64,26 @@
     "Tutorial": {
       "Type": "Task",
       "Resource": "${fof_state_tutorial_arn}",
-      "Next": "StateChanger"
+      "Next": "PostProcess"
     },
     "Launch": {
       "Type": "Task",
       "Resource": "${fof_state_launch_arn}",
-      "Next": "StateChanger"
+      "Next": "PostProcess"
     },
     "Oracle": {
       "Type": "Task",
       "Resource": "${fof_state_oracle_arn}",
+      "Next": "PostProcess"
+    },
+    "PostProcess": {
+      "Type": "Pass",
+      "Next": "TextTranslator"
+    },
+    "TextTranslator": {
+      "Type": "Task",
+      "Resource": "${fof_text_translator_arn}",
+      "ResultPath": "$.response_text",
       "Next": "StateChanger"
     },
     "StateChanger": {
