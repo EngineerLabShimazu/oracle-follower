@@ -22,7 +22,10 @@ def main(alexa_user_id):
                 original_texts.append(hero.increase_follower(
                     _user.follower_increase, _user.follower_total_amount))
 
+            # 昨日のお告げによって目的地へは行って帰ってきたのでクリア
             _user.clear_destination()
+
+            # 今日の目的地ガチャ
             _user.set_event()
 
         if not _user.has_todays_oracle:
