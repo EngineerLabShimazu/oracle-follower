@@ -31,6 +31,9 @@ def main(alexa_user_id, node_key, destination):
             # tutorial が終わったら、last_launch_date を入れ、
             # skill 初回起動判定をFalseにする
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
+
+            # 目的地ガチャ
+            _user.set_event()
             dynamo_ctl.attr = _user.attr
     return action
 
