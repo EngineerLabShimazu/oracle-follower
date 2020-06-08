@@ -49,11 +49,19 @@ def increase_follower_legacy(follower_increase, total_follower):
     return f"その結果、神様を信仰させていただきたいと申す者共が新たに{follower_increase}人増えました。現在の合計は{total_follower}人です。"
 
 
-def increase_follower(follower_increase, total_follower):
+def increase_follower(follower_increase):
     return {
         'text': 'HERO_INCREASE_FOLLOWER',
         'kwargs': {
-            'follower_increase': follower_increase,
+            'follower_increase': follower_increase
+            }
+        }
+
+
+def total_followers(total_follower):
+    return {
+        'text': 'HERO_TOTAL_FOLLOWERS',
+        'kwargs': {
             'total_follower': total_follower
             }
         }
