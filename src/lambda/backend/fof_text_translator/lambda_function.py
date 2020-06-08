@@ -1,9 +1,11 @@
 import tutorial
 import hero
+import help
 
 text_map = {}
 text_map.update(tutorial.text_map)
 text_map.update(hero.text_map)
+text_map.update(help.text_map)
 
 
 def translate_text(text_key: str, **kwargs) -> str:
