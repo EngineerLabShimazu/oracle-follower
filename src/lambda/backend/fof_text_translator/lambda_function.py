@@ -1,11 +1,13 @@
 import tutorial
 import hero
 import help
+import cancel_or_stop
 
 text_map = {}
 text_map.update(tutorial.text_map)
 text_map.update(hero.text_map)
 text_map.update(help.text_map)
+text_map.update(cancel_or_stop.text_map)
 
 
 def translate_text(text_key: str, **kwargs) -> str:
