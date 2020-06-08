@@ -1,3 +1,4 @@
+import random
 from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 from fof_sdk import hero
@@ -13,6 +14,9 @@ def main(alexa_user_id, intent, destinations):
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
             # follower_summary_recommend = f'現在の合計は{_user.follower_total_amount}人です。' if _user.follower_total_amount > 0 else ''
             dynamo_ctl.attr = _user.attr
+
+            if not destinations:
+                destinations = random.sample(util.get_village_names(), 2)
             return {
                 'type': 'help',
                 'original_texts': [
