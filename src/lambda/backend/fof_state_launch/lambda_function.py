@@ -20,7 +20,9 @@ def main(alexa_user_id):
                     hero.action_report(_user.destination, _user.contents))
                 _user.increase_follower()
                 original_texts.append(hero.increase_follower(
-                    _user.follower_increase, _user.follower_total_amount))
+                    _user.follower_increase))
+                original_texts.append(hero.total_followers(
+                    _user.follower_total_amount))
 
             # 昨日のお告げによって目的地へは行って帰ってきたのでクリア
             _user.clear_destination()
