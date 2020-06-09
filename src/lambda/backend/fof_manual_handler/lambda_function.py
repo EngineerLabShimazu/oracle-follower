@@ -28,6 +28,7 @@ def main(alexa_user_id, intent, destinations):
         return {
             'type': 'cancel_or_stop',
             'image_url': util.get_image('hero/hero_anticipation'),
+            'bg_image_url': util.get_image('bg/fof-map'),
             'original_texts': [
                 {
                     'text': 'APPRECIATE_ON_STOP',
