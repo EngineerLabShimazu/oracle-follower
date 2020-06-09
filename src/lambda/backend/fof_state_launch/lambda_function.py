@@ -10,7 +10,7 @@ from fof_sdk.dynamo_ctl import DynamoCtl
 def main(alexa_user_id):
     action = {
         'type': 'launch',
-        'image_url': util.get_image('hero_stand')
+        'image_url': util.get_image('hero/hero_stand')
         }
     original_texts = [hero.message()]
 
@@ -39,7 +39,9 @@ def main(alexa_user_id):
             original_texts.append(ask_oracle_text)
             action = {'type': 'ask_oracle',
                       'set_should_end_session': False,
-                      'destinations_choice': destinations_choice}
+                      'destinations_choice': destinations_choice,
+                      'image_url': util.get_image('hero/hero_stand')
+                      }
         dynamo_ctl.attr = _user.attr
 
     action['original_texts'] = original_texts

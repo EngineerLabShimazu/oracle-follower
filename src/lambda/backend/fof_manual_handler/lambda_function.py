@@ -27,7 +27,7 @@ def main(alexa_user_id, intent, destinations):
     elif intent == 'CancelOrStopIntent':
         return {
             'type': 'cancel_or_stop',
-            'image_url': util.get_image('hero_anticipation'),
+            'image_url': util.get_image('hero/hero_anticipation'),
             'original_texts': [
                 {
                     'text': 'APPRECIATE_ON_STOP',
