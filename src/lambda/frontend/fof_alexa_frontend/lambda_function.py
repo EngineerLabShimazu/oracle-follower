@@ -10,6 +10,8 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_model import ui
+from ask_sdk_model.interfaces.display import (
+    RenderTemplateDirective, BodyTemplate7, BackButtonBehavior)
 
 import sfn_ctl
 import util
@@ -55,6 +57,16 @@ class LaunchRequestHandler(AbstractRequestHandler):
         speech_text = response["response_text"]
 
         image_url = response.get('image_url')
+
+        if util.is_support_display(handler_input):
+            handler_input.response_builder.add_directive(
+                RenderTemplateDirective(
+                    BodyTemplate7(
+                        back_button=BackButtonBehavior.VISIBLE,
+                        image=image_url, title='title sample')
+                    )
+                )
+
         if image_url:
             handler_input.response_builder.set_card(
                 ui.StandardCard(

@@ -66,19 +66,7 @@ def get_village_names():
     return [i['actual_name'] for i in villages.values()]
 
 
-def is_support_display(handler_input):
-    try:
-        if hasattr(
-                handler_input.request_envelope.context.system.device.supported_interfaces,
-                'display'):
-            return (
-                    handler_input.request_envelope.context.system.device.
-                    supported_interfaces.display is not None)
-    except:
-        return False
-
-
-def get_image(image_key: str, extension: str = '.jpg') -> str:
+def get_image(image_key: str, extension: str = '.png') -> str:
     """
     :param image_key: 関数内で小文字に変換します。ex) hero/hero_anticipation.jpg
     :param extension:

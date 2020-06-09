@@ -8,7 +8,10 @@ from fof_sdk.dynamo_ctl import DynamoCtl
 
 
 def main(alexa_user_id):
-    action = {'type': 'launch'}
+    action = {
+        'type': 'launch',
+        'image_url': util.get_image('hero_stand')
+        }
     original_texts = [hero.message()]
 
     with DynamoCtl(alexa_user_id) as dynamo_ctl:
