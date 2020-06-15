@@ -3,7 +3,7 @@
 # This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK.
 import logging
 
-from ask_sdk_core.skill_builder import SkillBuilder
+from ask_sdk.standard import StandardSkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
@@ -13,6 +13,7 @@ from ask_sdk_model import ui
 from ask_sdk_model.interfaces.display import (
     RenderTemplateDirective, BodyTemplate7, BackButtonBehavior,
     ImageInstance, Image)
+from ask_sdk_model.interfaces.connections import SendRequestDirective
 
 import sfn_ctl
 import util
@@ -203,6 +204,41 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class BuyHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name('BuyIntent')(handler_input)
+
+    def handle(self, handler_input: HandlerInput):
+        purchase_product = util.get_purchase_product(
+            handler_input, 'product_category')
+
+        if not purchase_product:
+            speech_text = 'すみません、分かりませんでした。'
+            ask = 'もう一度お願いできますか？'
+            handler_input.response_builder.speak(speech_text + ask).ask(
+                ask).set_should_end_session(False)
+            return handler_input.response_builder.response
+
+        in_skill_response = util.in_skill_product_response(handler_input)
+        if not in_skill_response:
+            raise ValueError('購入できる商品を見つけられませんでした。')
+
+        skill_product = util.get_skill_product(
+            in_skill_response, purchase_product.id)
+
+        return handler_input.response_builder.add_directive(
+            SendRequestDirective(
+                name='Buy',
+                payload={
+                    'InSkillProduct': {
+                        'productId': skill_product.product_id
+                        }
+                    },
+                token='correlationToken'
+                )
+            ).response
+
+
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """Handler for Session End."""
 
@@ -259,12 +295,15 @@ class ErrorHandler(AbstractExceptionHandler):
 # This handler acts as the entry point for your skill, routing all request and response
 # payloads to the handlers above. Make sure any new handlers or interceptors you've
 # defined are included below. The order matters - they're processed top to bottom.
-sb = SkillBuilder()
+sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
+
+sb.add_request_handler(BuyHandler())
+
 sb.add_request_handler(
     IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
 
