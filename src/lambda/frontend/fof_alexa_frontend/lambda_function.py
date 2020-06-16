@@ -14,6 +14,7 @@ from ask_sdk_model.interfaces.display import (
     RenderTemplateDirective, BodyTemplate7, BackButtonBehavior,
     ImageInstance, Image)
 from ask_sdk_model.interfaces.connections import SendRequestDirective
+from ask_sdk_model.interfaces.monetization.v1 import PurchaseResult
 
 import sfn_ctl
 import util
@@ -239,6 +240,50 @@ class BuyHandler(AbstractRequestHandler):
             ).response
 
 
+class BuyResponseHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return (is_request_type('Connections.Response')(handler_input)
+                and handler_input.request_envelope.request.name == 'Buy')
+
+    def handle(self, handler_input: HandlerInput):
+        in_skill_response = util.in_skill_product_response(handler_input)
+        if not in_skill_response:
+            return handler_input.response_builder.speak(
+                '購入処理でエラーが発生しました。'
+                'もう一度試すか、カスタマーサービスにご連絡ください。'
+                ).response
+        purchase_result = handler_input.request_envelope.request.payload.get(
+            'purchaseResult')
+        should_end_session = False
+        speech = '購入フローにはいりませんでした。'
+        if purchase_result == PurchaseResult.ACCEPTED.value:
+            # ユーザーは製品の購入オファーを受け入れました
+            fof_sfn_input = {
+                'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+                'IsPreResponse': True,
+                'intent': 'Connections.Response',
+                'env_type': util.get_env_type(handler_input)
+                }
+            response = sfn_ctl.execute(fof_sfn_input)
+            speech = response["response_text"]
+        elif purchase_result == PurchaseResult.DECLINED.value:
+            # ユーザーは製品の購入オファーを拒否しました
+            speech = 'ユーザーは製品の購入オファーを拒否しました'
+        elif purchase_result == PurchaseResult.ERROR.value:
+            # 内部エラーが発生しました
+            speech = '内部エラーが発生しました'
+            should_end_session = True
+        elif purchase_result == PurchaseResult.ALREADY_PURCHASED.value:
+            # ユーザーはすでに製品を購入しています
+            speech = 'ユーザーはすでに製品を購入しています'
+        elif purchase_result == PurchaseResult.NOT_ENTITLED.value:
+            # ユーザーは資格のない製品をキャンセル/返品しようとしました
+            speech = 'ユーザーは資格のない製品をキャンセルまたは返品しようとしました'
+        handler_input.response_builder.speak(speech).ask(
+            speech).set_should_end_session(should_end_session)
+        return handler_input.response_builder.response
+
+
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """Handler for Session End."""
 
@@ -303,6 +348,7 @@ sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 
 sb.add_request_handler(BuyHandler())
+sb.add_request_handler(BuyResponseHandler())
 
 sb.add_request_handler(
     IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers

@@ -39,6 +39,15 @@ def main(alexa_user_id, intent, destinations):
                 {'text': 'PLEASE_AGAIN_ON_STOP'}
                 ]
             }
+    elif intent == 'Connections.Response':
+        return {
+            'type': 'Connections.Response',
+            'original_texts': [
+                {
+                    'text': 'BUY_COMPLETE'
+                    }
+                ]
+            }
     return action
 
 
