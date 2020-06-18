@@ -284,6 +284,24 @@ class BuyResponseHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class WhatCanIBuyHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name('WhatCanIBuyIntent')(handler_input)
+
+    def handle(self, handler_input: HandlerInput):
+        in_skill_response = util.in_skill_product_response(handler_input)
+        if not in_skill_response:
+            handler_input.response_builder.set_should_end_session(True)
+            return handler_input.response_builder.speak('現在購入できる商品がございません。')
+
+        purchasable_products = util.get_speakable_products(in_skill_response)
+        speech = f'現在購入可能な商品は、{purchasable_products}です。' \
+                 f'詳しく知りたい場合には、ジェムについて教えて、のように行ってください。'
+
+        handler_input.response_builder.speak(speech).ask(speech)
+        return handler_input.response_builder.response
+
+
 class SessionEndedRequestHandler(AbstractRequestHandler):
     """Handler for Session End."""
 
@@ -349,6 +367,7 @@ sb.add_request_handler(SessionEndedRequestHandler())
 
 sb.add_request_handler(BuyHandler())
 sb.add_request_handler(BuyResponseHandler())
+sb.add_request_handler(WhatCanIBuyHandler())
 
 sb.add_request_handler(
     IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
