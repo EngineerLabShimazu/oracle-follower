@@ -92,7 +92,8 @@ def get_purchase_product(handler_input: HandlerInput, slot_name: str):
 
 
 def get_skill_product(in_skill_response,
-                      purchase_product_id) -> InSkillProduct:
+                      purchase_product_id=None,
+                      product_id=None) -> InSkillProduct:
     """
     :return: InSkillProduct attributes are {
         "active_entitlement_count": int,
@@ -108,5 +109,8 @@ def get_skill_product(in_skill_response,
         }
     """
     for skill_product in in_skill_response.in_skill_products:
-        if skill_product.reference_name == purchase_product_id:
+        if purchase_product_id and \
+                skill_product.reference_name == purchase_product_id:
+            return skill_product
+        if product_id and skill_product.product_id == product_id:
             return skill_product

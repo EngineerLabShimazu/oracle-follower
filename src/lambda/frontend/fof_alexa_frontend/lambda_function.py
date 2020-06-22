@@ -263,7 +263,8 @@ class BuyResponseHandler(AbstractRequestHandler):
             product_id = handler_input.request_envelope.request.payload.get(
                 'productId')
 
-            product = util.get_skill_product(in_skill_response, product_id)
+            product = util.get_skill_product(
+                in_skill_response, product_id=product_id)
             fof_sfn_input = {
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
                 'IsPreResponse': True,
