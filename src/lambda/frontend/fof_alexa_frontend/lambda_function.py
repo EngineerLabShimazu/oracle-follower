@@ -296,7 +296,7 @@ class WhatCanIBuyHandler(AbstractRequestHandler):
 
         purchasable_products = util.get_speakable_products(in_skill_response)
         speech = f'現在購入可能な商品は、{purchasable_products}です。' \
-                 f'詳しく知りたい場合には、ジェムについて教えて、のように行ってください。'
+                 f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
 
         handler_input.response_builder.speak(speech).ask(speech)
         return handler_input.response_builder.response
@@ -319,10 +319,18 @@ class ProductDetailHandler(AbstractRequestHandler):
         skill_product = util.get_skill_product(
             in_skill_response, purchase_product.id)
 
-        ask = f'購入するには{skill_product.name}を買う、と言ってください。'
-        handler_input.response_builder.speak(skill_product.summary + ask)
-        handler_input.response_builder.ask(ask)
-        return handler_input.response_builder.response
+        handler_input.response_builder.speak(skill_product.summary)
+        return handler_input.response_builder.add_directive(
+            SendRequestDirective(
+                name='Buy',
+                payload={
+                    'InSkillProduct': {
+                        'productId': skill_product.product_id
+                        }
+                    },
+                token='correlationToken'
+                )
+            ).response
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
