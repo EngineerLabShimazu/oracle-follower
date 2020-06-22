@@ -40,11 +40,20 @@ def main(alexa_user_id, intent, destinations):
                 ]
             }
     elif intent == 'Connections.Response':
+        with DynamoCtl(alexa_user_id) as dynamo_ctl:
+            _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
         return {
             'type': 'Connections.Response',
             'original_texts': [
                 {
-                    'text': 'BUY_COMPLETE'
+                    'text': 'ADD_GEM',
+                    'kwargs': {
+                        'paid_gem': _user.paid_gem,
+                        'free_gem': _user.free_gem
+                        }
+                    },
+                {
+                    'text': 'ASK_GO_TO_GANESHA_SHOP'
                     }
                 ]
             }
