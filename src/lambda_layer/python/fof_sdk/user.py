@@ -22,6 +22,13 @@ class User:
     def attr(self) -> dict:
         _attr = dict(self.__dict__)
         _attr['last_launch_date'] = iso_formatted_date_today
+
+        # DBのcolumn nameの先頭に _ が付かないようにconvert
+        _attr['paid_gem'] = self._paid_gem
+        _attr['free_gem'] = self._free_gem
+        _attr.pop('_paid_gem')
+        _attr.pop('_free_gem')
+
         return _attr
 
     @property
