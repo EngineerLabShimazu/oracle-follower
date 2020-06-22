@@ -14,7 +14,9 @@ class User:
         self.last_launch_date: str = attr.get('last_launch_date', '')
         self.follower_increase: int = attr.get('follower_increase', 0)
         self.destination: str = attr.get('destination', '')
-        self.possible_events: attr = attr.get('possible_events', '')
+        self.possible_events: str = attr.get('possible_events', '')
+        self.paid_gem: int = attr.get('paid_gem', 0)
+        self.free_gem: int = attr.get('free_gem', 0)
 
     @property
     def attr(self) -> dict:
