@@ -40,36 +40,49 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
                 ]
             }
     elif intent == 'Connections.Response':
-        ret = {
+        if not product_reference_name:
+            return {
+                'type': 'Connections.Response',
+                'original_texts': [
+                    {
+                        'text': 'ASK_GO_TO_GANESHA_SHOP'
+                        }
+                    ]
+                }
+        with DynamoCtl(alexa_user_id) as dynamo_ctl:
+            _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
+            added = _user.add_gem(product_reference_name)
+            if not added:
+                return {
+                    'type': 'Connections.Response',
+                    'original_texts': [
+                        {
+                            'text': 'ASK_GO_TO_GANESHA_SHOP'
+                            }
+                        ]
+                    }
+        return {
             'type': 'Connections.Response',
             'original_texts': [
+                {
+                    'text': 'ADD_GEM',
+                    'kwargs': {
+                        'paid_gem': added['paid_gem'],
+                        'free_gem': added['free_gem']
+                        }
+                    },
+                {
+                    'text': 'CURRENT_GEM',
+                    'kwargs': {
+                        'paid_gem': _user.paid_gem,
+                        'free_gem': _user.free_gem
+                        }
+                    },
                 {
                     'text': 'ASK_GO_TO_GANESHA_SHOP'
                     }
                 ]
             }
-        if not product_reference_name:
-            return ret
-        with DynamoCtl(alexa_user_id) as dynamo_ctl:
-            _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
-            added = _user.add_gem(product_reference_name)
-            if not added:
-                return ret
-            ret['original_texts'].append({
-                'text': 'ADD_GEM',
-                'kwargs': {
-                    'paid_gem': added['paid_gem'],
-                    'free_gem': added['free_gem']
-                    }
-                })
-            ret['original_texts'].append({
-                'text': 'CURRENT_GEM',
-                'kwargs': {
-                    'paid_gem': _user.paid_gem,
-                    'free_gem': _user.free_gem
-                    }
-                })
-        return ret
     return action
 
 
