@@ -48,24 +48,27 @@ def main(alexa_user_id, intent, destinations, product_id):
                     }
                 ]
             }
+        if not product_id:
+            return ret
         with DynamoCtl(alexa_user_id) as dynamo_ctl:
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
-            if product_id:
-                added = _user.add_gem(product_id)
-                ret['original_texts'].append({
-                    'text': 'ADD_GEM',
-                    'kwargs': {
-                        'paid_gem': added['paid_gem'],
-                        'free_gem': added['free_gem']
-                        }
-                    })
-                ret['original_texts'].append({
-                    'text': 'CURRENT_GEM',
-                    'kwargs': {
-                        'paid_gem': _user.paid_gem,
-                        'free_gem': _user.free_gem
-                        }
-                    })
+            added = _user.add_gem(product_id)
+            if not added:
+                return ret
+            ret['original_texts'].append({
+                'text': 'ADD_GEM',
+                'kwargs': {
+                    'paid_gem': added['paid_gem'],
+                    'free_gem': added['free_gem']
+                    }
+                })
+            ret['original_texts'].append({
+                'text': 'CURRENT_GEM',
+                'kwargs': {
+                    'paid_gem': _user.paid_gem,
+                    'free_gem': _user.free_gem
+                    }
+                })
         return ret
     return action
 
