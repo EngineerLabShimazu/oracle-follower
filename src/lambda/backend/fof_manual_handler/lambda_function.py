@@ -61,6 +61,7 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
                             }
                         ]
                     }
+            dynamo_ctl.attr = _user.attr
         return {
             'type': 'Connections.Response',
             'original_texts': [
