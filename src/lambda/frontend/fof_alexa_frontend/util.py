@@ -59,7 +59,7 @@ def get_purchasable_products(in_skill_response) -> list:
 
 def get_speakable_products(in_skill_response, products=None) -> str:
     if not products:
-        products = get_purchasable_products(in_skill_response)
+        products = in_skill_response.in_skill_products
     product_names = [product.name for product in products]
     if len(product_names) > 1:
         # If more than one, add and 'and' in the end
