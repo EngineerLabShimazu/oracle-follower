@@ -5,7 +5,7 @@ from fof_sdk import hero
 from fof_sdk import util
 
 
-def main(alexa_user_id, intent, destinations, product_id):
+def main(alexa_user_id, intent, destinations, product_reference_name):
     action = {
         'type': 'end'
         }
@@ -48,11 +48,11 @@ def main(alexa_user_id, intent, destinations, product_id):
                     }
                 ]
             }
-        if not product_id:
+        if not product_reference_name:
             return ret
         with DynamoCtl(alexa_user_id) as dynamo_ctl:
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
-            added = _user.add_gem(product_id)
+            added = _user.add_gem(product_reference_name)
             if not added:
                 return ret
             ret['original_texts'].append({
@@ -77,6 +77,7 @@ def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     intent = event['intent']
     destinations = event.get('destinations_choice')
-    product_id = event.get('product_id')
-    response = main(alexa_user_id, intent, destinations, product_id)
+    product_reference_name = event.get('product_reference_name')
+    response = main(alexa_user_id, intent, destinations,
+                    product_reference_name)
     return response

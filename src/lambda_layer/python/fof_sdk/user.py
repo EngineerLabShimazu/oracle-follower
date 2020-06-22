@@ -62,14 +62,14 @@ class User:
         if self.is_first_launch_today:
             self.destination = ''
 
-    def add_gem(self, product_id):
-        if product_id == 'gem_1000':
+    def add_gem(self, product_reference_name):
+        if product_reference_name == 'gem_1000':
             _paid_gem = 1000
             _free_gem = 300
-        elif product_id == 'gem_500':
+        elif product_reference_name == 'gem_500':
             _paid_gem = 500
             _free_gem = 300
-        elif product_id == 'gem_300':
+        elif product_reference_name == 'gem_300':
             _paid_gem = 300
             _free_gem = 0
         else:

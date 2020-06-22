@@ -258,12 +258,17 @@ class BuyResponseHandler(AbstractRequestHandler):
         speech = '購入フローにはいりませんでした。'
         if purchase_result == PurchaseResult.ACCEPTED.value:
             # ユーザーは製品の購入オファーを受け入れました
+
+            # ex) amzn1.adg.product.XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+            product_id = handler_input.request_envelope.request.payload.get(
+                'productId')
+
+            product = util.get_skill_product(in_skill_response, product_id)
             fof_sfn_input = {
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
                 'IsPreResponse': True,
                 'intent': 'Connections.Response',
-                'product_id': handler_input.request_envelope.request.payload.get(
-                    'productId'),
+                'product_reference_name': product.reference_name,
                 'env_type': util.get_env_type(handler_input)
                 }
             response = sfn_ctl.execute(fof_sfn_input)
