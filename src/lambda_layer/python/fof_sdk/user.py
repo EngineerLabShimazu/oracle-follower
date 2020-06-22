@@ -74,8 +74,8 @@ class User:
             _free_gem = 0
         else:
             return
-        self._paid_gem = _paid_gem
-        self._free_gem = _free_gem
+        self._paid_gem += _paid_gem
+        self._free_gem += _free_gem
         return {'paid_gem': _paid_gem, 'free_gem': _free_gem}
 
     @property
