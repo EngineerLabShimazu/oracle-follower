@@ -15,8 +15,8 @@ class User:
         self.follower_increase: int = attr.get('follower_increase', 0)
         self.destination: str = attr.get('destination', '')
         self.possible_events: str = attr.get('possible_events', '')
-        self.paid_gem: int = attr.get('paid_gem', 0)
-        self.free_gem: int = attr.get('free_gem', 0)
+        self._paid_gem: int = attr.get('paid_gem', 0)
+        self._free_gem: int = attr.get('free_gem', 0)
 
     @property
     def attr(self) -> dict:
@@ -61,6 +61,30 @@ class User:
     def clear_destination(self):
         if self.is_first_launch_today:
             self.destination = ''
+
+    def add_gem(self, product_id):
+        if product_id == 'gem_1000':
+            _paid_gem = 1000
+            _free_gem = 300
+        elif product_id == 'gem_500':
+            _paid_gem = 500
+            _free_gem = 300
+        elif product_id == 'gem_300':
+            _paid_gem = 300
+            _free_gem = 0
+        else:
+            return
+        self._paid_gem = _paid_gem
+        self._free_gem = _free_gem
+        return {'paid_gem': _paid_gem, 'free_gem': _free_gem}
+
+    @property
+    def paid_gem(self):
+        return self._paid_gem
+
+    @property
+    def free_gem(self):
+        return self._free_gem
 
 
 def serialize_attribute(attributes):

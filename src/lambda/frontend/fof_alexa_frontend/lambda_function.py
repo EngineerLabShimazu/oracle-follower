@@ -262,6 +262,8 @@ class BuyResponseHandler(AbstractRequestHandler):
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
                 'IsPreResponse': True,
                 'intent': 'Connections.Response',
+                'product_id': handler_input.request_envelope.request.payload.get(
+                    'productId'),
                 'env_type': util.get_env_type(handler_input)
                 }
             response = sfn_ctl.execute(fof_sfn_input)

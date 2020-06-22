@@ -5,7 +5,7 @@ from fof_sdk import hero
 from fof_sdk import util
 
 
-def main(alexa_user_id, intent, destinations):
+def main(alexa_user_id, intent, destinations, product_id):
     action = {
         'type': 'end'
         }
@@ -40,23 +40,33 @@ def main(alexa_user_id, intent, destinations):
                 ]
             }
     elif intent == 'Connections.Response':
-        with DynamoCtl(alexa_user_id) as dynamo_ctl:
-            _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
-        return {
+        ret = {
             'type': 'Connections.Response',
             'original_texts': [
-                {
-                    'text': 'ADD_GEM',
-                    'kwargs': {
-                        'paid_gem': _user.paid_gem,
-                        'free_gem': _user.free_gem
-                        }
-                    },
                 {
                     'text': 'ASK_GO_TO_GANESHA_SHOP'
                     }
                 ]
             }
+        with DynamoCtl(alexa_user_id) as dynamo_ctl:
+            _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
+            if product_id:
+                added = _user.add_gem(product_id)
+                ret['original_texts'].append({
+                    'text': 'ADD_GEM',
+                    'kwargs': {
+                        'paid_gem': added['paid_gem'],
+                        'free_gem': added['free_gem']
+                        }
+                    })
+                ret['original_texts'].append({
+                    'text': 'CURRENT_GEM',
+                    'kwargs': {
+                        'paid_gem': _user.paid_gem,
+                        'free_gem': _user.free_gem
+                        }
+                    })
+        return ret
     return action
 
 
@@ -64,5 +74,6 @@ def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     intent = event['intent']
     destinations = event.get('destinations_choice')
-    response = main(alexa_user_id, intent, destinations)
+    product_id = event.get('product_id')
+    response = main(alexa_user_id, intent, destinations, product_id)
     return response
