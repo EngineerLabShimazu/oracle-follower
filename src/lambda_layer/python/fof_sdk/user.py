@@ -69,21 +69,39 @@ class User:
         if self.is_first_launch_today:
             self.destination = ''
 
-    def add_gem(self, product_reference_name):
+    def buy_gem(self, product_reference_name):
         if product_reference_name == 'gem_1000':
             _paid_gem = 1000
             _free_gem = 300
         elif product_reference_name == 'gem_500':
             _paid_gem = 500
-            _free_gem = 300
+            _free_gem = 100
         elif product_reference_name == 'gem_300':
             _paid_gem = 300
             _free_gem = 0
         else:
             return
-        self._paid_gem += _paid_gem
-        self._free_gem += _free_gem
+        self.add_gem(_free_gem, _paid_gem)
         return {'paid_gem': _paid_gem, 'free_gem': _free_gem}
+
+    def add_event_gem(self, event_id):
+        """
+        TODO こんな感じで、イベントごとの free_gem 追加 method も作りたい
+        :param event_id:
+        :return:
+        """
+        gem_events = {
+            'tutorial_clear': {
+                'free_gem': 100
+                }
+            }
+        gem_event = gem_events[event_id]
+        self.add_gem(gem_event['free_gem'])
+
+    def add_gem(self, free_gem, paid_gem=0):
+        self._free_gem += free_gem
+        if paid_gem > 0:
+            self._paid_gem += paid_gem
 
     @property
     def paid_gem(self):

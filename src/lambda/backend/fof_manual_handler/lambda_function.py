@@ -51,7 +51,7 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
                 }
         with DynamoCtl(alexa_user_id) as dynamo_ctl:
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
-            added = _user.add_gem(product_reference_name)
+            added = _user.buy_gem(product_reference_name)
             if not added:
                 return {
                     'type': 'Connections.Response',
