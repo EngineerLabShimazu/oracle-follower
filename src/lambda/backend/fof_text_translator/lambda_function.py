@@ -3,6 +3,7 @@ import hero
 import help
 import cancel_or_stop
 import buy_response
+import ganesha_shop
 
 text_map = {}
 text_map.update(tutorial.text_map)
@@ -10,6 +11,7 @@ text_map.update(hero.text_map)
 text_map.update(help.text_map)
 text_map.update(cancel_or_stop.text_map)
 text_map.update(buy_response.text_map)
+text_map.update(ganesha_shop.text_map)
 
 
 def translate_text(text_key: str, **kwargs) -> str:

@@ -57,7 +57,13 @@
           "Variable": "$.state",
           "StringEquals": "Tutorial",
           "Next": "Tutorial"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "GaneshaShop",
+          "Next": "GaneshaShop"
         }
+
       ],
       "Default": "Launch"
     },
@@ -74,6 +80,11 @@
     "Oracle": {
       "Type": "Task",
       "Resource": "${fof_state_oracle_arn}",
+      "Next": "PostProcess"
+    },
+    "GaneshaShop": {
+      "Type": "Task",
+      "Resource": "${fof_state_ganesha_shop_arn}",
       "Next": "PostProcess"
     },
     "PostProcess": {
