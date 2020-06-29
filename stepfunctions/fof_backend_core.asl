@@ -60,8 +60,8 @@
         },
         {
           "Variable": "$.state",
-          "StringEquals": "GaneshaShop",
-          "Next": "GaneshaShop"
+          "StringEquals": "Ganesha",
+          "Next": "Ganesha"
         }
 
       ],
@@ -82,7 +82,7 @@
       "Resource": "${fof_state_oracle_arn}",
       "Next": "PostProcess"
     },
-    "GaneshaShop": {
+    "Ganesha": {
       "Type": "Task",
       "Resource": "${fof_state_ganesha_shop_arn}",
       "Next": "PostProcess"
