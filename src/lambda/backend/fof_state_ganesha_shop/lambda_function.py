@@ -1,4 +1,4 @@
-def main():
+def main(alexa_user_id):
     action = {'type': 'end',
               "original_texts": [
                   {
