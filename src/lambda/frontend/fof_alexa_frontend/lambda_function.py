@@ -44,7 +44,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
             'state': 'launch',
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
-            }
+        }
         response = sfn_ctl.execute(fof_sfn_input)
         if response.get('destinations_choice'):
             handler_input.attributes_manager.session_attributes[
@@ -74,8 +74,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
                             image=img_obj,
                             background_image=bg_img_obj,
                             title=image_title)
-                        )
                     )
+                )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
@@ -84,9 +84,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
-                            )
                         )
                     )
+                )
 
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
@@ -111,7 +111,7 @@ class DestinationIntentHandler(AbstractRequestHandler):
             'destination': village,
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input),
-            }
+        }
 
         node = handler_input.attributes_manager.session_attributes.get(
             'node')
@@ -134,14 +134,15 @@ class DestinationIntentHandler(AbstractRequestHandler):
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
-                        )
                     )
                 )
+            )
 
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
             response.get('set_should_end_session', True))
         return handler_input.response_builder.response
+
 
 class GaneshaShopIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
@@ -152,9 +153,9 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'GaneshaShop',
+            'state': 'Ganesha',
             'env_type': util.get_env_type(handler_input),
-            }
+        }
 
         # node = handler_input.attributes_manager.session_attributes.get(
         #     'node')
@@ -177,14 +178,15 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
-                        )
                     )
                 )
+            )
 
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(
             response.get('set_should_end_session', True))
         return handler_input.response_builder.response
+
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -225,7 +227,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
             'IsPreResponse': True,
             'intent': 'CancelOrStopIntent',
             'env_type': util.get_env_type(handler_input)
-            }
+        }
         response = sfn_ctl.execute(fof_sfn_input)
         handler_input.response_builder.speak(response["response_text"])
 
@@ -238,9 +240,9 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
-                        )
                     )
                 )
+            )
 
         handler_input.response_builder.set_should_end_session(True)
 
@@ -275,11 +277,11 @@ class BuyHandler(AbstractRequestHandler):
                 payload={
                     'InSkillProduct': {
                         'productId': skill_product.product_id
-                        }
-                    },
+                    }
+                },
                 token='correlationToken'
-                )
-            ).response
+            )
+        ).response
 
 
 class BuyResponseHandler(AbstractRequestHandler):
@@ -293,7 +295,7 @@ class BuyResponseHandler(AbstractRequestHandler):
             return handler_input.response_builder.speak(
                 '購入処理でエラーが発生しました。'
                 'もう一度試すか、カスタマーサービスにご連絡ください。'
-                ).response
+            ).response
         purchase_result = handler_input.request_envelope.request.payload.get(
             'purchaseResult')
         should_end_session = False
@@ -313,7 +315,7 @@ class BuyResponseHandler(AbstractRequestHandler):
                 'intent': 'Connections.Response',
                 'product_reference_name': product.reference_name,
                 'env_type': util.get_env_type(handler_input)
-                }
+            }
             response = sfn_ctl.execute(fof_sfn_input)
             speech = response["response_text"]
         elif purchase_result == PurchaseResult.DECLINED.value:
@@ -346,7 +348,7 @@ class WhatCanIBuyHandler(AbstractRequestHandler):
 
         purchasable_products = util.get_speakable_products(in_skill_response)
         speech = f'現在購入可能な商品は、{purchasable_products}です。' \
-                 f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
+            f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
 
         handler_input.response_builder.speak(speech).ask(speech)
         return handler_input.response_builder.response
@@ -376,11 +378,11 @@ class ProductDetailHandler(AbstractRequestHandler):
                 payload={
                     'InSkillProduct': {
                         'productId': skill_product.product_id
-                        }
-                    },
+                    }
+                },
                 token='correlationToken'
-                )
-            ).response
+            )
+        ).response
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
