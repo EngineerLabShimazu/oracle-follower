@@ -9,5 +9,6 @@ resource "aws_sfn_state_machine" "fof_backend_core" {
     fof_state_changer_arn = module.fof_state_changer.arn
     fof_state_tutorial_arn = module.fof_state_tutorial.arn
     fof_text_translator_arn = module.fof_text_translator.arn
+    fof_state_ganesha_shop_arn = module.fof_state_ganesha_shop.arn
   })
 }

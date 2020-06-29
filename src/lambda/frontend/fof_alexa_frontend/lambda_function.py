@@ -143,6 +143,48 @@ class DestinationIntentHandler(AbstractRequestHandler):
             response.get('set_should_end_session', True))
         return handler_input.response_builder.response
 
+class GaneshaShopIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
+        return is_intent_name("GaneshaShopIntent")(handler_input)
+
+    def handle(self,
+               handler_input):  # type: (HandlerInput) -> Union[None, Response]
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': 'GaneshaShop',
+            'env_type': util.get_env_type(handler_input),
+            }
+
+        # node = handler_input.attributes_manager.session_attributes.get(
+        #     'node')
+        # if node:
+        #     fof_sfn_input['node'] = node
+        #
+        response = sfn_ctl.execute(fof_sfn_input)
+        speech_text = response["response_text"]
+        #
+        # if response.get('node'):
+        #     handler_input.attributes_manager.session_attributes['node'] = \
+        #         response['node']
+        #
+        image_url = response.get('image_url')
+        if image_url:
+            handler_input.response_builder.set_card(
+                ui.StandardCard(
+                    title='title sample',
+                    text='text sample',
+                    image=ui.Image(
+                        small_image_url=image_url,
+                        large_image_url=image_url
+                        )
+                    )
+                )
+
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text).set_should_end_session(
+            response.get('set_should_end_session', True))
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -400,6 +442,7 @@ class ErrorHandler(AbstractExceptionHandler):
 sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
+sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
