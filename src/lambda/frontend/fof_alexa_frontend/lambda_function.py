@@ -190,6 +190,57 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class TurnTimesIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
+        return is_intent_name("GaneshaShopIntent")(handler_input)
+
+    def valid_turn_times(self, turn_times: int) -> bool:
+        if turn_times in [1, 10]:
+            return True
+        return False
+
+    def handle(self,
+               handler_input):  # type: (HandlerInput) -> Union[None, Response]
+        turn_times = handler_input.request_envelope.request.intent.slots[
+            'turn_times'].value
+        if not self.valid_turn_times(turn_times):
+            speech_text = '一回か十回で！'
+            handler_input.response_builder.speak(speech_text).ask(
+                speech_text)
+            return handler_input.response_builder.response
+
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': 'Ganesha',
+            'turn_times': turn_times,
+            'env_type': util.get_env_type(handler_input),
+        }
+
+        response = sfn_ctl.execute(fof_sfn_input)
+        handler_input.attributes_manager.session_attributes['state'] = \
+            response['state']
+        speech_text = response["response_text"]
+
+        image_url = response.get('image_url')
+        if image_url:
+            handler_input.response_builder.set_card(
+                ui.StandardCard(
+                    title='title sample',
+                    text='text sample',
+                    image=ui.Image(
+                        small_image_url=image_url,
+                        large_image_url=image_url
+                    )
+                )
+            )
+
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text).set_should_end_session(
+            response.get('set_should_end_session', True))
+        return handler_input.response_builder.response
+
+
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -447,6 +498,7 @@ sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
+sb.add_request_handler(TurnTimesIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
