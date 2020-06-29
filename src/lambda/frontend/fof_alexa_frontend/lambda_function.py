@@ -163,6 +163,8 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         #     fof_sfn_input['node'] = node
         #
         response = sfn_ctl.execute(fof_sfn_input)
+        handler_input.attributes_manager.session_attributes['state'] = \
+            response['state']
         speech_text = response["response_text"]
         #
         # if response.get('node'):

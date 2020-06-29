@@ -1,5 +1,5 @@
 def main(alexa_user_id):
-    action = {'type': 'end',
+    action = {'type': 'ganesha',
               "original_texts": [
                   {
                       'text': 'WELCOME_TO_GANESHA_SHOP'

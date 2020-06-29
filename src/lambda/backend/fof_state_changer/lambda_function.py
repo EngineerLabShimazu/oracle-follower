@@ -8,6 +8,8 @@ def main(action):
         return 'end'
     elif action['type'] == 'help':
         return 'oracle'
+    elif action['type'] == 'ganesha':
+        return 'ganesha'
     return 'そんなステートないですよw'
 
 
