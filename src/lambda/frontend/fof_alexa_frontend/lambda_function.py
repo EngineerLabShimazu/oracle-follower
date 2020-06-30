@@ -187,14 +187,13 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
             )
 
         handler_input.response_builder.speak(speech_text).ask(
-            speech_text).set_should_end_session(
-            response.get('set_should_end_session', True))
+            speech_text)
         return handler_input.response_builder.response
 
 
 class TurnTimesIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
-        return is_intent_name("GaneshaShopIntent")(handler_input)
+        return is_intent_name("TurnTimesIntent")(handler_input)
 
     def valid_turn_times(self, turn_times: int) -> bool:
         if turn_times in [1, 10]:
@@ -219,10 +218,19 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input),
         }
 
+        node = handler_input.attributes_manager.session_attributes.get(
+            'node')
+        if node:
+            fof_sfn_input['node'] = node
+
         response = sfn_ctl.execute(fof_sfn_input)
         handler_input.attributes_manager.session_attributes['state'] = \
             response['state']
         speech_text = response["response_text"]
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
 
         image_url = response.get('image_url')
         if image_url:
@@ -238,8 +246,7 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
             )
 
         handler_input.response_builder.speak(speech_text).ask(
-            speech_text).set_should_end_session(
-            response.get('set_should_end_session', True))
+            speech_text)
         return handler_input.response_builder.response
 
 
@@ -256,12 +263,23 @@ class YesIntentHandler(AbstractRequestHandler):
             'turn_times', 0)
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-            'IsPreResponse': True,
+            'IsPreResponse': False,
             'state': 'Ganesha',
             'turn_times': turn_times,
             'env_type': util.get_env_type(handler_input)
         }
+
+        node = handler_input.attributes_manager.session_attributes.get(
+            'node')
+        if node:
+            fof_sfn_input['node'] = node
+
         response = sfn_ctl.execute(fof_sfn_input)
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
+
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
@@ -525,6 +543,7 @@ sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(TurnTimesIntentHandler())
+sb.add_request_handler(YesIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
