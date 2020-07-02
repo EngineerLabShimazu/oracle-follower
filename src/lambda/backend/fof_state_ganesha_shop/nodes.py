@@ -1,4 +1,4 @@
-def welcome():
+def launch():
     return {
         'original_texts': [
             {
@@ -49,5 +49,6 @@ def end():
                 'text': 'END_SHOP',
             }
         ],
-        'type': 'launch'
+        'type': 'launch',
+        'set_should_end_session': True
     }
