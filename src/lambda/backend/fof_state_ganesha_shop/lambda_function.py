@@ -35,6 +35,7 @@ def main(alexa_user_id, turn_times, node_key):
 
     if node_key == 'welcome':
         node = nodes.welcome()
+
     elif node_key == 'recommend':
         node = nodes.recommend()
     elif node_key == 'gatcha':
@@ -50,7 +51,9 @@ def main(alexa_user_id, turn_times, node_key):
             ]
         }
 
-    node['node'] = change_node(node_key, bool(turn_times))
+    # nodeのturn_timesを優先する。
+    accept = bool(node.get('turn_times', turn_times))
+    node['node'] = change_node(node_key, accept)
 
     action.update(node)
 
