@@ -18,7 +18,8 @@ def recommend():
             {
                 'text': 'RECOMMEND_GATCHA',
             }
-        ]
+        ],
+        'turn_times': 1
     }
 
 
@@ -39,6 +40,7 @@ def gatcha(turn_times):
                 }
             }
         ],
+        'turn_times': turn_times
     }
 
 
