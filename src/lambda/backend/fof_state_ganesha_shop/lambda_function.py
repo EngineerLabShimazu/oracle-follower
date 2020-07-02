@@ -22,7 +22,9 @@ def gatcha(turn_times):
 
 
 def change_node(node_key, accept):
-    if node_key == 'welcome':
+    if node_key == 'launch':
+        return 'welcome'
+    elif node_key == 'welcome':
         return 'gatcha' if accept else 'recommend'
     elif node_key == 'recommend':
         return 'gatcha' if accept else 'end'
@@ -30,18 +32,30 @@ def change_node(node_key, accept):
         return 'gatcha' if accept else 'end'
 
 
+def should_gatcha(turn_times):
+    return bool(turn_times)
+
+
 def main(alexa_user_id, turn_times, node_key):
     action = {'type': 'ganesha'}
 
-    if node_key == 'welcome':
-        node = nodes.welcome()
-
+    if node_key == 'launch':
+        node = nodes.launch()
+    elif node_key == 'welcome':
+        if should_gatcha(turn_times):
+            node = nodes.gatcha(turn_times)
+        else:
+            node = nodes.recommend()
     elif node_key == 'recommend':
-        node = nodes.recommend()
+        if should_gatcha(turn_times):
+            node = nodes.gatcha(turn_times)
+        else:
+            node = nodes.end()
     elif node_key == 'gatcha':
-        node = nodes.gatcha(turn_times)
-    elif node_key == 'end':
-        node = nodes.end()
+        if should_gatcha(turn_times):
+            node = nodes.gatcha(turn_times)
+        else:
+            node = nodes.end()
     else:
         node = {
             'original_texts': [
@@ -63,6 +77,6 @@ def main(alexa_user_id, turn_times, node_key):
 def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     turn_times = event.get('turn_times')
-    node_key = event.get('node', 'welcome')
+    node_key = event.get('node', 'launch')
     response = main(alexa_user_id, turn_times, node_key)
     return response

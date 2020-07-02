@@ -285,6 +285,43 @@ class YesIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class NoIntentHandler(AbstractRequestHandler):
+    """Handler for Help Intent."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("AMAZON.NoIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': 'Ganesha',
+            'turn_times': 0,
+            'env_type': util.get_env_type(handler_input)
+        }
+
+        node = handler_input.attributes_manager.session_attributes.get(
+            'node')
+        if node:
+            fof_sfn_input['node'] = node
+
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+
+        end_session = response.get('set_should_end_session', False)
+        handler_input.response_builder.set_should_end_session(end_session)
+
+        return handler_input.response_builder.response
+
+
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -544,6 +581,7 @@ sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(TurnTimesIntentHandler())
 sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(NoIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
