@@ -25,8 +25,8 @@ def change_node(node_key, accept):
     if node_key == 'launch':
         return 'welcome'
     elif node_key == 'welcome':
-        return 'gatcha' if accept else 'recommend'
-    elif node_key == 'recommend':
+        return 'gatcha' if accept else 'recommend_gatcha'
+    elif node_key == 'recommend_gatcha':
         return 'gatcha' if accept else 'end'
     elif node_key == 'gatcha':
         return 'gatcha' if accept else 'end'
@@ -45,8 +45,8 @@ def main(alexa_user_id, turn_times, node_key):
         if should_gatcha(turn_times):
             node = nodes.gatcha(turn_times)
         else:
-            node = nodes.recommend()
-    elif node_key == 'recommend':
+            node = nodes.recommend_gatcha()
+    elif node_key == 'recommend_gatcha':
         if should_gatcha(turn_times):
             node = nodes.gatcha(turn_times)
         else:
