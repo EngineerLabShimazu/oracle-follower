@@ -12,7 +12,7 @@ def launch():
     }
 
 
-def recommend():
+def recommend_gatcha():
     return {
         'original_texts': [
             {

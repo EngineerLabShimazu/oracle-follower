@@ -93,8 +93,8 @@ class User:
         gem_events = {
             'tutorial_clear': {
                 'free_gem': 100
-                }
             }
+        }
         gem_event = gem_events[event_id]
         self.add_gem(gem_event['free_gem'])
 
@@ -110,6 +110,22 @@ class User:
     @property
     def free_gem(self):
         return self._free_gem
+
+    def pay_gem(self, payment_amount: int) -> bool:
+        # 無償ジェムで足りる場合は無償ジェムから引く
+        if self.free_gem - payment_amount > 0:
+            self._free_gem = self.free_gem - payment_amount
+            return True
+
+        # 無償ジェムで足りない場合は不足分を有償ジェムから引く
+        if self.free_gem - payment_amount <= 0:
+            unpaid = payment_amount - self.free_gem
+            if self.paid_gem > unpaid:
+                self._paid_gem = self.paid_gem - unpaid
+                self._free_gem = 0
+                return True
+
+        return False
 
 
 def serialize_attribute(attributes):
