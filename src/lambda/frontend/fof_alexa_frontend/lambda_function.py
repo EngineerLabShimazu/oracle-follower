@@ -232,6 +232,10 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
             handler_input.attributes_manager.session_attributes['node'] = \
                 response['node']
 
+        if response.get('turn_times'):
+            handler_input.attributes_manager.session_attributes['turn_times'] = \
+                response['turn_times']
+
         image_url = response.get('image_url')
         if image_url:
             handler_input.response_builder.set_card(
@@ -279,6 +283,10 @@ class YesIntentHandler(AbstractRequestHandler):
         if response.get('node'):
             handler_input.attributes_manager.session_attributes['node'] = \
                 response['node']
+
+        if response.get('turn_times'):
+            handler_input.attributes_manager.session_attributes['turn_times'] = \
+                response['turn_times']
 
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
