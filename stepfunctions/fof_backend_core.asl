@@ -1,12 +1,39 @@
 {
   "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
-  "StartAt": "StateTranslator",
+  "StartAt": "PreProcess",
   "States": {
-    "StateTranslator": {
-      "Comment": "新規ユーザーはTutorialを実行する。",
-      "Type": "Task",
-      "Resource": "${fof_state_translator_arn}",
-      "ResultPath": "$.state",
+    "PreProcess": {
+      "Type": "Parallel",
+      "Next": "Main",
+      "Branches": [
+        {
+          "StartAt": "StateTranslator",
+          "States": {
+            "StateTranslator": {
+              "Comment": "新規ユーザーはTutorialを実行する。",
+              "Type": "Task",
+              "Resource": "${fof_state_translator_arn}",
+              "ResultPath": "$.state",
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ImportAttr",
+          "States": {
+            "ImportAttr": {
+              "Comment": "DBから情報を積み込む",
+              "Type": "Task",
+              "Resource": "${fof_pre_import_arn}",
+              "ResultPath": "$.dynamo_attr",
+              "End": true
+            }
+          }
+        }
+      ]
+    },
+    "Main": {
+      "Type": "Pass",
       "Next": "文脈なしの返答すべき？"
     },
     "文脈なしの返答すべき？": {
