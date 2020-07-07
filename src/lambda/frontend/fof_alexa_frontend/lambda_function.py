@@ -278,6 +278,9 @@ class YesIntentHandler(AbstractRequestHandler):
         if node:
             fof_sfn_input['node'] = node
 
+            if node == 'recommend_gem':
+                return BuyHandler.handle(handler_input)
+
         response = sfn_ctl.execute(fof_sfn_input)
 
         if response.get('node'):

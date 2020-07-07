@@ -23,12 +23,27 @@ def recommend_gatcha():
     }
 
 
-def gatcha(turn_times):
+def recommend_gem(turn_times):
+    return {
+        'original_texts': [
+            {
+                'text': 'RECOMMEND_GEM',
+            }
+        ],
+        'turn_times': turn_times
+    }
+
+
+def gatcha(turn_times, item):
     turn_times_text = '一回' if turn_times == 1 else '十連'
+    gatcha_sound = ''
     return {
         'original_texts': [
             {
                 'text': 'GANESHA_THANKS',
+            },
+            {
+                'text': gatcha_sound,
             },
             {
                 'text': 'GATCHA',
