@@ -47,6 +47,16 @@ module "fof_text_translator" {
   role = var.lambda_role
 }
 
+module "fof_pre_import_attr" {
+  env = var.env
+  source = "./modules/lambda/"
+  function_name = "fof_pre_import_attr"
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
+
 module "fof_state_translator" {
   env = var.env
   source = "./modules/lambda/"
@@ -122,6 +132,17 @@ module "fof_state_ganesha_shop" {
   env = var.env
   source = "./modules/lambda/"
   function_name = "fof_state_ganesha_shop"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+}
+
+module "fof_post_save_attr" {
+  env = var.env
+  source = "./modules/lambda/"
+  function_name = "fof_post_save_attr"
   memory = 128
   description = ""
   layer_arn = module.fof_sdk.arn

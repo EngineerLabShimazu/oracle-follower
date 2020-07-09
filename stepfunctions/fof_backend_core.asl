@@ -1,36 +1,20 @@
 {
   "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
-  "StartAt": "PreProcess",
+  "StartAt": "ImportAttr",
   "States": {
-    "PreProcess": {
-      "Type": "Parallel",
-      "Next": "Main",
-      "Branches": [
-        {
-          "StartAt": "StateTranslator",
-          "States": {
-            "StateTranslator": {
-              "Comment": "新規ユーザーはTutorialを実行する。",
-              "Type": "Task",
-              "Resource": "${fof_state_translator_arn}",
-              "ResultPath": "$.state",
-              "End": true
-            }
-          }
-        },
-        {
-          "StartAt": "ImportAttr",
-          "States": {
-            "ImportAttr": {
-              "Comment": "DBから情報を積み込む",
-              "Type": "Task",
-              "Resource": "${fof_pre_import_arn}",
-              "ResultPath": "$.dynamo_attr",
-              "End": true
-            }
-          }
-        }
-      ]
+    "ImportAttr": {
+      "Comment": "DynamoDBからalexa_user_idをkeyとしてAttributesを取得する。",
+      "Type": "Task",
+      "Resource": "{$fof_pre_import_attr_arn}",
+      "ResultPath": "$.dynamo_attr",
+      "Next": "StateTranslator"
+    },
+    "StateTranslator": {
+      "Comment": "新規ユーザーはTutorialを実行する。",
+      "Type": "Task",
+      "Resource": "${fof_state_translator_arn}",
+      "ResultPath": "$.state",
+      "Next": "Main"
     },
     "Main": {
       "Type": "Pass",
@@ -128,6 +112,12 @@
       "Type": "Task",
       "Resource": "${fof_state_changer_arn}",
       "ResultPath": "$.state",
+      "Next": "SaveAttr"
+    },
+    "SaveAttr": {
+      "Type": "Task",
+      "Resource": "${fof_post_save_attr_arn}",
+      "ResultPath": null,
       "End": true
     }
   }
