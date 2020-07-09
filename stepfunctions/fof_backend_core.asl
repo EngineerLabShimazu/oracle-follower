@@ -5,7 +5,7 @@
     "ImportAttr": {
       "Comment": "DynamoDBからalexa_user_idをkeyとしてAttributesを取得する。",
       "Type": "Task",
-      "Resource": "{$fof_pre_import_attr_arn}",
+      "Resource": "${fof_pre_import_attr_arn}",
       "ResultPath": "$.dynamo_attr",
       "Next": "StateTranslator"
     },
