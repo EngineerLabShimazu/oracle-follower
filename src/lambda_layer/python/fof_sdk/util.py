@@ -23,20 +23,19 @@ follower_table = {'SS': 10,
                   }
 
 hunt_table = {
-    'SS': ['堕天使'],
-    'S': ['青龍', '白虎', '朱雀', '玄武'],
-    'A': ['ヴァンパイア'],
-    'B': ['ゴーレム', 'オーガ'],
-    'C': ['ゴブリン', 'イエティ'],
-    'D': ['コウモリ', 'スライム']
+    'A': ['プレシャ'],
+    'D': ['キャリネズミ', 'ともしびトカゲ', '大福ウサギ']
 }
 
 
 def gacha():
-    rarity = random.choices(['SS', 'S', 'A', 'B', 'C', 'D'],
-                            weights=[0.1, 0.5, 5, 20, 30, 44.4])[0]
-    contents = random.choice(hunt(rarity))
-    return {'rarity': rarity, 'contents': contents}
+    """
+
+    :return: {'rarity': 'D', 'contents': }
+    """
+    rarity = random.choices(['A', 'D'], weights=[5, 95])[0]
+    content = random.choice(hunt(rarity))
+    return {'rarity': rarity, 'content': content}
 
 
 def hunt(rarity):
