@@ -57,8 +57,8 @@ class User:
         )
 
     @property
-    def contents(self):
-        return self.possible_events[self.destination]['contents']
+    def content(self):
+        return self.possible_events[self.destination]['content']
 
     @property
     def has_todays_oracle(self):

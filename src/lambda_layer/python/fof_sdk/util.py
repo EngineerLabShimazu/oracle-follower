@@ -31,7 +31,7 @@ hunt_table = {
 def gacha():
     """
 
-    :return: {'rarity': 'D', 'contents': }
+    :return: {'rarity': 'D', 'content': }
     """
     rarity = random.choices(['A', 'D'], weights=[5, 95])[0]
     content = random.choice(hunt(rarity))

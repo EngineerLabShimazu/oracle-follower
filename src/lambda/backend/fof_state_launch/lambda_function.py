@@ -17,7 +17,7 @@ def main(user):
     if user.is_first_launch_today:
         if user.destination:
             original_texts.append(
-                hero.action_report(user.destination, user.contents))
+                hero.action_report(user.destination, user.content))
             user.increase_follower()
             original_texts.append(hero.increase_follower(
                 user.follower_increase))
