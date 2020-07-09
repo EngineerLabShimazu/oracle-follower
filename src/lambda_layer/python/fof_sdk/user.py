@@ -53,7 +53,7 @@ class User:
 
     def set_event(self):
         self.possible_events = dict(
-            (name, util.gacha() for name in util.get_village_names())
+            (name, util.gacha()) for name in util.get_village_names()
         )
 
     @property
