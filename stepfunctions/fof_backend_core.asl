@@ -1,12 +1,23 @@
 {
   "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
-  "StartAt": "StateTranslator",
+  "StartAt": "ImportAttr",
   "States": {
+    "ImportAttr": {
+      "Comment": "DynamoDBからalexa_user_idをkeyとしてAttributesを取得する。",
+      "Type": "Task",
+      "Resource": "{$fof_pre_import_attr_arn}",
+      "ResultPath": "$.dynamo_attr",
+      "Next": "StateTranslator"
+    },
     "StateTranslator": {
       "Comment": "新規ユーザーはTutorialを実行する。",
       "Type": "Task",
       "Resource": "${fof_state_translator_arn}",
       "ResultPath": "$.state",
+      "Next": "Main"
+    },
+    "Main": {
+      "Type": "Pass",
       "Next": "文脈なしの返答すべき？"
     },
     "文脈なしの返答すべき？": {
@@ -101,6 +112,12 @@
       "Type": "Task",
       "Resource": "${fof_state_changer_arn}",
       "ResultPath": "$.state",
+      "Next": "SaveAttr"
+    },
+    "SaveAttr": {
+      "Type": "Task",
+      "Resource": "${fof_post_save_attr_arn}",
+      "ResultPath": null,
       "End": true
     }
   }
