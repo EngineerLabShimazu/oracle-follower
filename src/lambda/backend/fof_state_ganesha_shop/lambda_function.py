@@ -1,6 +1,7 @@
 import random
 import nodes
 from gatcha_items import gatcha_items
+from fof_sdk.user import User
 
 
 def draw_lottery():
@@ -36,7 +37,8 @@ def should_gatcha(turn_times):
     return bool(turn_times)
 
 
-def main(alexa_user_id, turn_times, node_key):
+def main(turn_times, node_key, user):
+
     action = {'type': 'ganesha'}
 
     if node_key == 'launch':
@@ -53,7 +55,15 @@ def main(alexa_user_id, turn_times, node_key):
             node = nodes.end()
     elif node_key == 'gatcha':
         if should_gatcha(turn_times):
-            node = nodes.gatcha(turn_times)
+            gem_amount_map = {
+                1: 300,
+                10: 3000
+            }
+            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            if is_paid:
+                node = nodes.gatcha(turn_times)
+            else:
+                node = nodes.recommend_gem(turn_times)
         else:
             node = nodes.end()
     else:
@@ -75,8 +85,8 @@ def main(alexa_user_id, turn_times, node_key):
 
 
 def lambda_handler(event, context):
-    alexa_user_id = event['alexa_user_id']
     turn_times = event.get('turn_times')
     node_key = event.get('node', 'launch')
-    response = main(alexa_user_id, turn_times, node_key)
+    user = User(event['alexa_user_id'], event['dynamo_attr'])
+    response = main(turn_times, node_key, user)
     return response
