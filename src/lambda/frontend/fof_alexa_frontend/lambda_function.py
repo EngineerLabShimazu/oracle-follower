@@ -165,8 +165,12 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         response = sfn_ctl.execute(fof_sfn_input)
         handler_input.attributes_manager.session_attributes['state'] = \
             response['state']
-        handler_input.attributes_manager.session_attributes['turn_times'] = \
-            response['turn_times']
+
+        turn_times = response.get('turn_times')
+        if turn_times:
+            handler_input.attributes_manager.session_attributes['turn_times'] = \
+                turn_times
+
         speech_text = response["response_text"]
 
         if response.get('node'):
@@ -279,7 +283,7 @@ class YesIntentHandler(AbstractRequestHandler):
             fof_sfn_input['node'] = node
 
             if node == 'recommend_gem':
-                return BuyHandler.handle(handler_input)
+                return BuyHandler().handle(handler_input)
 
         response = sfn_ctl.execute(fof_sfn_input)
 

@@ -1,4 +1,6 @@
 import random
+from typing import Optional
+
 import nodes
 from gatcha_items import gatcha_items
 from fof_sdk.user import User
@@ -22,13 +24,21 @@ def gatcha(turn_times):
         pass
 
 
-def change_node(node_key, accept):
+def change_node(node_key, accept: bool, is_paid: Optional[bool]):
     if node_key == 'launch':
         return 'welcome'
     elif node_key == 'welcome':
-        return 'gatcha' if accept else 'recommend_gatcha'
+        if is_paid is False:
+            return 'recommend_gem'
+        elif accept:
+            return 'gatcha'
+        return 'recommend_gatcha'
     elif node_key == 'recommend_gatcha':
-        return 'gatcha' if accept else 'end'
+        if is_paid is False:
+            return 'recommend_gem'
+        elif accept:
+            return 'gatcha'
+        return 'end'
     elif node_key == 'gatcha':
         return 'gatcha' if accept else 'end'
 
@@ -38,14 +48,23 @@ def should_gatcha(turn_times):
 
 
 def main(turn_times, node_key, user):
-
     action = {'type': 'ganesha'}
 
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
         if should_gatcha(turn_times):
-            node = nodes.gatcha(turn_times)
+            gem_amount_map = {
+                1: 300,
+                10: 3000
+            }
+            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            print(f'is paid: {is_paid}')
+            if is_paid:
+                node = nodes.gatcha(turn_times)
+            else:
+                node = nodes.recommend_gem(turn_times)
+            node['is_paid'] = is_paid
         else:
             node = nodes.recommend_gatcha()
     elif node_key == 'recommend_gatcha':
@@ -60,10 +79,12 @@ def main(turn_times, node_key, user):
                 10: 3000
             }
             is_paid = user.pay_gem(gem_amount_map[turn_times])
+            print(f'is paid: {is_paid}')
             if is_paid:
                 node = nodes.gatcha(turn_times)
             else:
                 node = nodes.recommend_gem(turn_times)
+            node['is_paid'] = is_paid
         else:
             node = nodes.end()
     else:
@@ -75,9 +96,10 @@ def main(turn_times, node_key, user):
             ]
         }
 
-    # nodeのturn_timesを優先する。
+    # lambdaのインプットであるturn_timesよりも、nodes.pyで指定しているturn_timesを優先する。
     accept = bool(node.get('turn_times', turn_times))
-    node['node'] = change_node(node_key, accept)
+    is_paid = node.get('is_paid')
+    node['node'] = change_node(node_key, accept, is_paid)
 
     action.update(node)
 
