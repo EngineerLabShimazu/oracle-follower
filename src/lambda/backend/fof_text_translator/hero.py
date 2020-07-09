@@ -38,4 +38,8 @@ text_map = {
     'HERO_APPRECIATE_2': 'お気にかけてくださって',
     'HERO_APPRECIATE_3': '健やかに暮らさせていただき',
     'HERO_APPRECIATE_4': '祈りを受け入れてくださり',
-    }
+    'MONSTER_PRECHAT': 'プレシャ',
+    'MONSTER_CARRY_RAT': 'キャリネズミ',
+    'MONSTER_LIGHT_LIZARD': 'ともしびトカゲ',
+    'MONSTER_DAIFUKU_RABBIT': '大福ウサギ'
+}

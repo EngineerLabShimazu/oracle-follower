@@ -23,8 +23,9 @@ follower_table = {'SS': 10,
                   }
 
 hunt_table = {
-    'A': ['プレシャ'],
-    'D': ['キャリネズミ', 'ともしびトカゲ', '大福ウサギ']
+    'A': ['MONSTER_PRECHAT'],
+    'D': ['MONSTER_CARRY_RAT', 'MONSTER_LIGHT_LIZARD',
+          'MONSTER_DAIFUKU_RABBIT']
 }
 
 
