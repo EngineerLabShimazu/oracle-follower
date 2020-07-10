@@ -46,7 +46,8 @@ def action_report(destination, monster: str):
                 'monster': monster
             }
         },
-        'bg_image_url': util.get_image(f'reports/{monster.lower()}')
+        'image_url': util.get_image(f'reports/{monster.lower()}'),
+        'bg_image_url': util.get_image(f'bg/fof-map-gauss2', extension='.jpg')
     }
 
 

@@ -19,6 +19,7 @@ def main(user):
             # 昨日の活動報告を聞く
             action_parts = hero.action_report(user.destination, user.content)
             original_texts.append(action_parts['original_texts'])
+            action['image_url'] = action_parts['image_url']
             action['bg_image_url'] = action_parts['bg_image_url']
 
             # 信者を獲得
@@ -41,8 +42,10 @@ def main(user):
         action = {'type': 'ask_oracle',
                   'set_should_end_session': False,
                   'destinations_choice': destinations_choice,
-                  'image_url': util.get_image('hero/hero_stand'),
-                  'bg_image_url': util.get_image('bg/fof-map')
+                  'image_url': action.get('image_url',
+                                          util.get_image('hero/hero_stand')),
+                  'bg_image_url': action.get('bg_image_url',
+                                             util.get_image('bg/fof-map'))
                   }
 
     action['user_attr'] = user.attr
