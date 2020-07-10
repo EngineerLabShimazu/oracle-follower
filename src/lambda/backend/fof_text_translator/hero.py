@@ -6,7 +6,7 @@ text_map = {
     """,
     'HERO_ACTION_REPORT': """
     <voice name="Takumi">
-        昨日は {destination} へ行き、 {monster} を討伐してまいりました！
+        昨日は {destination} へ行き、 {monster} に襲われている少女を救ってまいりました！
     </voice>
     """,
     'HERO_ACTION_REPORT_PRECHAT': """
