@@ -39,10 +39,12 @@ def action_report_lecacy(destination, monster):
 
 def action_report(destination, monster: str):
     return {
-        'text': 'HERO_ACTION_REPORT',
-        'kwargs': {
-            'destination': destination,
-            'monster': monster
+        'original_texts': {
+            'text': 'HERO_ACTION_REPORT',
+            'kwargs': {
+                'destination': destination,
+                'monster': monster
+            }
         },
         'bg_image_url': util.get_image(f'reports/{monster.lower()}')
     }

@@ -16,8 +16,12 @@ def main(user):
 
     if user.is_first_launch_today:
         if user.destination:
-            original_texts.append(
-                hero.action_report(user.destination, user.content))
+            # 昨日の活動報告を聞く
+            action_parts = hero.action_report(user.destination, user.content)
+            original_texts.append(action_parts['original_texts'])
+            action['bg_image_url'] = action_parts['bg_image_url']
+
+            # 信者を獲得
             user.increase_follower()
             original_texts.append(hero.increase_follower(
                 user.follower_increase))
