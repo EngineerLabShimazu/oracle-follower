@@ -28,17 +28,17 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
         return {
             'type': 'cancel_or_stop',
             'image_url': util.get_image('hero/hero_anticipation'),
-            'bg_image_url': util.get_image('bg/fof-map'),
+            'bg_image_url': util.get_image('bg/fof-map-gauss2'),
             'original_texts': [
                 {
                     'text': 'APPRECIATE_ON_STOP',
                     'kwargs': {
                         'appreciate': hero.get_appreciate_message()
-                        }
-                    },
+                    }
+                },
                 {'text': 'PLEASE_AGAIN_ON_STOP'}
-                ]
-            }
+            ]
+        }
     elif intent == 'Connections.Response':
         if not product_reference_name:
             return {
