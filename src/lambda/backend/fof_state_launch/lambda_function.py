@@ -10,7 +10,7 @@ def main(user):
     action = {
         'type': 'launch',
         'image_url': util.get_image('hero/hero_stand'),
-        'bg_image_url': util.get_image('bg/fof-map-gauss2')
+        'bg_image_url': util.get_image('bg/fof-map-gauss2', extension='.jpg')
     }
     original_texts = [hero.message()]
 
@@ -45,7 +45,8 @@ def main(user):
                   'image_url': action.get('image_url',
                                           util.get_image('hero/hero_stand')),
                   'bg_image_url': action.get(
-                      'bg_image_url', util.get_image('bg/fof-map-gauss2'))
+                      'bg_image_url', util.get_image(
+                          'bg/fof-map-gauss2', extension='.jpg'))
                   }
 
     action['user_attr'] = user.attr
