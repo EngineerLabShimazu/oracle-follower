@@ -11,7 +11,7 @@ text_map = {
     """,
     'HERO_ACTION_REPORT_PRECHAT': """
     <voice name="Takumi">
-        昨日は {destination} へ行き、 魔女に襲われている プレシャ を逃してまいりました！
+        昨日は {destination} へ行き、 魔女に襲われている プレシャ を<sub alias="にが">逃</sub>してまいりました！
     </voice>
     """,
     'HERO_INCREASE_FOLLOWER': """
