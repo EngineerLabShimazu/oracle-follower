@@ -9,6 +9,11 @@ text_map = {
         昨日は {destination} へ行き、 {monster} を討伐してまいりました！
     </voice>
     """,
+    'HERO_ACTION_REPORT_PRECHAT': """
+    <voice name="Takumi">
+        昨日は {destination} へ行き、 魔女に襲われている プレシャ を逃してまいりました！
+    </voice>
+    """,
     'HERO_INCREASE_FOLLOWER': """
     <voice name="Takumi">
         その結果、神様を信仰させていただきたいと申す者共が新たに{follower_increase}人増えました。

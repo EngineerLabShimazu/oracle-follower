@@ -38,6 +38,18 @@ def action_report_lecacy(destination, monster):
 
 
 def action_report(destination, monster: str):
+    if monster == 'MONSTER_PRECHAT':
+        return {
+            'original_texts': {
+                'text': 'HERO_ACTION_REPORT_PRECHAT',
+                'kwargs': {
+                    'destination': destination
+                }
+            },
+            'image_url': util.get_image(f'reports/{monster.lower()}'),
+            'bg_image_url': util.get_image(f'bg/fof-map-gauss2',
+                                           extension='.jpg')
+        }
     return {
         'original_texts': {
             'text': 'HERO_ACTION_REPORT',
