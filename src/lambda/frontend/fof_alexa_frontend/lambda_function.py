@@ -281,9 +281,26 @@ class YesIntentHandler(AbstractRequestHandler):
             'node')
         if node:
             fof_sfn_input['node'] = node
-
             if node == 'recommend_gem':
-                return BuyHandler().handle(handler_input)
+
+                in_skill_response = util.in_skill_product_response(
+                    handler_input)
+
+                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                skill_product = util.get_skill_product(
+                    in_skill_response, 'gem_300')
+
+                return handler_input.response_builder.add_directive(
+                    SendRequestDirective(
+                        name='Buy',
+                        payload={
+                            'InSkillProduct': {
+                                'productId': skill_product.product_id
+                            }
+                        },
+                        token='correlationToken'
+                    )
+                ).response
 
         response = sfn_ctl.execute(fof_sfn_input)
 

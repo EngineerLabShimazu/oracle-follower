@@ -102,6 +102,7 @@ def main(turn_times, node_key, user):
     node['node'] = change_node(node_key, accept, is_paid)
 
     action.update(node)
+    action['user_attr'] = user.attr
 
     return action
 
