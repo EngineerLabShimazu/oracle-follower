@@ -178,17 +178,33 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
                 response['node']
 
         image_url = response.get('image_url')
+        bg_image_url = response.get('bg_image_url')
+        image_title = response.get('image_title')
+        image_text = response.get('image_text')
         if image_url:
-            handler_input.response_builder.set_card(
-                ui.StandardCard(
-                    title='title sample',
-                    text='text sample',
-                    image=ui.Image(
-                        small_image_url=image_url,
-                        large_image_url=image_url
+            img_obj = Image(sources=[ImageInstance(url=image_url)])
+            bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
+            if util.is_support_display(handler_input):
+                handler_input.response_builder.add_directive(
+                    RenderTemplateDirective(
+                        BodyTemplate7(
+                            back_button=BackButtonBehavior.VISIBLE,
+                            image=img_obj,
+                            background_image=bg_img_obj,
+                            title=image_title)
                     )
                 )
-            )
+            else:
+                handler_input.response_builder.set_card(
+                    ui.StandardCard(
+                        title=image_title,
+                        text=image_text,
+                        image=ui.Image(
+                            small_image_url=image_url,
+                            large_image_url=image_url
+                        )
+                    )
+                )
 
         handler_input.response_builder.speak(speech_text).ask(
             speech_text)
