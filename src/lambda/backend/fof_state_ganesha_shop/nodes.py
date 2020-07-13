@@ -34,7 +34,7 @@ def recommend_gem(turn_times):
     }
 
 
-def gatcha(turn_times, item):
+def gatcha(turn_times):
     turn_times_text = '一回' if turn_times == 1 else '十連'
     gatcha_sound = ''
     return {
