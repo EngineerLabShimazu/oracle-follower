@@ -53,11 +53,12 @@ class User:
 
     def set_event(self):
         self.possible_events = dict(
-            (i, util.gacha()) for i in util.get_village_names())
+            (name, util.gacha()) for name in util.get_village_names()
+        )
 
     @property
-    def contents(self):
-        return self.possible_events[self.destination]['contents']
+    def content(self):
+        return self.possible_events[self.destination]['content']
 
     @property
     def has_todays_oracle(self):

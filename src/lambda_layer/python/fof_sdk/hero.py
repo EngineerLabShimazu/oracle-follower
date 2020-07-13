@@ -1,6 +1,8 @@
 import random
 from typing import List
 
+from fof_sdk import util
+
 
 def get_appreciate_message_legacy() -> str:
     messages = ["見守ってくださって",
@@ -35,14 +37,30 @@ def action_report_lecacy(destination, monster):
     return f"昨日は{destination}へ行き、{monster}を討伐してまいりました！"
 
 
-def action_report(destination, monster):
-    return {
-        'text': 'HERO_ACTION_REPORT',
-        'kwargs': {
-            'destination': destination,
-            'monster': monster
-            }
+def action_report(destination, monster: str):
+    if monster == 'MONSTER_PRECHAT':
+        return {
+            'original_texts': {
+                'text': 'HERO_ACTION_REPORT_PRECHAT',
+                'kwargs': {
+                    'destination': destination
+                }
+            },
+            'image_url': util.get_image(f'reports/{monster.lower()}'),
+            'bg_image_url': util.get_image(f'bg/fof-map-gauss2',
+                                           extension='.jpg')
         }
+    return {
+        'original_texts': {
+            'text': 'HERO_ACTION_REPORT',
+            'kwargs': {
+                'destination': destination,
+                'monster': monster
+            }
+        },
+        'image_url': util.get_image(f'reports/{monster.lower()}'),
+        'bg_image_url': util.get_image(f'bg/fof-map-gauss2', extension='.jpg')
+    }
 
 
 def increase_follower_legacy(follower_increase, total_follower):
