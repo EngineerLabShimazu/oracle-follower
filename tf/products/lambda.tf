@@ -130,7 +130,7 @@ module "fof_state_tutorial" {
 
 module "fof_state_ganesha_shop" {
   env = var.env
-  source = "./modules/lambda/"
+  source = "./modules/lambda_with_env/"
   function_name = "fof_state_ganesha_shop"
   memory = 128
   description = ""
