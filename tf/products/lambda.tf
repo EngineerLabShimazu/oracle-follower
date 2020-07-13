@@ -137,6 +137,9 @@ module "fof_state_ganesha_shop" {
   layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
   role = var.lambda_role
+  environment = {
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
+  }
 }
 
 module "fof_post_save_attr" {
