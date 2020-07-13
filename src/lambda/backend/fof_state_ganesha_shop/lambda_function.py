@@ -3,6 +3,7 @@ from typing import Optional
 
 import nodes
 from gatcha_items import gatcha_items
+from fof_sdk import util
 from fof_sdk.user import User
 
 
@@ -48,7 +49,11 @@ def should_gatcha(turn_times):
 
 
 def main(turn_times, node_key, user):
-    action = {'type': 'ganesha'}
+    action = {'type': 'ganesha',
+              'image_url': util.get_image('gods/ganesha'),
+              'bg_image_url': util.get_image('bg/ganesha-shop',
+                                             extension='.jpg')
+              }
 
     if node_key == 'launch':
         node = nodes.launch()
