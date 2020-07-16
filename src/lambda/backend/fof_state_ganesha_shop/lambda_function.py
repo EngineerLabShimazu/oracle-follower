@@ -19,10 +19,10 @@ def draw_lottery():
 
 
 def gatcha(turn_times):
-    if turn_times == 1:
-        draw_lottery()
-    if turn_times == 10:
-        pass
+    items = []
+    for i in range(turn_times):
+        items.append(draw_lottery())
+    return items
 
 
 def change_node(node_key, accept: bool, is_paid: Optional[bool]):
@@ -42,13 +42,15 @@ def change_node(node_key, accept: bool, is_paid: Optional[bool]):
         return 'end'
     elif node_key == 'gatcha':
         return 'gatcha' if accept else 'end'
+    elif node_key == 'result':
+        return 'gatcha' if accept else 'end'
 
 
 def should_gatcha(turn_times):
     return bool(turn_times)
 
 
-def main(turn_times, node_key, user):
+def main(turn_times, node_key, user, total_ticket_amount):
     action = {
         'type': 'ganesha',
         'image_url': util.get_image('gods/ganesha'),
@@ -65,9 +67,9 @@ def main(turn_times, node_key, user):
                 10: 3000
             }
             is_paid = user.pay_gem(gem_amount_map[turn_times])
-            print(f'is paid: {is_paid}')
             if is_paid:
-                node = nodes.gatcha(turn_times)
+                items = gatcha(turn_times)
+                node = nodes.gatcha(turn_times, items, user)
             else:
                 node = nodes.recommend_gem(turn_times)
             node['is_paid'] = is_paid
@@ -75,7 +77,17 @@ def main(turn_times, node_key, user):
             node = nodes.recommend_gatcha()
     elif node_key == 'recommend_gatcha':
         if should_gatcha(turn_times):
-            node = nodes.gatcha(turn_times)
+            gem_amount_map = {
+                1: 300,
+                10: 3000
+            }
+            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            if is_paid:
+                items = gatcha(turn_times)
+                node = nodes.gatcha(turn_times, items, user)
+            else:
+                node = nodes.recommend_gem(turn_times)
+            node['is_paid'] = is_paid
         else:
             node = nodes.end()
     elif node_key == 'gatcha':
@@ -85,14 +97,16 @@ def main(turn_times, node_key, user):
                 10: 3000
             }
             is_paid = user.pay_gem(gem_amount_map[turn_times])
-            print(f'is paid: {is_paid}')
             if is_paid:
-                node = nodes.gatcha(turn_times)
+                items = gatcha(turn_times)
+                node = nodes.gatcha(turn_times, items)
             else:
                 node = nodes.recommend_gem(turn_times)
             node['is_paid'] = is_paid
         else:
             node = nodes.end()
+    elif node_key == 'result':
+        node = nodes.result(total_ticket_amount, turn_times)
     else:
         node = {
             'original_texts': [
@@ -117,5 +131,6 @@ def lambda_handler(event, context):
     turn_times = event.get('turn_times')
     node_key = event.get('node', 'launch')
     user = User(event['alexa_user_id'], event['dynamo_attr'])
-    response = main(turn_times, node_key, user)
+    total_ticket_amount = event.get('total_ticket_amount', 0)
+    response = main(turn_times, node_key, user, total_ticket_amount)
     return response

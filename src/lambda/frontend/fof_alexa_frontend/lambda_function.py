@@ -274,6 +274,66 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class ResultIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("ResultIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        total_ticket_amount = handler_input.attributes_manager.session_attributes.get(
+            'total_ticket_amount')
+
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
+
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': state,
+            'node': 'result',
+            'total_ticket_amount': total_ticket_amount,
+            'env_type': util.get_env_type(handler_input)
+        }
+
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
+
+class SkipIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("SkipIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        total_ticket_amount = handler_input.attributes_manager.session_attributes.get(
+            'total_ticket_amount')
+
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
+
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': state,
+            'node': 'result',
+            'total_ticket_amount': total_ticket_amount,
+            'env_type': util.get_env_type(handler_input)
+        }
+
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
+
 class YesIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
 
@@ -298,7 +358,6 @@ class YesIntentHandler(AbstractRequestHandler):
         if node:
             fof_sfn_input['node'] = node
             if node == 'recommend_gem':
-
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
@@ -327,6 +386,11 @@ class YesIntentHandler(AbstractRequestHandler):
         if response.get('turn_times'):
             handler_input.attributes_manager.session_attributes['turn_times'] = \
                 response['turn_times']
+
+        if response.get('total_ticket_amount'):
+            handler_input.attributes_manager.session_attributes[
+                'total_ticket_amount'] = \
+                response['total_ticket_amount']
 
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
@@ -632,6 +696,8 @@ sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(TurnTimesIntentHandler())
+sb.add_request_handler(ResultIntentHandler())
+sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())
 sb.add_request_handler(NoIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
