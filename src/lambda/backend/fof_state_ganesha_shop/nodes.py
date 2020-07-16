@@ -85,8 +85,8 @@ def gatcha(turn_times, items, user):
     original_texts.append({
         'text': 'REMAINGING_GEM',
         'kwargs': {
-            'turn_times_text': remaining_free_gem,
-            'turn_times_text': remaining_paid_gem
+            'remaining_free_gem': remaining_free_gem,
+            'remaining_paid_gem': remaining_paid_gem
         }
     })
 
