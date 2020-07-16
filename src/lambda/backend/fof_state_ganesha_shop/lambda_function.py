@@ -106,7 +106,7 @@ def main(turn_times, node_key, user, total_ticket_amount):
         else:
             node = nodes.end()
     elif node_key == 'result':
-        node = nodes.result(total_ticket_amount, turn_times)
+        node = nodes.result(total_ticket_amount, turn_times, user)
     else:
         node = {
             'original_texts': [

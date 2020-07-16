@@ -103,12 +103,23 @@ def gatcha(turn_times, items, user):
             }
 
 
-def result(total_ticket_amount, turn_times):
+def result(total_ticket_amount, turn_times, user):
     original_texts = []
     original_texts.append({
         'text': 'TOTAL_TICKET_AMOUNT',
         'kwargs': {
             'total_ticket_amount': total_ticket_amount
+        }
+    })
+
+    remaining_free_gem = user.free_gem
+    remaining_paid_gem = user.paid_gem
+
+    original_texts.append({
+        'text': 'REMAINGING_GEM',
+        'kwargs': {
+            'remaining_free_gem': remaining_free_gem,
+            'remaining_paid_gem': remaining_paid_gem
         }
     })
 
