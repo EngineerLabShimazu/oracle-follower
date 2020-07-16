@@ -34,7 +34,7 @@ def recommend_gem(turn_times):
     }
 
 
-def gatcha(turn_times, items):
+def gatcha(turn_times, items, user):
     turn_times_text = '一回' if turn_times == 1 else '十連'
     gatcha_items = {
         'chronus_ticket_1': {
@@ -79,6 +79,17 @@ def gatcha(turn_times, items):
         }
     })
 
+    remaining_free_gem = user.free_gem
+    remaining_paid_gem = user.paid_gem
+
+    original_texts.append({
+        'text': 'REMAINGING_GEM',
+        'kwargs': {
+            'turn_times_text': remaining_free_gem,
+            'turn_times_text': remaining_paid_gem
+        }
+    })
+
     original_texts.append({
         'text': 'GATCHA_AGAIN',
         'kwargs': {
@@ -113,6 +124,10 @@ def result(total_ticket_amount, turn_times):
         'original_texts': original_texts,
         'turn_times': turn_times
     }
+
+
+def remaining_gem():
+    pass
 
 
 def end():
