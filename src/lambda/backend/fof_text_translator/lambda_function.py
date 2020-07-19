@@ -23,7 +23,7 @@ def translate_text(text_key: str, **kwargs) -> str:
     for k, kwarg in kwargs.items():
         parameters[k] = text_map.get(kwarg, kwarg)
 
-    base_text: str = text_map.get(text_key, '')
+    base_text: str = text_map.get(text_key, text_key)
     return base_text.format(**parameters)
 
 
