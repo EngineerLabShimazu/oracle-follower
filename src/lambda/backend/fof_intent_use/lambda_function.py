@@ -12,7 +12,7 @@ def main(node, user):
 
 
 def lambda_handler(event, context):
-    node = event['node']
+    node = event.get('node', 'launch')
     user = User(event['alexa_user_id'], event['dynamo_attr'])
     response = main(node, user)
     return response
