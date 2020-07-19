@@ -66,6 +66,10 @@ def get_village_names():
     return [i['actual_name'] for i in villages.values()]
 
 
+def get_destinations_choice():
+    return random.sample(get_village_names(), 2)
+
+
 def get_image(image_key: str, extension: str = '.png') -> str:
     """
     :param image_key: 関数内で小文字に変換します。ex) hero/hero_anticipation.jpg

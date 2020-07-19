@@ -117,6 +117,20 @@ module "fof_manual_handler" {
   }
 }
 
+module "fof_intent_use" {
+  env = var.env
+  source = "./modules/lambda_with_env/"
+  function_name = "fof_intent_use"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+  environment = {
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
+  }
+}
+
 module "fof_state_tutorial" {
   env = var.env
   source = "./modules/lambda/"

@@ -35,7 +35,16 @@ def main(user):
         # 今日の目的地ガチャ
         user.set_event()
 
-    if not user.has_todays_oracle:
+    if user.has_todays_oracle:
+        original_texts.append({
+            'text': '本日は「グリーンスター」へ向かうお告げを完了しています。'
+        })
+        original_texts.append({
+            'text': 'クロノスチケットを使い、下界の時間を１日経過させ、すぐに勇者から報告を聞きますか？'
+        })
+        action['type'] = 'use'
+
+    else:
         destinations_choice = random.sample(util.get_village_names(), 2)
         ask_oracle_text = hero.ask_oracle(destinations_choice)
         original_texts.append(ask_oracle_text)
