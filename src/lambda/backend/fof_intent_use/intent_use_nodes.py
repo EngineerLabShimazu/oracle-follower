@@ -19,12 +19,8 @@ def launch(user: User):
             {
                 'text': 'PLEASE_ORACLE'
             },
-            {
-                'text': hero.message()
-            },
-            {
-                'text': hero.ask_oracle(util.get_destinations_choice())
-            }
+            hero.message(),
+            hero.ask_oracle(util.get_destinations_choice()),
         ]
     }
 
@@ -39,11 +35,7 @@ def use_ticket(user: User):
             {
                 'text': 'EARTH_TIME_PASSED'
             },
-            {
-                'text': hero.message()
-            },
-            {
-                'text': hero.ask_oracle(util.get_destinations_choice())
-            }
+            hero.message(),
+            hero.ask_oracle(util.get_destinations_choice()),
         ]
     }
