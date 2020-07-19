@@ -39,11 +39,27 @@
     },
     "Yes": {
       "Type": "Pass",
-      "Next": "文脈なしの返答"
+      "Next": "Intent?"
     },
     "No": {
       "Type": "Pass",
       "Next": "State?"
+    },
+    "Intent?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.intent",
+          "StringEquals": "Use",
+          "Next": "Use"
+        }
+      ],
+      "Default": "文脈なしの返答"
+    },
+    "Use": {
+      "Type": "Task",
+      "Resource": "${fof_intent_use_arn}",
+      "Next": "PostProcess"
     },
     "文脈なしの返答": {
       "Comment": "A Wait state delays the state machine from continuing for a specified time.",
