@@ -2,6 +2,7 @@
 
 # This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK.
 import logging
+from typing import Optional
 
 from ask_sdk.standard import StandardSkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
@@ -271,6 +272,28 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
 
         handler_input.response_builder.speak(speech_text).ask(
             speech_text)
+        return handler_input.response_builder.response
+
+
+class UseIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name('UseIntent')(handler_input)
+
+    def handle(self, handler_input: HandlerInput) -> Optional[Response]:
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': True,
+            'intent': 'use',
+            'env_type': util.get_env_type(handler_input)
+        }
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
 
 
@@ -696,6 +719,7 @@ sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(TurnTimesIntentHandler())
+sb.add_request_handler(UseIntentHandler())
 sb.add_request_handler(ResultIntentHandler())
 sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())
