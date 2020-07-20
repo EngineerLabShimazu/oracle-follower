@@ -3,7 +3,7 @@ from fof_sdk import util
 from fof_sdk.user import User
 
 
-def launch(user: User):
+def launch(user: User, intent):
     if user.has_todays_oracle:
         return {
             'type': 'use',
