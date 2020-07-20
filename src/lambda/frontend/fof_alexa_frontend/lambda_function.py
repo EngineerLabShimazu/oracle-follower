@@ -297,6 +297,50 @@ class UseIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
+class TurnIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("TurnIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
+
+        turn_times = handler_input.attributes_manager.session_attributes.get(
+            'turn_times', 0)
+
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': state,
+            'turn_times': turn_times,
+            'env_type': util.get_env_type(handler_input)
+        }
+
+        node = handler_input.attributes_manager.session_attributes.get(
+            'node')
+        if node:
+            fof_sfn_input['node'] = node
+
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        if response.get('node'):
+            handler_input.attributes_manager.session_attributes['node'] = \
+                response['node']
+
+        if response.get('turn_times'):
+            handler_input.attributes_manager.session_attributes['turn_times'] = \
+                response['turn_times']
+
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
+
 class ResultIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
@@ -330,7 +374,8 @@ class ResultIntentHandler(AbstractRequestHandler):
 class SkipIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-        return is_intent_name("SkipIntent")(handler_input)
+        return is_intent_name("SkipIntent")(handler_input) or is_intent_name(
+            "AMAZON.NextIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -723,6 +768,7 @@ sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(TurnTimesIntentHandler())
 sb.add_request_handler(UseIntentHandler())
+sb.add_request_handler(TurnIntentHandler())
 sb.add_request_handler(ResultIntentHandler())
 sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())

@@ -35,7 +35,7 @@ def recommend_gem(turn_times):
 
 
 def gatcha(turn_times, items, user):
-    turn_times_text = '一回' if turn_times == 1 else '十連'
+    turn_times_text = '' if turn_times == 1 else '十連'
     gatcha_items = {
         'chronus_ticket_1': {
             'sound': 'GATCHA_SOUND_1',
@@ -123,7 +123,7 @@ def result(total_ticket_amount, turn_times, user):
         }
     })
 
-    turn_times_text = '一回' if turn_times == 1 else '十連'
+    turn_times_text = '' if turn_times == 1 else '十連'
     original_texts.append({
         'text': 'GATCHA_AGAIN',
         'kwargs': {

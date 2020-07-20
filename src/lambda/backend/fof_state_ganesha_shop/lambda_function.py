@@ -99,7 +99,7 @@ def main(turn_times, node_key, user, total_ticket_amount):
             is_paid = user.pay_gem(gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
-                node = nodes.gatcha(turn_times, items)
+                node = nodes.gatcha(turn_times, items, user)
             else:
                 node = nodes.recommend_gem(turn_times)
             node['is_paid'] = is_paid
