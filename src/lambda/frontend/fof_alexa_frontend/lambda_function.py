@@ -334,8 +334,6 @@ class TurnIntentHandler(AbstractRequestHandler):
             handler_input.attributes_manager.session_attributes['turn_times'] = \
                 response['turn_times']
 
-        response = sfn_ctl.execute(fof_sfn_input)
-
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
