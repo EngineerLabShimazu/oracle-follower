@@ -7,6 +7,7 @@ def launch(user: User):
     if user.has_todays_oracle:
         return {
             'type': 'use',
+            'node': 'use_ticket',
             'original_texts': [
                 {
                     'text': 'CONFIRM_CHRONUS_TICKET'

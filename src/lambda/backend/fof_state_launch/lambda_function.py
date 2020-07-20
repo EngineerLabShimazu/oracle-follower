@@ -37,13 +37,14 @@ def main(user):
 
     if user.has_todays_oracle:
         original_texts.append({
-            'text': '本日は「グリーンスター」へ向かうお告げを完了しています。'
+            'text': f'本日は「{user.destination}」へ向かうお告げを完了しています。'
         })
         original_texts.append({
-            'text': 'クロノスチケットを使い、下界の時間を１日経過させ、すぐに勇者から報告を聞きますか？'
+            'text': 'クロノスチケットを使い、<sub alias="げかい">下界</sub>の時間を<sub alias="いちにち">１日</sub>経過させ、すぐに勇者から報告を聞きますか？'
         })
         action['type'] = 'use'
         action['set_should_end_session'] = False
+        action['node'] = 'use_ticket'
 
     else:
         destinations_choice = random.sample(util.get_village_names(), 2)
