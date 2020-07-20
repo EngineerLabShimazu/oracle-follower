@@ -225,7 +225,7 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
         turn_times = handler_input.request_envelope.request.intent.slots[
             'turn_times'].value
-        if not self.valid_turn_times(turn_times):
+        if not self.valid_turn_times(int(turn_times)):
             speech_text = '一回か十回で！'
             handler_input.response_builder.speak(speech_text).ask(
                 speech_text)
