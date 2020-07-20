@@ -89,8 +89,12 @@
           "Variable": "$.state",
           "StringEquals": "Ganesha",
           "Next": "Ganesha"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "Use",
+          "Next": "Use"
         }
-
       ],
       "Default": "Launch"
     },

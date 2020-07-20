@@ -10,6 +10,8 @@ def main(action):
         return 'oracle'
     elif action['type'] == 'ganesha':
         return 'ganesha'
+    elif action['type'] == 'use':
+        return 'use'
     return 'そんなステートないですよw'
 
 
