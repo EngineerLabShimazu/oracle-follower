@@ -435,10 +435,15 @@ class NoIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'Ganesha',
             'turn_times': 0,
+            'intent': 'No',
             'env_type': util.get_env_type(handler_input)
         }
+
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
+        if state:
+            fof_sfn_input['state'] = state
 
         node = handler_input.attributes_manager.session_attributes.get(
             'node')
