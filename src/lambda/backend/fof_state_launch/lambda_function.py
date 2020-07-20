@@ -43,6 +43,7 @@ def main(user):
             'text': 'クロノスチケットを使い、下界の時間を１日経過させ、すぐに勇者から報告を聞きますか？'
         })
         action['type'] = 'use'
+        action['set_should_end_session'] = False
 
     else:
         destinations_choice = random.sample(util.get_village_names(), 2)
