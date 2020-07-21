@@ -59,10 +59,10 @@ def use_ticket(user: User, intent):
         'user_attr': user.attr,
         'original_texts': [
             {
-                'text': 'AUDIO_TIME_PASS'
+                'text': 'EARTH_TIME_PASSED'
             },
             {
-                'text': 'EARTH_TIME_PASSED'
+                'text': 'AUDIO_TIME_PASS'
             },
             hero.message(),
             action_parts['original_texts'],
