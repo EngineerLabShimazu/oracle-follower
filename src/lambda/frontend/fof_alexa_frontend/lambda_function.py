@@ -468,6 +468,10 @@ class YesIntentHandler(AbstractRequestHandler):
 
         response = sfn_ctl.execute(fof_sfn_input)
 
+        if response.get('state'):
+            handler_input.attributes_manager.session_attributes['state'] = \
+                response['state']
+
         if response.get('node'):
             handler_input.attributes_manager.session_attributes['node'] = \
                 response['node']

@@ -6,6 +6,15 @@ from fof_sdk.user import User
 from fof_sdk import util
 
 
+def has_chronus_ticket(user: User):
+    amount: int = user.get_item('chronus_ticket')
+    if not amount:
+        return False
+    if amount <= 0:
+        return False
+    return True
+
+
 def main(user):
     action = {
         'type': 'launch',
@@ -39,9 +48,14 @@ def main(user):
         original_texts.append({
             'text': f'本日は「{user.destination}」へ向かうお告げを完了しています。'
         })
-        original_texts.append({
-            'text': 'クロノスチケットを使い、<sub alias="げかい">下界</sub>の時間を<sub alias="いちにち">１日</sub>経過させ、すぐに勇者から報告を聞きますか？'
-        })
+        if has_chronus_ticket(user):
+            original_texts.append({
+                'text': 'CONFIRM_CHRONUS_TICKET'
+            })
+        else:
+            original_texts.append({
+                'text': 'RECOMMEND_CHRONUS_TICKET'
+            })
         action['type'] = 'use'
         action['set_should_end_session'] = False
         action['node'] = 'use_ticket'

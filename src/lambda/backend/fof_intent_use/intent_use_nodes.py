@@ -28,16 +28,6 @@ def launch(user: User, intent):
 
 
 def use_ticket(user: User, intent):
-    if not use_util.has_chronus_ticket(user):
-        return {
-            'type': 'buy',
-            'original_texts': [
-                {
-                    'text': 'すぐに勇者から報告を受け取るために、<sub alias="げかい">下界</sub>の時間を<sub alias="いちにち">１日</sub>経過させる「クロノスチケット」を購入しますか？'
-                }
-            ]
-        }
-    use_util.use_ticket(user)
     if intent == 'No':
         return {
             'type': 'end',
@@ -48,6 +38,19 @@ def use_ticket(user: User, intent):
                 }
             ]
         }
+
+    if not use_util.has_chronus_ticket(user):
+        return {
+            'type': 'ganesha',
+            'node': 'launch',
+            'original_texts': [
+                {
+                    'text': 'RECOMMEND_CHRONUS_TICKET'
+                }
+            ]
+        }
+
+    use_util.use_ticket(user)
 
     original_texts = []
     # 昨日の活動報告を聞く
