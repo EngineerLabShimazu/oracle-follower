@@ -223,9 +223,9 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
 
     def handle(self,
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
-        turn_times = handler_input.request_envelope.request.intent.slots[
-            'turn_times'].value
-        if not self.valid_turn_times(int(turn_times)):
+        turn_times = int(handler_input.request_envelope.request.intent.slots[
+                             'turn_times'].value)
+        if not self.valid_turn_times(turn_times):
             speech_text = '一回か十回で！'
             handler_input.response_builder.speak(speech_text).ask(
                 speech_text)
@@ -256,6 +256,11 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
         if response.get('turn_times'):
             handler_input.attributes_manager.session_attributes['turn_times'] = \
                 response['turn_times']
+
+        if response.get('total_ticket_amount'):
+            handler_input.attributes_manager.session_attributes[
+                'total_ticket_amount'] = \
+                response['total_ticket_amount']
 
         image_url = response.get('image_url')
         if image_url:
