@@ -50,6 +50,11 @@ def should_gatcha(turn_times):
     return bool(turn_times)
 
 
+def set_gatcha_result(user, item, add_amount):
+    amount: int = user.get_item(item, 0)
+    user.set_item('chronus_ticket', amount + add_amount)
+
+
 def main(turn_times, node_key, user, total_ticket_amount):
     action = {
         'type': 'ganesha',
@@ -119,6 +124,11 @@ def main(turn_times, node_key, user, total_ticket_amount):
     # lambdaのインプットであるturn_timesよりも、nodes.pyで指定しているturn_timesを優先する。
     accept = bool(node.get('turn_times', turn_times))
     is_paid = node.get('is_paid')
+
+    total_ticket_amount = node.get('total_ticket_amount')
+    if total_ticket_amount:
+        set_gatcha_result(user, 'chronus_ticket', total_ticket_amount)
+
     node['node'] = change_node(node_key, accept, is_paid)
 
     action.update(node)
