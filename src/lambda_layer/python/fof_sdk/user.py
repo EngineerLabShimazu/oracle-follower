@@ -17,6 +17,7 @@ class User:
         self.possible_events: str = attr.get('possible_events', '')
         self._paid_gem: int = attr.get('paid_gem', 0)
         self._free_gem: int = attr.get('free_gem', 0)
+        self.item_storage = attr.get('item_storage', {})
 
     @property
     def attr(self) -> dict:
@@ -126,6 +127,12 @@ class User:
                 return True
 
         return False
+
+    def set_item(self, item_name, value):
+        self.item_storage[item_name] = value
+
+    def get_item(self, item_name):
+        return self.item_storage.get(item_name)
 
 
 def serialize_attribute(attributes):
