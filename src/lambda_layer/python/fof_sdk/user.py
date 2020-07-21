@@ -131,8 +131,11 @@ class User:
     def set_item(self, item_name, value):
         self.item_storage[item_name] = value
 
-    def get_item(self, item_name):
-        return self.item_storage.get(item_name)
+    def get_item(self, item_name, default=None):
+        item = self.item_storage.get(item_name)
+        if item:
+            return item
+        return default
 
 
 def serialize_attribute(attributes):
