@@ -26,7 +26,8 @@ class TestUser(TestCase):
             'destination': '',
             'possible_events': '',
             'paid_gem': 0,
-            'free_gem': 0
+            'free_gem': 0,
+            'item_storage': {}
         })
 
         self.assertNotEqual(_user.__dict__, _user.attr)
