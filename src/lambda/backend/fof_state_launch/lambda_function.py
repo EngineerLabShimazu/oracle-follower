@@ -29,8 +29,8 @@ def main(user):
             original_texts.append(hero.total_followers(
                 user.follower_total_amount))
 
-        # 昨日のお告げによって目的地へは行って帰ってきたのでクリア
-        user.clear_destination()
+            # 昨日のお告げによって目的地へは行って帰ってきたのでクリア
+            user.clear_destination()
 
         # 今日の目的地ガチャ
         user.set_event()

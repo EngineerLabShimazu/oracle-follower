@@ -67,8 +67,7 @@ class User:
         return False
 
     def clear_destination(self):
-        if self.is_first_launch_today:
-            self.destination = ''
+        self.destination = ''
 
     def buy_gem(self, product_reference_name):
         if product_reference_name == 'gem_1000':
