@@ -52,13 +52,15 @@ def main(user):
             original_texts.append({
                 'text': 'CONFIRM_CHRONUS_TICKET'
             })
+            action['type'] = 'use'
+            action['node'] = 'use_ticket'
         else:
             original_texts.append({
                 'text': 'RECOMMEND_CHRONUS_TICKET'
             })
-        action['type'] = 'use'
+            action['type'] = 'ganesha'
+            action['node'] = 'launch'
         action['set_should_end_session'] = False
-        action['node'] = 'use_ticket'
 
     else:
         destinations_choice = random.sample(util.get_village_names(), 2)

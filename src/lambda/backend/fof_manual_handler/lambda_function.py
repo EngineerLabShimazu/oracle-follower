@@ -43,13 +43,13 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
     elif intent == 'Connections.Response':
         if not product_reference_name:
             return {
-                'type': 'Connections.Response',
+                'type': 'ganesha',
                 'original_texts': [
                     {
                         'text': 'ASK_GO_TO_GANESHA_SHOP'
-                        }
-                    ]
-                }
+                    }
+                ]
+            }
         with DynamoCtl(alexa_user_id) as dynamo_ctl:
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
             added = _user.buy_gem(product_reference_name)
@@ -64,15 +64,15 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
                     }
             dynamo_ctl.attr = _user.attr
         return {
-            'type': 'Connections.Response',
+            'type': 'ganesha',
             'original_texts': [
                 {
                     'text': 'ADD_GEM',
                     'kwargs': {
                         'paid_gem': added['paid_gem'],
                         'free_gem': added['free_gem']
-                        }
-                    },
+                    }
+                },
                 {
                     'text': 'CURRENT_GEM',
                     'kwargs': {
