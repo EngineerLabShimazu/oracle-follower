@@ -343,11 +343,15 @@ class TurnIntentHandler(AbstractRequestHandler):
         turn_times = handler_input.attributes_manager.session_attributes.get(
             'turn_times', 0)
 
+        destinations_choice = handler_input.attributes_manager.session_attributes.get(
+            'destinations_choice')
+
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': state,
             'turn_times': turn_times,
+            'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
         }
 

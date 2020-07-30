@@ -34,8 +34,8 @@ def main(destination_intent, alexa_user_id, destinations_choice):
 
 
 def lambda_handler(event, context):
-    destination = event['destination']
     alexa_user_id = event['alexa_user_id']
-    destinations_choice = event['destinations_choice']
+    destination = event.get('destination')
+    destinations_choice = event.get('destinations_choice')
     response = main(destination, alexa_user_id, destinations_choice)
     return response
