@@ -443,11 +443,17 @@ class YesIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput) -> Response:
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
+        node = session.get('node')
+        destinations_choice = session.get('destinations_choice')
+        total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
             'state': state,
+            'node': node,
+            'destinations_choice': destinations_choice,
+            'total_ticket_amount': total_ticket_amount,
             'turn_times': turn_times,
             'env_type': util.get_env_type(handler_input)
         }
@@ -483,6 +489,9 @@ class YesIntentHandler(AbstractRequestHandler):
 
         if 'node' in response:
             session['node'] = response['node']
+
+        if 'destinations_choice' in response:
+            session['destinations_choice'] = response['destinations_choice']
 
         if 'turn_times' in response:
             session['turn_times'] = response['turn_times']
@@ -829,7 +838,7 @@ sb.add_request_handler(WithContextIntentHandler())
 # sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 # sb.add_request_handler(TurnTimesIntentHandler())
-# sb.add_request_handler(UseIntentHandler())
+sb.add_request_handler(UseIntentHandler())
 # sb.add_request_handler(TurnIntentHandler())
 # sb.add_request_handler(ResultIntentHandler())
 # sb.add_request_handler(SkipIntentHandler())
