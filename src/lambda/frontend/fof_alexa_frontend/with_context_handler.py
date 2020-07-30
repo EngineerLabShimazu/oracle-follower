@@ -30,18 +30,6 @@ class WithContextIntentHandler(AbstractRequestHandler):
                 or is_intent_name("AMAZON.NoIntent")(handler_input))
 
     def handle(self, handler_input: HandlerInput) -> Response:
-        slots = handler_input.request_envelope.request.intent.slots
-
-        if 'turn_times' in slots:
-            turn_times = int(slots['turn_times'].value)
-            if not valid_turn_times(turn_times):
-                speech_text = '一回か十回で！'
-                handler_input.response_builder.speak(speech_text).ask(
-                    speech_text)
-                return handler_input.response_builder.response
-
-        village = slots['village'].value if 'village' in slots else ''
-
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
         node = session.get('node')
@@ -53,12 +41,25 @@ class WithContextIntentHandler(AbstractRequestHandler):
             'IsPreResponse': False,
             'state': state,
             'node': node,
-            'destination': village,
             'destinations_choice': destinations_choice,
-            'turn_times': turn_times,
             'total_ticket_amount': total_ticket_amount,
             'env_type': util.get_env_type(handler_input)
         }
+
+        slots = handler_input.request_envelope.request.intent.slots
+        if slots:
+            village = slots['village'].value if 'village' in slots else ''
+            fof_sfn_input['destination'] = village
+
+            if 'turn_times' in slots:
+                turn_times = int(slots['turn_times'].value)
+                if not valid_turn_times(turn_times):
+                    speech_text = '一回か十回で！'
+                    handler_input.response_builder.speak(speech_text).ask(
+                        speech_text)
+                    return handler_input.response_builder.response
+                fof_sfn_input['turn_times'] = turn_times
+
         response = sfn_ctl.execute(fof_sfn_input)
         print(f'response: {response}, type: {type(response)}')
 
