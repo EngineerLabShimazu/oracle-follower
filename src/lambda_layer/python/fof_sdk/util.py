@@ -54,6 +54,8 @@ def valid_destination(destination_intent) -> str:
     - ホワイト xxx
     - xxx タウン
     """
+    if not destination_intent:
+        return ''
     for i in villages.values():
         for words in i['variation'].values():
             for word in words:
