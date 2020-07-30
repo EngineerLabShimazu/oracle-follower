@@ -3,7 +3,7 @@ import json
 
 def main(action):
     if action['type'] == 'ask_oracle':
-        return 'expect_oracle'
+        return 'oracle'
     elif action['type'] == 'launch':
         return 'end'
     elif action['type'] == 'help':

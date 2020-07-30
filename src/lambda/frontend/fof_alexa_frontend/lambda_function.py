@@ -42,7 +42,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'launch',
+            'state': 'Launch',
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input)
         }
@@ -105,10 +105,12 @@ class DestinationIntentHandler(AbstractRequestHandler):
             'village'].value
         destinations_choice = handler_input.attributes_manager.session_attributes.get(
             'destinations_choice')
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'Oracle',
+            'state': state,
             'destination': village,
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input),
@@ -151,10 +153,12 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
 
     def handle(self,
                handler_input):  # type: (HandlerInput) -> Union[None, Response]
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'Ganesha',
+            'state': state,
             'env_type': util.get_env_type(handler_input),
         }
 
@@ -231,10 +235,13 @@ class TurnTimesIntentHandler(AbstractRequestHandler):
                 speech_text)
             return handler_input.response_builder.response
 
+        state = handler_input.attributes_manager.session_attributes.get(
+            'state')
+
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'state': 'Ganesha',
+            'state': state,
             'turn_times': turn_times,
             'env_type': util.get_env_type(handler_input),
         }
