@@ -20,7 +20,6 @@ def valid_turn_times(turn_times: int) -> bool:
 class WithContextIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return (is_intent_name("DestinationIntent")(handler_input)
-                or is_intent_name("GaneshaShopIntent")(handler_input)
                 or is_intent_name("TurnTimesIntent")(handler_input)
                 or is_intent_name("TurnIntent")(handler_input)
                 or is_intent_name("ResultIntent")(handler_input)

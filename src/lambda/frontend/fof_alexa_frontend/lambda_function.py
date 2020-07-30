@@ -149,73 +149,69 @@ class LaunchRequestHandler(AbstractRequestHandler):
 #         return handler_input.response_builder.response
 
 
-# class GaneshaShopIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
-#         return is_intent_name("GaneshaShopIntent")(handler_input)
-#
-#     def handle(self, handler_input: HandlerInput) -> Optional[Response]:
-#         session = handler_input.attributes_manager.session_attributes
-#         destinations_choice = session.get('destinations_choice')
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': 'Ganesha',
-#             'destinations_choice': destinations_choice,
-#             'env_type': util.get_env_type(handler_input),
-#         }
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#         handler_input.attributes_manager.session_attributes['state'] = \
-#             response['state']
-#
-#         turn_times = response.get('turn_times')
-#         if turn_times:
-#             handler_input.attributes_manager.session_attributes['turn_times'] = \
-#                 turn_times
-#
-#         speech_text = response["response_text"]
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         image_url = response.get('image_url')
-#         bg_image_url = response.get('bg_image_url')
-#         image_title = response.get('image_title')
-#         image_text = response.get('image_text')
-#         if image_url:
-#             img_obj = Image(sources=[ImageInstance(url=image_url)])
-#             bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
-#             if util.is_support_display(handler_input):
-#                 handler_input.response_builder.add_directive(
-#                     RenderTemplateDirective(
-#                         BodyTemplate7(
-#                             back_button=BackButtonBehavior.VISIBLE,
-#                             image=img_obj,
-#                             background_image=bg_img_obj,
-#                             title=image_title)
-#                     )
-#                 )
-#             else:
-#                 handler_input.response_builder.set_card(
-#                     ui.StandardCard(
-#                         title=image_title,
-#                         text=image_text,
-#                         image=ui.Image(
-#                             small_image_url=image_url,
-#                             large_image_url=image_url
-#                         )
-#                     )
-#                 )
-#
-#         handler_input.response_builder.speak(speech_text).ask(
-#             speech_text)
-#         return handler_input.response_builder.response
+class GaneshaShopIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name("GaneshaShopIntent")(handler_input)
+
+    def handle(self, handler_input: HandlerInput) -> Optional[Response]:
+        session = handler_input.attributes_manager.session_attributes
+        destinations_choice = session.get('destinations_choice')
+
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': 'Ganesha',
+            'destinations_choice': destinations_choice,
+            'env_type': util.get_env_type(handler_input),
+        }
+
+        if 'node' in session:
+            fof_sfn_input['node'] = session['node']
+
+        response = sfn_ctl.execute(fof_sfn_input)
+        if 'state' in response:
+            session['state'] = response['state']
+
+        if 'node' in response:
+            session['node'] = response['node']
+
+        if 'turn_times' in response:
+            session['turn_times'] = response['turn_times']
+
+        speech_text = response["response_text"]
+
+        image_url = response.get('image_url')
+        bg_image_url = response.get('bg_image_url')
+        image_title = response.get('image_title')
+        image_text = response.get('image_text')
+        if image_url:
+            img_obj = Image(sources=[ImageInstance(url=image_url)])
+            bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
+            if util.is_support_display(handler_input):
+                handler_input.response_builder.add_directive(
+                    RenderTemplateDirective(
+                        BodyTemplate7(
+                            back_button=BackButtonBehavior.VISIBLE,
+                            image=img_obj,
+                            background_image=bg_img_obj,
+                            title=image_title)
+                    )
+                )
+            else:
+                handler_input.response_builder.set_card(
+                    ui.StandardCard(
+                        title=image_title,
+                        text=image_text,
+                        image=ui.Image(
+                            small_image_url=image_url,
+                            large_image_url=image_url
+                        )
+                    )
+                )
+
+        handler_input.response_builder.speak(speech_text).ask(
+            speech_text)
+        return handler_input.response_builder.response
 
 
 # class TurnTimesIntentHandler(AbstractRequestHandler):
@@ -840,7 +836,7 @@ sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(WithContextIntentHandler())
 # sb.add_request_handler(DestinationIntentHandler())
-# sb.add_request_handler(GaneshaShopIntentHandler())
+sb.add_request_handler(GaneshaShopIntentHandler())
 # sb.add_request_handler(TurnTimesIntentHandler())
 # sb.add_request_handler(UseIntentHandler())
 # sb.add_request_handler(TurnIntentHandler())
