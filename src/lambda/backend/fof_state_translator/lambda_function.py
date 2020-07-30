@@ -13,5 +13,7 @@ def main(alexa_user_id, state: str) -> str:
 def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     _state = event.get('state', '')
+    if not _state:
+        return
     state = main(alexa_user_id, _state)
     return state.capitalize()

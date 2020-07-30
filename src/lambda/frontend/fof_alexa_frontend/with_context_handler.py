@@ -25,7 +25,6 @@ class WithContextIntentHandler(AbstractRequestHandler):
                 or is_intent_name("ResultIntent")(handler_input)
                 or is_intent_name("SkipIntent")(handler_input)
                 or is_intent_name("AMAZON.NextIntent")(handler_input)
-                or is_intent_name("AMAZON.YesIntent")(handler_input)
                 or is_intent_name("AMAZON.NoIntent")(handler_input))
 
     def handle(self, handler_input: HandlerInput) -> Response:
@@ -34,6 +33,7 @@ class WithContextIntentHandler(AbstractRequestHandler):
         node = session.get('node')
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
+        turn_times = session.get('turn_times')
 
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
@@ -42,6 +42,7 @@ class WithContextIntentHandler(AbstractRequestHandler):
             'node': node,
             'destinations_choice': destinations_choice,
             'total_ticket_amount': total_ticket_amount,
+            'turn_times': turn_times,
             'env_type': util.get_env_type(handler_input)
         }
 

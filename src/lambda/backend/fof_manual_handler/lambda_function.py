@@ -55,13 +55,13 @@ def main(alexa_user_id, intent, destinations, product_reference_name):
             added = _user.buy_gem(product_reference_name)
             if not added:
                 return {
-                    'type': 'Connections.Response',
+                    'type': 'ganesha',
                     'original_texts': [
                         {
                             'text': 'ASK_GO_TO_GANESHA_SHOP'
-                            }
-                        ]
-                    }
+                        }
+                    ]
+                }
             dynamo_ctl.attr = _user.attr
         return {
             'type': 'ganesha',

@@ -434,105 +434,96 @@ class UseIntentHandler(AbstractRequestHandler):
 #         return handler_input.response_builder.response
 
 
-# class YesIntentHandler(AbstractRequestHandler):
-#     """Handler for Help Intent."""
-#
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("AMAZON.YesIntent")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         turn_times = handler_input.attributes_manager.session_attributes.get(
-#             'turn_times', 0)
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'turn_times': turn_times,
-#             'env_type': util.get_env_type(handler_input)
-#         }
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#         if state:
-#             fof_sfn_input['state'] = state
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#             if node == 'recommend_gem':
-#                 in_skill_response = util.in_skill_product_response(
-#                     handler_input)
-#
-#                 # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
-#                 skill_product = util.get_skill_product(
-#                     in_skill_response, 'gem_300')
-#
-#                 return handler_input.response_builder.add_directive(
-#                     SendRequestDirective(
-#                         name='Buy',
-#                         payload={
-#                             'InSkillProduct': {
-#                                 'productId': skill_product.product_id
-#                             }
-#                         },
-#                         token='correlationToken'
-#                     )
-#                 ).response
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#
-#         if response.get('state'):
-#             handler_input.attributes_manager.session_attributes['state'] = \
-#                 response['state']
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         if response.get('turn_times'):
-#             handler_input.attributes_manager.session_attributes['turn_times'] = \
-#                 response['turn_times']
-#
-#         if response.get('total_ticket_amount'):
-#             handler_input.attributes_manager.session_attributes[
-#                 'total_ticket_amount'] = \
-#                 response['total_ticket_amount']
-#
-#         image_url = response.get('image_url')
-#         bg_image_url = response.get('bg_image_url')
-#         image_title = response.get('image_title')
-#         image_text = response.get('image_text')
-#         if image_url:
-#             img_obj = Image(sources=[ImageInstance(url=image_url)])
-#             bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
-#             if util.is_support_display(handler_input):
-#                 handler_input.response_builder.add_directive(
-#                     RenderTemplateDirective(
-#                         BodyTemplate7(
-#                             back_button=BackButtonBehavior.VISIBLE,
-#                             image=img_obj,
-#                             background_image=bg_img_obj,
-#                             title=image_title)
-#                     )
-#                 )
-#             else:
-#                 handler_input.response_builder.set_card(
-#                     ui.StandardCard(
-#                         title=image_title,
-#                         text=image_text,
-#                         image=ui.Image(
-#                             small_image_url=image_url,
-#                             large_image_url=image_url
-#                         )
-#                     )
-#                 )
-#
-#         speech_text = response["response_text"]
-#         handler_input.response_builder.speak(speech_text).ask(speech_text)
-#         return handler_input.response_builder.response
-#
-#
+class YesIntentHandler(AbstractRequestHandler):
+    """Handler for Yes Intent."""
+
+    def can_handle(self, handler_input: HandlerInput) -> bool:
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
+
+    def handle(self, handler_input: HandlerInput) -> Response:
+        session = handler_input.attributes_manager.session_attributes
+        state = session.get('state')
+        turn_times = session.get('turn_times')
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': False,
+            'state': state,
+            'turn_times': turn_times,
+            'env_type': util.get_env_type(handler_input)
+        }
+
+        node = session.get('node')
+        if node:
+            fof_sfn_input['node'] = node
+            if node == 'recommend_gem':
+                in_skill_response = util.in_skill_product_response(
+                    handler_input)
+
+                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                skill_product = util.get_skill_product(
+                    in_skill_response, 'gem_300')
+
+                return handler_input.response_builder.add_directive(
+                    SendRequestDirective(
+                        name='Buy',
+                        payload={
+                            'InSkillProduct': {
+                                'productId': skill_product.product_id
+                            }
+                        },
+                        token='correlationToken'
+                    )
+                ).response
+
+        print(fof_sfn_input)
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        if 'state' in response:
+            session['state'] = response['state']
+
+        if 'node' in response:
+            session['node'] = response['node']
+
+        if 'turn_times' in response:
+            session['turn_times'] = response['turn_times']
+
+        if 'total_ticket_amount' in response:
+            session['total_ticket_amount'] = response['total_ticket_amount']
+
+        image_url = response.get('image_url')
+        bg_image_url = response.get('bg_image_url')
+        image_title = response.get('image_title')
+        image_text = response.get('image_text')
+        if image_url:
+            img_obj = Image(sources=[ImageInstance(url=image_url)])
+            bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
+            if util.is_support_display(handler_input):
+                handler_input.response_builder.add_directive(
+                    RenderTemplateDirective(
+                        BodyTemplate7(
+                            back_button=BackButtonBehavior.VISIBLE,
+                            image=img_obj,
+                            background_image=bg_img_obj,
+                            title=image_title)
+                    )
+                )
+            else:
+                handler_input.response_builder.set_card(
+                    ui.StandardCard(
+                        title=image_title,
+                        text=image_text,
+                        image=ui.Image(
+                            small_image_url=image_url,
+                            large_image_url=image_url
+                        )
+                    )
+                )
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
+
 # class NoIntentHandler(AbstractRequestHandler):
 #     """Handler for Help Intent."""
 #
@@ -842,7 +833,7 @@ sb.add_request_handler(GaneshaShopIntentHandler())
 # sb.add_request_handler(TurnIntentHandler())
 # sb.add_request_handler(ResultIntentHandler())
 # sb.add_request_handler(SkipIntentHandler())
-# sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(YesIntentHandler())
 # sb.add_request_handler(NoIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())

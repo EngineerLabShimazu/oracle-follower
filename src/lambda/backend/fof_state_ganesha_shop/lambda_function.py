@@ -41,7 +41,11 @@ def change_node(node_key, accept: bool, is_paid: Optional[bool]):
             return 'gatcha'
         return 'end'
     elif node_key == 'gatcha':
-        return 'gatcha' if accept else 'end'
+        if is_paid is False:
+            return 'recommend_gem'
+        elif accept:
+            return 'gatcha'
+        return 'end'
     elif node_key == 'result':
         return 'gatcha' if accept else 'end'
 
@@ -60,7 +64,8 @@ def main(turn_times, node_key, user, total_ticket_amount):
         'type': 'ganesha',
         'image_url': util.get_image('gods/ganesha'),
         'bg_image_url': util.get_image('bg/ganesha-shop',
-                                       extension='.jpg')
+                                       extension='.jpg'),
+        'set_should_end_session': False
     }
 
     if node_key == 'launch':
