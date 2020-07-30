@@ -66,7 +66,7 @@ def main(user):
         destinations_choice = random.sample(util.get_village_names(), 2)
         ask_oracle_text = hero.ask_oracle(destinations_choice)
         original_texts.append(ask_oracle_text)
-        action = {'type': 'ask_oracle',
+        action = {'type': 'oracle',
                   'set_should_end_session': False,
                   'destinations_choice': destinations_choice,
                   'image_url': action.get('image_url',
