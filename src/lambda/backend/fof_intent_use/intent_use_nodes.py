@@ -94,5 +94,7 @@ def use_ticket(user: User, intent):
             hero.message(),
             action_parts['original_texts'],
             hero.ask_oracle(util.get_destinations_choice()),
-        ]
+        ],
+        'image_url': action_parts['image_url'],
+        'bg_image_url': action_parts['bg_image_url']
     }
