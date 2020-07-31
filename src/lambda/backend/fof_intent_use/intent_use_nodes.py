@@ -41,7 +41,7 @@ def launch(user: User, intent):
 
 
 def use_ticket(user: User, intent):
-    if intent == 'No':
+    if intent == 'AMAZON.NoIntent':
         return {
             'type': 'end',
             'set_should_end_session': True,
