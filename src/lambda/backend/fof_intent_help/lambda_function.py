@@ -20,7 +20,16 @@ def main(user, destinations):
         'image_url': util.get_image('hero/hero_stand'),
         'bg_image_url': util.get_image('bg/fof-map-gauss2', extension='.jpg')
     }
-    original_texts = [{'text': 'SKILL_SUMMARY'}]
+    ticket_amount: int = user.get_item('chronus_ticket', 0)
+    original_texts = [{'text': 'SKILL_SUMMARY'},
+                      {
+                          'text': 'CURRENT_GEM',
+                          'kwargs': {
+                              'paid_gem': user.paid_gem,
+                              'free_gem': user.free_gem
+                          }
+                      },
+                      {'text': f'クロノスチケットは{ticket_amount}枚持っています。'}]
 
     if user.has_todays_oracle:
         original_texts.append({
