@@ -52,6 +52,11 @@
           "Variable": "$.intent",
           "StringEquals": "UseIntent",
           "Next": "Use"
+        },
+        {
+          "Variable": "$.intent",
+          "StringEquals": "HelpIntent",
+          "Next": "Help"
         }
       ],
       "Default": "文脈なしの返答"
@@ -59,6 +64,11 @@
     "Use": {
       "Type": "Task",
       "Resource": "${fof_intent_use_arn}",
+      "Next": "PostProcess"
+    },
+    "Help": {
+      "Type": "Task",
+      "Resource": "${fof_intent_help_arn}",
       "Next": "PostProcess"
     },
     "文脈なしの返答": {

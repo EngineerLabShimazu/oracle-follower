@@ -755,10 +755,23 @@ class WhatCanIBuyHandler(AbstractRequestHandler):
 
         purchasable_products = util.get_speakable_products(in_skill_response)
         speech = f'現在購入可能な商品は、{purchasable_products}です。' \
-            f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
+                 f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
+        handler_input.response_builder.speak(speech)
 
-        handler_input.response_builder.speak(speech).ask(speech)
-        return handler_input.response_builder.response
+        skill_product = util.get_skill_product(
+            in_skill_response, 'gem_1000')
+
+        return handler_input.response_builder.add_directive(
+            SendRequestDirective(
+                name='Buy',
+                payload={
+                    'InSkillProduct': {
+                        'productId': skill_product.product_id
+                    }
+                },
+                token='correlationToken'
+            )
+        ).response
 
 
 class ProductDetailHandler(AbstractRequestHandler):

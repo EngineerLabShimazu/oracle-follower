@@ -156,6 +156,20 @@ module "fof_state_ganesha_shop" {
   }
 }
 
+module "fof_intent_help" {
+  env = var.env
+  source = "./modules/lambda_with_env/"
+  function_name = "fof_intent_help"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+  environment = {
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
+  }
+}
+
 module "fof_post_save_attr" {
   env = var.env
   source = "./modules/lambda/"
