@@ -14,6 +14,12 @@ def has_chronus_ticket(user: User):
     return True
 
 
+def add_item_text(ticket_amount):
+    if ticket_amount <= 0:
+        return {'text': 'アイテムは所持していません。'}
+    return {'text': f'クロノスチケットを{ticket_amount}枚持っています。'}
+
+
 def main(user, destinations):
     action = {
         'type': 'help',
@@ -29,7 +35,8 @@ def main(user, destinations):
                               'free_gem': user.free_gem
                           }
                       },
-                      {'text': f'クロノスチケットは{ticket_amount}枚持っています。'}]
+                      add_item_text(ticket_amount)
+                      ]
 
     if user.has_todays_oracle:
         original_texts.append({
