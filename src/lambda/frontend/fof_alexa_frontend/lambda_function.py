@@ -160,6 +160,7 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
+            'intent': 'GaneshaShopIntent',
             'state': 'Ganesha',
             'destinations_choice': destinations_choice,
             'env_type': util.get_env_type(handler_input),

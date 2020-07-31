@@ -6,6 +6,20 @@ def launch():
             },
             {
                 'text': 'SALES_GATCHA'
+            },
+            {
+                'text': 'RECOMMEND_TEN'
+            }
+        ],
+        'turn_times': 10
+    }
+
+
+def recommend_ten():
+    return {
+        'original_texts': [
+            {
+                'text': 'RECOMMEND_TEN'
             }
         ],
         'turn_times': 10
@@ -139,6 +153,16 @@ def result(total_ticket_amount, turn_times, user):
 
 def remaining_gem():
     pass
+
+
+def recommend_gatcha_again(turn_times):
+    turn_times_text = '' if turn_times == 1 else '十連'
+    return {
+        'text': 'GATCHA_AGAIN',
+        'kwargs': {
+            'turn_times_text': turn_times_text
+        }
+    }
 
 
 def end():

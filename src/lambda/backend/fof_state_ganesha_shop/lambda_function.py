@@ -59,6 +59,41 @@ def set_gatcha_result(user, item, add_amount):
     user.set_item('chronus_ticket', amount + add_amount)
 
 
+def is_valid_intent(intent: str, node: str):
+    valid_intents = {
+        'welcome': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
+                    'TurnTimesIntent'],
+        'recommend_gatcha': ['AMAZON.YesIntent', 'AMAZON.NoIntent',
+                             'TurnIntent', 'TurnTimesIntent'],
+        'result': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
+                   'TurnTimesIntent'],
+    }
+    if intent in valid_intents[node]:
+        return True
+    return False
+
+
+def re_ask(node, turn_times):
+    action = {
+        'type': 'ganesha',
+        'image_url': util.get_image('gods/ganesha'),
+        'bg_image_url': util.get_image('bg/ganesha-shop',
+                                       extension='.jpg'),
+        'set_should_end_session': False
+    }
+
+    if node == 'welcome':
+        text = nodes.recommend_ten()
+    if node == 'recommend_gatcha':
+        text = nodes.recommend_gatcha()
+    if node == 'result':
+        text = nodes.recommend_gatcha_again(turn_times)
+    action.update(text)
+    print(F'NODE: {node}')
+    print(f'ACTION: {action}')
+    return action
+
+
 def main(turn_times, node_key, user, total_ticket_amount):
     action = {
         'type': 'ganesha',
@@ -144,8 +179,16 @@ def main(turn_times, node_key, user, total_ticket_amount):
 
 def lambda_handler(event, context):
     turn_times = event.get('turn_times')
-    node_key = event.get('node', 'launch')
     user = User(event['alexa_user_id'], event['dynamo_attr'])
     total_ticket_amount = event.get('total_ticket_amount', 0)
+    node_key = event.get('node', 'launch')
+
+    intent = event.get('intent')
+    if intent == 'AMAZON.NoIntent':
+        turn_times = 0
+    if node_key in ['welcome', 'recommend_gatcha', 'result']:
+        if not is_valid_intent(intent, node_key):
+            return re_ask(node_key, turn_times)
+
     response = main(turn_times, node_key, user, total_ticket_amount)
     return response
