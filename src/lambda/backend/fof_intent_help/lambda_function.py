@@ -43,7 +43,7 @@ def main(user, destinations):
             destinations = random.sample(util.get_village_names(), 2)
         original_texts.append(hero.total_followers(user.follower_total_amount))
         original_texts.append(hero.ask_oracle(destinations))
-        action['original_texts'] = original_texts
+    action['original_texts'] = original_texts
     return action
 
 
