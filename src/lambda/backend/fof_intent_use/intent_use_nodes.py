@@ -12,7 +12,8 @@ def re_ask():
             {
                 'text': 'CONFIRM_CHRONUS_TICKET'
             }
-        ]
+        ],
+        'set_should_end_session': False,
     }
 
 
