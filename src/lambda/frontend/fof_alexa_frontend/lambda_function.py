@@ -167,7 +167,8 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         }
 
         if 'node' in session:
-            fof_sfn_input['node'] = session['node']
+            if session.get('state') == 'Ganesha':
+                fof_sfn_input['node'] = session['node']
 
         response = sfn_ctl.execute(fof_sfn_input)
         if 'state' in response:
@@ -294,7 +295,7 @@ class UseIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,
-            'intent': 'Use',
+            'intent': 'UseIntent',
             'env_type': util.get_env_type(handler_input)
         }
         response = sfn_ctl.execute(fof_sfn_input)

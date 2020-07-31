@@ -3,7 +3,7 @@ from fof_sdk.user import User
 
 
 def main(node, user, intent):
-    if intent not in ['Amazon.YesIntent', 'UseIntent']:
+    if intent not in ['AMAZON.YesIntent', 'UseIntent']:
         return nodes.re_ask()
     _node_map = {
         'launch': nodes.launch,

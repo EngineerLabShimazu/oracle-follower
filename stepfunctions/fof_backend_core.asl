@@ -50,7 +50,7 @@
       "Choices": [
         {
           "Variable": "$.intent",
-          "StringEquals": "Use",
+          "StringEquals": "UseIntent",
           "Next": "Use"
         }
       ],
