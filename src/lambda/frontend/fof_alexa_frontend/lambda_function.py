@@ -166,7 +166,8 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         }
 
         if 'node' in session:
-            fof_sfn_input['node'] = session['node']
+            if session.get('state') == 'Ganesha':
+                fof_sfn_input['node'] = session['node']
 
         response = sfn_ctl.execute(fof_sfn_input)
         if 'state' in response:
