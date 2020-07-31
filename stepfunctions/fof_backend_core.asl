@@ -132,6 +132,12 @@
       "Type": "Task",
       "Resource": "${fof_state_changer_arn}",
       "ResultPath": "$.state",
+      "Next": "NodeCleaner"
+    },
+    "NodeCleaner": {
+      "Type": "Task",
+      "Resource": "${fof_post_node_cleaner}",
+      "ResultPath": "$.node",
       "Next": "SaveAttr"
     },
     "SaveAttr": {
