@@ -291,10 +291,13 @@ class UseIntentHandler(AbstractRequestHandler):
         return is_intent_name('UseIntent')(handler_input)
 
     def handle(self, handler_input: HandlerInput) -> Optional[Response]:
+        session = handler_input.attributes_manager.session_attributes
+        node = session.get('node')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,
             'intent': 'UseIntent',
+            'node': node,
             'env_type': util.get_env_type(handler_input)
         }
         response = sfn_ctl.execute(fof_sfn_input)
@@ -319,9 +322,20 @@ class UseIntentHandler(AbstractRequestHandler):
                 )
             ).response
 
-        if response.get('node'):
-            handler_input.attributes_manager.session_attributes['node'] = \
-                response['node']
+        if 'state' in response:
+            session['state'] = response['state']
+
+        if 'node' in response:
+            session['node'] = response['node']
+
+        if 'destinations_choice' in response:
+            session['destinations_choice'] = response['destinations_choice']
+
+        if 'turn_times' in response:
+            session['turn_times'] = response['turn_times']
+
+        if 'total_ticket_amount' in response:
+            session['total_ticket_amount'] = response['total_ticket_amount']
 
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
