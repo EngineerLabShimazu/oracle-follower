@@ -4,6 +4,18 @@ from fof_sdk import util
 from fof_sdk.user import User
 
 
+def re_ask():
+    return {
+        'type': 'use',
+        'node': 'use_ticket',
+        'original_texts': [
+            {
+                'text': 'CONFIRM_CHRONUS_TICKET'
+            }
+        ]
+    }
+
+
 def launch(user: User, intent):
     if user.has_todays_oracle:
         return {
