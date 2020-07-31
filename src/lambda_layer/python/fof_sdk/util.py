@@ -14,12 +14,12 @@ _ASSETS_URL_PREFIX = os.getenv('ASSETS_URL_PREFIX')
 ex.) https://bucket_name.s3-region.amazonaws.com/oracle-follower/assets
 """
 
-follower_table = {'SS': 10,
-                  'S': 9,
-                  'A': 8,
-                  'B': 7,
-                  'C': 6,
-                  'D': 5
+follower_table = {'SS': 2,
+                  'S': 2,
+                  'A': 2,
+                  'B': 1,
+                  'C': 1,
+                  'D': 1
                   }
 
 hunt_table = {
