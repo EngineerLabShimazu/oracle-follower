@@ -450,6 +450,7 @@ class YesIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
+            'intent': 'AMAZON.YesIntent',
             'state': state,
             'node': node,
             'destinations_choice': destinations_choice,

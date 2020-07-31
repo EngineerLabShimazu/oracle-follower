@@ -38,6 +38,7 @@ class WithContextIntentHandler(AbstractRequestHandler):
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
+            'intent': handler_input.request_envelope.request.intent.name,
             'state': state,
             'node': node,
             'destinations_choice': destinations_choice,
