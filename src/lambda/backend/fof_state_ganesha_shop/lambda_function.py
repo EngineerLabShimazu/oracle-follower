@@ -61,11 +61,11 @@ def set_gatcha_result(user, item, add_amount):
 
 def is_valid_intent(intent: str, node: str):
     valid_intents = {
-        'welcome': ['Amazon.YesIntent', 'Amazon.NoIntent', 'TurnIntent',
+        'welcome': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
                     'TurnTimesIntent'],
-        'recommend_gatcha': ['Amazon.YesIntent', 'Amazon.NoIntent',
+        'recommend_gatcha': ['AMAZON.YesIntent', 'AMAZON.NoIntent',
                              'TurnIntent', 'TurnTimesIntent'],
-        'result': ['Amazon.YesIntent', 'Amazon.NoIntent', 'TurnIntent',
+        'result': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
                    'TurnTimesIntent'],
     }
     if intent in valid_intents[node]:
@@ -88,7 +88,10 @@ def re_ask(node, turn_times):
         text = nodes.recommend_gatcha()
     if node == 'result':
         text = nodes.recommend_gatcha_again(turn_times)
-    return action.update(text)
+    action.update(text)
+    print(F'NODE: {node}')
+    print(f'ACTION: {action}')
+    return action
 
 
 def main(turn_times, node_key, user, total_ticket_amount):
@@ -181,8 +184,10 @@ def lambda_handler(event, context):
     node_key = event.get('node', 'launch')
 
     intent = event.get('intent')
+    if intent == 'AMAZON.NoIntent':
+        turn_times = 0
     if node_key in ['welcome', 'recommend_gatcha', 'result']:
-        if not is_valid_intent(node_key):
+        if not is_valid_intent(intent, node_key):
             return re_ask(node_key, turn_times)
 
     response = main(turn_times, node_key, user, total_ticket_amount)

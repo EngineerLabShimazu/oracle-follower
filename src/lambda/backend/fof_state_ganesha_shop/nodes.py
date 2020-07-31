@@ -8,7 +8,7 @@ def launch():
                 'text': 'SALES_GATCHA'
             },
             {
-                'text': 'ASK_TURN_TEN_TIMES'
+                'text': 'RECOMMEND_TEN'
             }
         ],
         'turn_times': 10
@@ -16,7 +16,14 @@ def launch():
 
 
 def recommend_ten():
-    pass
+    return {
+        'original_texts': [
+            {
+                'text': 'RECOMMEND_TEN'
+            }
+        ],
+        'turn_times': 10
+    }
 
 
 def recommend_gatcha():
