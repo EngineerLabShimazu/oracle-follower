@@ -136,7 +136,7 @@
     },
     "NodeCleaner": {
       "Type": "Task",
-      "Resource": "${fof_post_node_cleaner}",
+      "Resource": "${fof_post_node_cleaner_arn}",
       "ResultPath": "$.node",
       "Next": "SaveAttr"
     },
