@@ -21,7 +21,7 @@ text_map = {
     """,
     'HERO_TOTAL_FOLLOWERS': """
     <voice name="Takumi">
-        現在の合計は{total_follower}人です。
+        現在の信者の合計は{total_follower}人です。
     </voice>
     """,
     'HERO_ASK_ORACLE': """
