@@ -88,7 +88,6 @@ def main(turn_times, node_key, user, total_ticket_amount):
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
-
         if should_gatcha(turn_times):
             gem_amount_map = {
                 1: 300,
@@ -161,7 +160,6 @@ def main(turn_times, node_key, user, total_ticket_amount):
 
 
 def lambda_handler(event, context):
-    print(f'EVENT: {event}')
     turn_times = event.get('turn_times')
     user = User(event['alexa_user_id'], event['dynamo_attr'])
     total_ticket_amount = event.get('total_ticket_amount', 0)

@@ -459,7 +459,6 @@ class YesIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput) -> Response:
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
-        print(f'YESINTENT: {state}')
         node = session.get('node')
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
