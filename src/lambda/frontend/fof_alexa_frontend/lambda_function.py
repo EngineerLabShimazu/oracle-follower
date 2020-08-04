@@ -605,10 +605,15 @@ class HelpIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
+        session = handler_input.attributes_manager.session_attributes
+        state = session.get('state')
+        node = session.get('node')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,
             'intent': 'HelpIntent',
+            'state': state,
+            'node': node,
             'destinations_choice':
                 handler_input.attributes_manager.session_attributes.get(
                     'destinations_choice'),

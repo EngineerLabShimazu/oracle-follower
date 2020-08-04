@@ -3,15 +3,15 @@ from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 
 
-def main(alexa_user_id, node_key, destination):
+def main(alexa_user_id, node_key, intent, destination):
     action = {
         'type': 'tutorial',
         'set_should_end_session': False
-        }
+    }
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'salvation':
-        node = nodes.salvation()
+        node = nodes.salvation(intent)
     elif node_key == 'send_out':
         node = nodes.send_out(destination)
     else:
@@ -42,6 +42,7 @@ def main(alexa_user_id, node_key, destination):
 def lambda_handler(event, context):
     alexa_user_id = event['alexa_user_id']
     node_key = event.get('node', 'launch')
+    intent = event.get('intent')
     destination = event.get('destination')
-    action = main(alexa_user_id, node_key, destination)
+    action = main(alexa_user_id, node_key, intent, destination)
     return action
