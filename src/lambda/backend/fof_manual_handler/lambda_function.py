@@ -29,6 +29,7 @@ def main(alexa_user_id, intent, product_reference_name):
         if not product_reference_name:
             return {
                 'type': 'ganesha',
+                'node': 'launch',
                 'original_texts': [
                     {
                         'text': 'ASK_GO_TO_GANESHA_SHOP'
@@ -41,6 +42,7 @@ def main(alexa_user_id, intent, product_reference_name):
             if not added:
                 return {
                     'type': 'ganesha',
+                    'node': 'launch',
                     'original_texts': [
                         {
                             'text': 'ASK_GO_TO_GANESHA_SHOP'
@@ -50,6 +52,7 @@ def main(alexa_user_id, intent, product_reference_name):
             dynamo_ctl.attr = _user.attr
         return {
             'type': 'ganesha',
+            'node': 'launch',
             'original_texts': [
                 {
                     'text': 'ADD_GEM',

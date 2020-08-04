@@ -730,6 +730,54 @@ class BuyResponseHandler(AbstractRequestHandler):
                 'env_type': util.get_env_type(handler_input)
             }
             response = sfn_ctl.execute(fof_sfn_input)
+
+            session = handler_input.attributes_manager.session_attributes
+            if 'state' in response:
+                session['state'] = response['state']
+
+            if 'node' in response:
+                session['node'] = response['node']
+
+            if 'destinations_choice' in response:
+                session['destinations_choice'] = response[
+                    'destinations_choice']
+
+            if 'turn_times' in response:
+                session['turn_times'] = response['turn_times']
+
+            if 'total_ticket_amount' in response:
+                session['total_ticket_amount'] = response[
+                    'total_ticket_amount']
+
+            image_url = response.get('image_url')
+            bg_image_url = response.get('bg_image_url')
+            image_title = response.get('image_title')
+            image_text = response.get('image_text')
+            if image_url:
+                img_obj = Image(sources=[ImageInstance(url=image_url)])
+                bg_img_obj = Image(sources=[ImageInstance(url=bg_image_url)])
+                if util.is_support_display(handler_input):
+                    handler_input.response_builder.add_directive(
+                        RenderTemplateDirective(
+                            BodyTemplate7(
+                                back_button=BackButtonBehavior.VISIBLE,
+                                image=img_obj,
+                                background_image=bg_img_obj,
+                                title=image_title)
+                        )
+                    )
+                else:
+                    handler_input.response_builder.set_card(
+                        ui.StandardCard(
+                            title=image_title,
+                            text=image_text,
+                            image=ui.Image(
+                                small_image_url=image_url,
+                                large_image_url=image_url
+                            )
+                        )
+                    )
+
             speech = response["response_text"]
         elif purchase_result == PurchaseResult.DECLINED.value:
             # ユーザーは製品の購入オファーを拒否しました

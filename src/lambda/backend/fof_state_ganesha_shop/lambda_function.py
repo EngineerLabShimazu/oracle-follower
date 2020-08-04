@@ -88,7 +88,6 @@ def main(turn_times, node_key, user, total_ticket_amount):
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
-
         if should_gatcha(turn_times):
             gem_amount_map = {
                 1: 300,
