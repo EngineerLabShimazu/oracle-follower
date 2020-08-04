@@ -100,6 +100,19 @@ text_map = {
     </p>
     </speak>
     """,
+    'TUTORIAL_SALVATION_ASK': """
+    <speak>
+    <p>
+        <voice name="Takumi">
+            <prosody pitch="x-low">
+                勇者の妹に危機が迫っているようですね。
+                勇者にお告げを与え、救いましょう。
+                今回は「ブルードレスへ向かえ」と言いなさい。
+            </prosody>
+        </voice>
+    </p>
+    </speak>
+    """,
     'TUTORIAL_SEND_OUT': """
     <speak>
         <p>

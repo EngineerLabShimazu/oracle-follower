@@ -63,8 +63,26 @@ def main(user, destinations):
     return action
 
 
+def tutorial_salvation():
+    return {
+        'type': 'tutorial',
+        'node': 'salvation',
+        'image_url': util.get_image('gods/greatest-god'),
+        'bg_image_url': util.get_image('bg/fof-map-gauss2', extension='.jpg'),
+        'original_texts': [
+            {
+                'text': 'HELP_TUTORIAL_SALVATION',
+            }
+        ]
+    }
+
+
 def lambda_handler(event, context):
     destinations = event.get('destinations_choice')
     user = User(event['alexa_user_id'], event['dynamo_attr'])
+    state = event.get('state')
+    node = event.get('node')
+    if state == 'Tutorial' and node == 'salvation':
+        return tutorial_salvation()
     response = main(user, destinations)
     return response
