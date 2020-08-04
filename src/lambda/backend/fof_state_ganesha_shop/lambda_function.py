@@ -31,13 +31,13 @@ def change_node(node_key, accept: bool, is_paid: Optional[bool]):
     elif node_key == 'welcome':
         if is_paid is False:
             return 'recommend_gem'
-        elif accept:
+        elif accept and is_paid:
             return 'gatcha'
         return 'recommend_gatcha'
     elif node_key == 'recommend_gatcha':
         if is_paid is False:
             return 'recommend_gem'
-        elif accept:
+        elif accept and is_paid:
             return 'gatcha'
         return 'end'
     elif node_key == 'gatcha':
@@ -59,20 +59,6 @@ def set_gatcha_result(user, item, add_amount):
     user.set_item('chronus_ticket', amount + add_amount)
 
 
-def is_valid_intent(intent: str, node: str):
-    valid_intents = {
-        'welcome': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
-                    'TurnTimesIntent'],
-        'recommend_gatcha': ['AMAZON.YesIntent', 'AMAZON.NoIntent',
-                             'TurnIntent', 'TurnTimesIntent'],
-        'result': ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'TurnIntent',
-                   'TurnTimesIntent'],
-    }
-    if intent in valid_intents[node]:
-        return True
-    return False
-
-
 def re_ask(node, turn_times):
     action = {
         'type': 'ganesha',
@@ -86,11 +72,7 @@ def re_ask(node, turn_times):
         text = nodes.recommend_ten()
     if node == 'recommend_gatcha':
         text = nodes.recommend_gatcha()
-    if node == 'result':
-        text = nodes.recommend_gatcha_again(turn_times)
     action.update(text)
-    print(F'NODE: {node}')
-    print(f'ACTION: {action}')
     return action
 
 
@@ -106,6 +88,7 @@ def main(turn_times, node_key, user, total_ticket_amount):
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
+
         if should_gatcha(turn_times):
             gem_amount_map = {
                 1: 300,
@@ -186,9 +169,17 @@ def lambda_handler(event, context):
     intent = event.get('intent')
     if intent == 'AMAZON.NoIntent':
         turn_times = 0
-    if node_key in ['welcome', 'recommend_gatcha', 'result']:
-        if not is_valid_intent(intent, node_key):
+
+    valid_intents = ['AMAZON.YesIntent', 'AMAZON.NoIntent',
+                     'TurnIntent', 'TurnTimesIntent']
+
+    if node_key in ['welcome', 'recommend_gatcha']:
+        if intent not in valid_intents:
             return re_ask(node_key, turn_times)
+
+    if node_key in ['result', 'gatcha']:
+        if intent not in valid_intents:
+            node_key = 'result'
 
     response = main(turn_times, node_key, user, total_ticket_amount)
     return response
