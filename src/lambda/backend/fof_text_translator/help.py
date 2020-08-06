@@ -11,5 +11,18 @@ text_map = {
         </voice>
     </p>
     </speak>
+    """,
+    'HELP_TUTORIAL_SEND_OUT': """
+    <speak>
+    <p>
+        <voice name="Takumi">
+            <prosody pitch="x-low">
+                「お告げの勇者」では、この世界の神であるあなたのお告げによって勇者を成長させ、あなたの信者数を拡大していただきます。
+                まずは、勇者にお告げを与え、迷える人のもとへお導きください。
+                ブルードレスとマゼンタコートのどちらへ向かわせますか？
+            </prosody>
+        </voice>
+    </p>
+    </speak>
     """
 }
