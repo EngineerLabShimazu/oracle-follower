@@ -12,6 +12,8 @@ def main(action):
         return 'ganesha'
     elif action['type'] == 'use':
         return 'use'
+    elif action['type'] == 'tutorial':
+        return 'tutorial'
     return 'そんなステートないですよw'
 
 
