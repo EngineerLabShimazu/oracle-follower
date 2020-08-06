@@ -3,10 +3,11 @@ def launch():
         'original_texts': [
             {
                 'text': 'TUTORIAL_LAUNCH',
-                }
-            ],
+            }
+        ],
+        'state': 'tutorial',
         'node': 'salvation'
-        }
+    }
 
 
 def salvation(intent):
@@ -17,6 +18,7 @@ def salvation(intent):
                     'text': 'TUTORIAL_SALVATION',
                 }
             ],
+            'state': 'tutorial',
             'node': 'send_out'
         }
     return {
@@ -25,6 +27,7 @@ def salvation(intent):
                 'text': 'TUTORIAL_SALVATION_ASK',
             }
         ],
+        'state': 'tutorial',
         'node': 'salvation'
     }
 
@@ -57,5 +60,7 @@ def send_out(intent, destination):
             {
                 'text': 'TUTORIAL_SEND_OUT_ASK'
             }
-        ]
+        ],
+        'state': 'tutorial',
+        'node': 'salvation'
     }
