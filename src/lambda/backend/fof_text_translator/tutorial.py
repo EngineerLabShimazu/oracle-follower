@@ -129,5 +129,15 @@ text_map = {
         </p>
         <break time="1s"/>
     </speak>
+    """,
+    'TUTORIAL_SEND_OUT_ASK': """
+    <speak>
+    <p>
+        <voice name="Takumi">
+            神様、迷える人のもとへお導きください。
+            次はブルードレスとマゼンタコートのどちらへ向かえばよろしいでしょうか。
+        </voice>
+    </p>
+    </speak>
     """
-    }
+}

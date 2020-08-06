@@ -10,7 +10,7 @@ def launch():
 
 
 def salvation(intent):
-    if intent in ['DestinationIntent', 'HelpIntent']:
+    if intent == 'DestinationIntent':
         return {
             'original_texts': [
                 {
@@ -39,15 +39,23 @@ def salvation_ask():
     }
 
 
-def send_out(destination):
+def send_out(intent, destination):
+    if intent == 'DestinationIntent':
+        return {
+            'original_texts': [
+                {
+                    'text': 'TUTORIAL_SEND_OUT',
+                    'kwargs': {
+                        'destination': destination
+                    }
+                }
+            ],
+            'end': True
+        }
     return {
         'original_texts': [
             {
-                'text': 'TUTORIAL_SEND_OUT',
-                'kwargs': {
-                    'destination': destination
-                }
-                }
-            ],
-        'end': True
-        }
+                'text': 'TUTORIAL_SEND_OUT_ASK'
+            }
+        ]
+    }

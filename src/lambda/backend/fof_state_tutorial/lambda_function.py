@@ -13,7 +13,7 @@ def main(alexa_user_id, node_key, intent, destination):
     elif node_key == 'salvation':
         node = nodes.salvation(intent)
     elif node_key == 'send_out':
-        node = nodes.send_out(destination)
+        node = nodes.send_out(intent, destination)
     else:
         node = {
             'original_texts': [
