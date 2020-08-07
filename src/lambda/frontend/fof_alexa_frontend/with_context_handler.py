@@ -47,6 +47,14 @@ class WithContextIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input)
         }
 
+        if state == 'ganesha' and node == 'launch':
+            if handler_input.request_envelope.request.intent.name == 'AMAZON.NoIntent':
+                speech = '本日も祈りを受け入れてくださり、ありがとうございました。 ' \
+                         'また信仰を捧げさせていただく機会を、どうか、お与えくださいませ。'
+                handler_input.response_builder.speak(speech).ask(
+                    speech).set_should_end_session(True)
+                return handler_input.response_builder.response
+
         slots = handler_input.request_envelope.request.intent.slots
         if slots:
             village = slots['village'].value if 'village' in slots else ''
