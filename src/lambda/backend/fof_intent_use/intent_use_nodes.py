@@ -81,6 +81,7 @@ def use_ticket(user: User, intent):
 
     # 今日の目的地ガチャ
     user.set_event()
+    destinations_choice = util.get_destinations_choice()
     return {
         'type': 'oracle',
         'user_attr': user.attr,
@@ -93,8 +94,9 @@ def use_ticket(user: User, intent):
             },
             hero.message(),
             action_parts['original_texts'],
-            hero.ask_oracle(util.get_destinations_choice()),
+            hero.ask_oracle(destinations_choice),
         ],
+        'destinations_choice': destinations_choice,
         'image_url': action_parts['image_url'],
         'bg_image_url': action_parts['bg_image_url']
     }
