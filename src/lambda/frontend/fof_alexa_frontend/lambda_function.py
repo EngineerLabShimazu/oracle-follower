@@ -299,8 +299,8 @@ class UseIntentHandler(AbstractRequestHandler):
         if state == 'ganesha':
             fof_sfn_input = {
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-                'IsPreResponse': True,
-                'intent': 'GaneshaShopIntent',
+                'IsPreResponse': False,
+                'state': 'ganesha',
                 'node': node,
                 'env_type': util.get_env_type(handler_input)
             }
