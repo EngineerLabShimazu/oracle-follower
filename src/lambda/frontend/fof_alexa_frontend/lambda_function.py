@@ -294,34 +294,51 @@ class UseIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput) -> Optional[Response]:
         session = handler_input.attributes_manager.session_attributes
         node = session.get('node')
-        fof_sfn_input = {
-            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-            'IsPreResponse': True,
-            'intent': 'UseIntent',
-            'node': node,
-            'env_type': util.get_env_type(handler_input)
-        }
-        response = sfn_ctl.execute(fof_sfn_input)
+        state = session.get('state')
+        total_ticket_amount = session.get('total_ticket_amount')
+        turn_times = session.get('turn_times')
 
-        if response.get('state') == 'Buy':
-            in_skill_response = util.in_skill_product_response(
-                handler_input)
+        if state == 'ganesha':
+            fof_sfn_input = {
+                'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+                'IsPreResponse': False,
+                'state': 'ganesha',
+                'node': node,
+                'total_ticket_amount': total_ticket_amount,
+                'turn_times': turn_times,
+                'env_type': util.get_env_type(handler_input)
+            }
+            response = sfn_ctl.execute(fof_sfn_input)
 
-            # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
-            skill_product = util.get_skill_product(
-                in_skill_response, 'gem_300')
+        else:
+            fof_sfn_input = {
+                'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+                'IsPreResponse': True,
+                'intent': 'UseIntent',
+                'node': node,
+                'env_type': util.get_env_type(handler_input)
+            }
+            response = sfn_ctl.execute(fof_sfn_input)
 
-            return handler_input.response_builder.add_directive(
-                SendRequestDirective(
-                    name='Buy',
-                    payload={
-                        'InSkillProduct': {
-                            'productId': skill_product.product_id
-                        }
-                    },
-                    token='correlationToken'
-                )
-            ).response
+            if response.get('state') == 'Buy':
+                in_skill_response = util.in_skill_product_response(
+                    handler_input)
+
+                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                skill_product = util.get_skill_product(
+                    in_skill_response, 'gem_300')
+
+                return handler_input.response_builder.add_directive(
+                    SendRequestDirective(
+                        name='Buy',
+                        payload={
+                            'InSkillProduct': {
+                                'productId': skill_product.product_id
+                            }
+                        },
+                        token='correlationToken'
+                    )
+                ).response
 
         if 'state' in response:
             session['state'] = response['state']
