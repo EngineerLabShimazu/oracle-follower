@@ -294,6 +294,21 @@ class UseIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input: HandlerInput) -> Optional[Response]:
         session = handler_input.attributes_manager.session_attributes
         node = session.get('node')
+        state = session.get('state')
+
+        if state == 'ganesha':
+            fof_sfn_input = {
+                'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+                'IsPreResponse': True,
+                'intent': 'GaneshaShopIntent',
+                'node': node,
+                'env_type': util.get_env_type(handler_input)
+            }
+            response = sfn_ctl.execute(fof_sfn_input)
+            speech_text = response["response_text"]
+            handler_input.response_builder.speak(speech_text).ask(speech_text)
+            return handler_input.response_builder.response
+
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,
