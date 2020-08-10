@@ -1,6 +1,6 @@
 data "archive_file" "fof_frontend" {
   type = "zip"
-  source_dir = "src/lambda/frontend/${var.function_name}"
+  source_dir = "src/lambda/frontend/${var.source_dir}"
   output_path = "lambda_${var.function_name}.zip"
 }
 
