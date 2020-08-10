@@ -25,6 +25,7 @@ resource "aws_lambda_permission" "alexa_permission" {
 module "fof_alexa_frontend" {
   env = var.env
   source = "./modules/frontend/lambda"
+  source_dir = "fof_alexa_frontend"
   function_name = "fof_alexa_frontend_${var.env}"
   memory = 128
   description = ""
@@ -40,6 +41,7 @@ module "fof_alexa_frontend" {
 module "fof_text_translator" {
   env = var.env
   source = "./modules/lambda"
+  source_dir = "fof_text_translator"
   function_name = "fof_text_translator_${var.env}"
   description = ""
   layer_arn = module.fof_sdk.arn
@@ -50,6 +52,7 @@ module "fof_text_translator" {
 module "fof_pre_import_attr" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_pre_import_attr"
   function_name = "fof_pre_import_attr_${var.env}"
   description = ""
   layer_arn = module.fof_sdk.arn
@@ -60,6 +63,7 @@ module "fof_pre_import_attr" {
 module "fof_state_translator" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_state_translator"
   function_name = "fof_state_translator_${var.env}"
   description = ""
   layer_arn = module.fof_sdk.arn
@@ -70,6 +74,7 @@ module "fof_state_translator" {
 module "fof_state_launch" {
   env = var.env
   source = "./modules/lambda_with_env/"
+  source_dir = "fof_state_launch"
   function_name = "fof_state_launch_${var.env}"
   memory = 128
   description = ""
@@ -84,6 +89,7 @@ module "fof_state_launch" {
 module "fof_state_oracle" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_state_oracle"
   function_name = "fof_state_oracle_${var.env}"
   memory = 128
   description = ""
@@ -95,6 +101,7 @@ module "fof_state_oracle" {
 module "fof_state_changer" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_state_changer"
   function_name = "fof_state_changer_${var.env}"
   memory = 128
   description = ""
@@ -106,6 +113,7 @@ module "fof_state_changer" {
 module "fof_manual_handler" {
   env = var.env
   source = "./modules/lambda_with_env/"
+  source_dir = "fof_manual_handler"
   function_name = "fof_manual_handler_${var.env}"
   memory = 128
   description = ""
@@ -120,6 +128,7 @@ module "fof_manual_handler" {
 module "fof_intent_use" {
   env = var.env
   source = "./modules/lambda_with_env/"
+  source_dir = "fof_intent_use"
   function_name = "fof_intent_use_${var.env}"
   memory = 128
   description = ""
@@ -134,6 +143,7 @@ module "fof_intent_use" {
 module "fof_state_tutorial" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_state_tutorial"
   function_name = "fof_state_tutorial_${var.env}"
   memory = 128
   description = ""
@@ -145,6 +155,7 @@ module "fof_state_tutorial" {
 module "fof_state_ganesha_shop" {
   env = var.env
   source = "./modules/lambda_with_env/"
+  source_dir = "fof_state_ganesha_shop"
   function_name = "fof_state_ganesha_shop_${var.env}"
   memory = 128
   description = ""
@@ -159,6 +170,7 @@ module "fof_state_ganesha_shop" {
 module "fof_intent_help" {
   env = var.env
   source = "./modules/lambda_with_env/"
+  source_dir = "fof_intent_help"
   function_name = "fof_intent_help_${var.env}"
   memory = 128
   description = ""
@@ -173,6 +185,7 @@ module "fof_intent_help" {
 module "fof_post_save_attr" {
   env = var.env
   source = "./modules/lambda/"
+  source_dir = "fof_post_save_attr"
   function_name = "fof_post_save_attr_${var.env}"
   memory = 128
   description = ""

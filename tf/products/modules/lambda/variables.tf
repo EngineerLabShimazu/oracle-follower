@@ -1,4 +1,5 @@
 variable "env" {}
+variable "source_dir" {}
 variable "function_name" {}
 variable "description" {}
 variable "layer_arn" {}
