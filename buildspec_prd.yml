@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR}
+      - aws s3 cp "s3://${TERRAFORM_BUCKET}/bin/terraform_0.12.25_linux_amd64.zip" ./terraform.zip
+      - unzip terraform.zip
+      - mv terraform /usr/bin
+
+  pre_build:
+    commands:
+      - cd ${CODEBUILD_SRC_DIR}
+      - aws s3 cp "s3://${BUCKET}/oracle-follower/terraform/tfvars/prd.tfvars" "tf/products/prd.tfvars"
+      - aws s3 cp "s3://${BUCKET}/oracle-follower/terraform/tfbackends/prd.tfbackend" "tf/products/backends/prd.tfbackend"
+
+  build:
+    commands:
+      - terraform init -backend-config=tf/products/backends/prd.tfbackend tf/products/ -no-color
+      - terraform plan -var-file=tf/products/prd.tfvars tf/products -no-color
