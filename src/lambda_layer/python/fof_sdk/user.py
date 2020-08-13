@@ -121,7 +121,7 @@ class User:
         # 無償ジェムで足りない場合は不足分を有償ジェムから引く
         if self.free_gem - payment_amount <= 0:
             unpaid = payment_amount - self.free_gem
-            if self.paid_gem > unpaid:
+            if self.paid_gem >= unpaid:
                 self._paid_gem = self.paid_gem - unpaid
                 self._free_gem = 0
                 return True

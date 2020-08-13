@@ -1,11 +1,11 @@
-import random
 from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
 from fof_sdk import hero
 from fof_sdk import util
+from fof_sdk import lambda_util
 
 
-def main(alexa_user_id, intent, product_reference_name):
+def main(env, alexa_user_id, intent, product_reference_name):
     action = {
         'type': 'end'
     }
@@ -36,7 +36,7 @@ def main(alexa_user_id, intent, product_reference_name):
                     }
                 ]
             }
-        with DynamoCtl(alexa_user_id) as dynamo_ctl:
+        with DynamoCtl(env, alexa_user_id) as dynamo_ctl:
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
             added = _user.buy_gem(product_reference_name)
             if not added:
@@ -77,8 +77,9 @@ def main(alexa_user_id, intent, product_reference_name):
 
 
 def lambda_handler(event, context):
+    env = lambda_util.get_env(context)
     alexa_user_id = event['alexa_user_id']
     intent = event['intent']
     product_reference_name = event.get('product_reference_name')
-    response = main(alexa_user_id, intent, product_reference_name)
+    response = main(env, alexa_user_id, intent, product_reference_name)
     return response
