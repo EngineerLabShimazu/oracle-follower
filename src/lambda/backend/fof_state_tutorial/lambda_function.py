@@ -1,9 +1,10 @@
 import nodes
 from fof_sdk.dynamo_ctl import DynamoCtl
 from fof_sdk import user
+from fof_sdk import lambda_util
 
 
-def main(alexa_user_id, node_key, intent, destination):
+def main(env, alexa_user_id, node_key, intent, destination):
     action = {
         'type': 'tutorial',
         'set_should_end_session': False
@@ -27,7 +28,7 @@ def main(alexa_user_id, node_key, intent, destination):
     if action.get('end'):
         action['set_should_end_session'] = True
 
-        with DynamoCtl(alexa_user_id) as dynamo_ctl:
+        with DynamoCtl(env, alexa_user_id) as dynamo_ctl:
             # tutorial が終わったら、last_launch_date を入れ、
             # skill 初回起動判定をFalseにする
             _user = user.get_user(alexa_user_id, dynamo_ctl.attr)
@@ -40,9 +41,10 @@ def main(alexa_user_id, node_key, intent, destination):
 
 
 def lambda_handler(event, context):
+    env = lambda_util.get_env(context)
     alexa_user_id = event['alexa_user_id']
     node_key = event.get('node', 'launch')
     intent = event.get('intent')
     destination = event.get('destination')
-    action = main(alexa_user_id, node_key, intent, destination)
+    action = main(env, alexa_user_id, node_key, intent, destination)
     return action
