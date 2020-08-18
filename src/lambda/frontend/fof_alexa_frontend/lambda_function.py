@@ -76,14 +76,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -196,14 +196,14 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -547,14 +547,14 @@ class YesIntentHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -665,8 +665,8 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
         if image_url:
             handler_input.response_builder.set_card(
                 ui.StandardCard(
-                    title='title sample',
-                    text='text sample',
+                    title='',
+                    text='',
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
@@ -780,14 +780,14 @@ class BuyResponseHandler(AbstractRequestHandler):
                                 back_button=BackButtonBehavior.VISIBLE,
                                 image=img_obj,
                                 background_image=bg_img_obj,
-                                title=image_title)
+                                title='')
                         )
                     )
                 else:
                     handler_input.response_builder.set_card(
                         ui.StandardCard(
-                            title=image_title,
-                            text=image_text,
+                            title='',
+                            text='',
                             image=ui.Image(
                                 small_image_url=image_url,
                                 large_image_url=image_url
@@ -830,14 +830,14 @@ class BuyResponseHandler(AbstractRequestHandler):
                                 back_button=BackButtonBehavior.VISIBLE,
                                 image=img_obj,
                                 background_image=bg_img_obj,
-                                title=image_title)
+                                title='')
                         )
                     )
                 else:
                     handler_input.response_builder.set_card(
                         ui.StandardCard(
-                            title=image_title,
-                            text=image_text,
+                            title='',
+                            text='',
                             image=ui.Image(
                                 small_image_url=image_url,
                                 large_image_url=image_url

@@ -93,8 +93,8 @@ class WithContextIntentHandler(AbstractRequestHandler):
         if image_url:
             handler_input.response_builder.set_card(
                 ui.StandardCard(
-                    title='title sample',
-                    text='text sample',
+                    title='',
+                    text='',
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
