@@ -76,7 +76,7 @@ def re_ask(node, turn_times):
     return action
 
 
-def main(turn_times, node_key, user, total_ticket_amount):
+def main(turn_times, node_key, user, total_ticket_amount, intent):
     action = {
         'type': 'ganesha',
         'image_url': util.get_image('gods/ganesha'),
@@ -84,7 +84,6 @@ def main(turn_times, node_key, user, total_ticket_amount):
                                        extension='.jpg'),
         'set_should_end_session': False
     }
-
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
@@ -134,6 +133,9 @@ def main(turn_times, node_key, user, total_ticket_amount):
             node = nodes.end()
     elif node_key == 'result':
         node = nodes.result(total_ticket_amount, turn_times, user)
+    elif node_key == 'recommend_gem':
+        if intent == 'AMAZON.NoIntent':
+            node = nodes.end()
     else:
         node = {
             'original_texts': [
@@ -180,5 +182,5 @@ def lambda_handler(event, context):
         if intent not in valid_intents:
             node_key = 'result'
 
-    response = main(turn_times, node_key, user, total_ticket_amount)
+    response = main(turn_times, node_key, user, total_ticket_amount, intent)
     return response
