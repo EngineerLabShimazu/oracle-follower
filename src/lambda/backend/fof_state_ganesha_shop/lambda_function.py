@@ -2,6 +2,7 @@ import random
 from typing import Optional
 
 import nodes
+import consts
 from gatcha_items import gatcha_items
 from fof_sdk import util
 from fof_sdk.user import User
@@ -88,46 +89,34 @@ def main(turn_times, node_key, user, total_ticket_amount, intent):
         node = nodes.launch()
     elif node_key == 'welcome':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.recommend_gatcha()
     elif node_key == 'recommend_gatcha':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.end()
     elif node_key == 'gatcha':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.end()

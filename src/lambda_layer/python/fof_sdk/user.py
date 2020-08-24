@@ -1,5 +1,6 @@
 import boto3
 import boto3.dynamodb.types as dynamodb_types
+from typing import Tuple
 
 from fof_sdk import util
 from fof_sdk.util import iso_formatted_date_today
@@ -112,11 +113,11 @@ class User:
     def free_gem(self):
         return self._free_gem
 
-    def pay_gem(self, payment_amount: int) -> bool:
+    def pay_gem(self, payment_amount: int) -> Tuple[bool, int]:
         # 無償ジェムで足りる場合は無償ジェムから引く
         if self.free_gem - payment_amount > 0:
             self._free_gem = self.free_gem - payment_amount
-            return True
+            return True, 0
 
         # 無償ジェムで足りない場合は不足分を有償ジェムから引く
         if self.free_gem - payment_amount <= 0:
@@ -124,9 +125,10 @@ class User:
             if self.paid_gem >= unpaid:
                 self._paid_gem = self.paid_gem - unpaid
                 self._free_gem = 0
-                return True
+                return True, 0
 
-        return False
+        not_enough_gem = payment_amount - (self.free_gem + self.paid_gem)
+        return False, not_enough_gem
 
     def set_item(self, item_name, value):
         self.item_storage[item_name] = value
