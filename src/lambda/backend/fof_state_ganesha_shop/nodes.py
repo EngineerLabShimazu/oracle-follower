@@ -1,3 +1,5 @@
+import consts
+
 def launch():
     return {
         'original_texts': [
@@ -37,11 +39,14 @@ def recommend_gatcha():
     }
 
 
-def recommend_gem(turn_times):
+def recommend_gem(turn_times, not_enough_gem):
     return {
         'original_texts': [
             {
                 'text': 'RECOMMEND_GEM',
+                'kwargs': {
+                    'not_enough_gem': not_enough_gem
+                }
             }
         ],
         'turn_times': turn_times

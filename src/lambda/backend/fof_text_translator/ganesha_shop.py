@@ -3,7 +3,7 @@ text_map = {
     'SALES_GATCHA': '銅のガチャは1回ジェム300個、10回連続ならジェム3000個だぞう。',
     'RECOMMEND_TEN': '10回連続まわしちゃう？',
     'RECOMMEND_GATCHA': '銅のガチャを1回まわしちゃう？',
-    'RECOMMEND_GEM': 'ジェムが足りないぞう。ジェムを買うぞう？',
+    'RECOMMEND_GEM': 'ジェムが{not_enough_gem}個足りないぞう。ジェムを買うぞう？',
     'GANESHA_THANKS': 'まいど！',
     'GATCHA_SOUND_1': 'でん!',
     'GATCHA_SOUND_3': 'ででん!',
