@@ -908,6 +908,13 @@ class ProductDetailHandler(AbstractRequestHandler):
 
         purchase_product = util.get_purchase_product(
             handler_input, 'product_category')
+        if not purchase_product:
+            speech_text = 'すみません、分かりませんでした。'
+            ask = 'もう一度お願いできますか？'
+            handler_input.response_builder.speak(speech_text + ask).ask(
+                ask).set_should_end_session(False)
+            return handler_input.response_builder.response
+
         skill_product = util.get_skill_product(
             in_skill_response, purchase_product.id)
 
