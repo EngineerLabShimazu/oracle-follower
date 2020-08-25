@@ -480,6 +480,7 @@ class YesIntentHandler(AbstractRequestHandler):
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
+        not_enough_gem = session.get('not_enough_gem')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
@@ -489,6 +490,7 @@ class YesIntentHandler(AbstractRequestHandler):
             'destinations_choice': destinations_choice,
             'total_ticket_amount': total_ticket_amount,
             'turn_times': turn_times,
+            'not_enough_gem': not_enough_gem,
             'env_type': util.get_env_type(handler_input)
         }
 
@@ -535,6 +537,9 @@ class YesIntentHandler(AbstractRequestHandler):
 
         if 'product_name' in response:
             session['product_name'] = response['product_name']
+
+        if 'not_enough_gem' in response:
+            session['not_enough_gem'] = response['not_enough_gem']
 
         image_url = response.get('image_url')
         bg_image_url = response.get('bg_image_url')

@@ -60,7 +60,8 @@ def recommend_gem(turn_times, not_enough_gem):
             }
         ],
         'turn_times': turn_times,
-        'product_name': product_name
+        'product_name': product_name,
+        'not_enough_gem': not_enough_gem
     }
 
 
