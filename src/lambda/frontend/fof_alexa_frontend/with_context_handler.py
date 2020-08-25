@@ -87,6 +87,9 @@ class WithContextIntentHandler(AbstractRequestHandler):
         if 'total_ticket_amount' in response:
             session['total_ticket_amount'] = response['total_ticket_amount']
 
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
+
         speech_text = response["response_text"]
 
         image_url = response.get('image_url')
