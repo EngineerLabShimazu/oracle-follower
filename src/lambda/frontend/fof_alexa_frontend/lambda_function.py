@@ -324,9 +324,9 @@ class UseIntentHandler(AbstractRequestHandler):
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
-                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                product_name = session.get('product_name')
                 skill_product = util.get_skill_product(
-                    in_skill_response, 'gem_300')
+                    in_skill_response, product_name)
 
                 return handler_input.response_builder.add_directive(
                     SendRequestDirective(
