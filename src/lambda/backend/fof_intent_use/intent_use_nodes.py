@@ -65,16 +65,11 @@ def use_ticket(user: User, intent):
 
     use_util.use_ticket(user)
 
-    original_texts = []
     # 昨日の活動報告を聞く
     action_parts = hero.action_report(user.destination, user.content)
 
     # 信者を獲得
     user.increase_follower()
-    original_texts.append(hero.increase_follower(
-        user.follower_increase))
-    original_texts.append(hero.total_followers(
-        user.follower_total_amount))
 
     # 昨日のお告げによって目的地へは行って帰ってきたのでクリア
     user.clear_destination()
@@ -94,7 +89,9 @@ def use_ticket(user: User, intent):
             },
             hero.message(),
             action_parts['original_texts'],
-            hero.ask_oracle(destinations_choice),
+            hero.increase_follower(user.follower_increase),
+            hero.total_followers(user.follower_total_amount),
+            hero.ask_oracle(destinations_choice)
         ],
         'destinations_choice': destinations_choice,
         'image_url': action_parts['image_url'],
