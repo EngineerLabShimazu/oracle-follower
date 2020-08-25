@@ -499,9 +499,9 @@ class YesIntentHandler(AbstractRequestHandler):
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
-                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                product_name = session.get('product_name')
                 skill_product = util.get_skill_product(
-                    in_skill_response, 'gem_300')
+                    in_skill_response, product_name)
 
                 return handler_input.response_builder.add_directive(
                     SendRequestDirective(
@@ -532,6 +532,9 @@ class YesIntentHandler(AbstractRequestHandler):
 
         if 'total_ticket_amount' in response:
             session['total_ticket_amount'] = response['total_ticket_amount']
+
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
 
         image_url = response.get('image_url')
         bg_image_url = response.get('bg_image_url')

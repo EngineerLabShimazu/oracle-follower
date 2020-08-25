@@ -42,10 +42,13 @@ def recommend_gatcha():
 def recommend_gem(turn_times, not_enough_gem):
     if not_enough_gem <= 300:
         gem_pack_grade = '小'
+        product_name = 'gem_300'
     elif 300 < not_enough_gem <= 600:
         gem_pack_grade = '中'
+        product_name = 'gem_500'
     else:
         gem_pack_grade = '大'
+        product_name = 'gem_1000'
     return {
         'original_texts': [
             {
@@ -56,7 +59,8 @@ def recommend_gem(turn_times, not_enough_gem):
                 }
             }
         ],
-        'turn_times': turn_times
+        'turn_times': turn_times,
+        'product_name': product_name
     }
 
 
