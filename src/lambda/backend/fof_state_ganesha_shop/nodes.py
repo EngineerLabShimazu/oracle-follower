@@ -40,12 +40,19 @@ def recommend_gatcha():
 
 
 def recommend_gem(turn_times, not_enough_gem):
+    if not_enough_gem <= 300:
+        gem_pack_grade = '小'
+    elif 300 < not_enough_gem <= 600:
+        gem_pack_grade = '中'
+    else:
+        gem_pack_grade = '大'
     return {
         'original_texts': [
             {
                 'text': 'RECOMMEND_GEM',
                 'kwargs': {
-                    'not_enough_gem': not_enough_gem
+                    'not_enough_gem': not_enough_gem,
+                    'gem_pack_grade': gem_pack_grade
                 }
             }
         ],
