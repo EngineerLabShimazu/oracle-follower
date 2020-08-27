@@ -57,6 +57,11 @@
           "Variable": "$.intent",
           "StringEquals": "HelpIntent",
           "Next": "Help"
+        },
+        {
+          "Variable": "$.intent",
+          "StringEquals": "WhatHaveIGotIntent",
+          "Next": "WhatHaveIGot"
         }
       ],
       "Default": "文脈なしの返答"
@@ -69,6 +74,11 @@
     "Help": {
       "Type": "Task",
       "Resource": "${fof_intent_help_arn}",
+      "Next": "PostProcess"
+    },
+    "WhatHaveIGot": {
+      "Type": "Task",
+      "Resource": "${fof_intent_what_have_i_got_arn}",
       "Next": "PostProcess"
     },
     "文脈なしの返答": {
@@ -104,6 +114,11 @@
           "Variable": "$.state",
           "StringEquals": "Use",
           "Next": "Use"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "WhatHaveIGot",
+          "Next": "WhatHaveIGot"
         }
       ],
       "Default": "Launch"

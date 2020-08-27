@@ -3,17 +3,19 @@ import json
 
 def main(action):
     if action['type'] == 'oracle':
-        return 'oracle'
+        return 'Oracle'
     elif action['type'] == 'launch':
-        return 'end'
+        return 'End'
     elif action['type'] == 'help':
-        return 'oracle'
+        return 'Oracle'
     elif action['type'] == 'ganesha':
-        return 'ganesha'
+        return 'Ganesha'
     elif action['type'] == 'use':
-        return 'use'
+        return 'Use'
+    elif action['type'] == 'what_have_i_got':
+        return 'WhatHaveIGot'
     elif action['type'] == 'tutorial':
-        return 'tutorial'
+        return 'Tutorial'
     return 'そんなステートないですよw'
 
 

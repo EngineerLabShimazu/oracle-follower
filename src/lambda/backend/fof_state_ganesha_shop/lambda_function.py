@@ -2,6 +2,7 @@ import random
 from typing import Optional
 
 import nodes
+import consts
 from gatcha_items import gatcha_items
 from fof_sdk import util
 from fof_sdk.user import User
@@ -59,7 +60,7 @@ def set_gatcha_result(user, item, add_amount):
     user.set_item('chronus_ticket', amount + add_amount)
 
 
-def re_ask(node, turn_times):
+def re_ask(node, turn_times, not_enough_gem=0):
     action = {
         'type': 'ganesha',
         'image_url': util.get_image('gods/ganesha'),
@@ -72,11 +73,13 @@ def re_ask(node, turn_times):
         text = nodes.recommend_ten()
     if node == 'recommend_gatcha':
         text = nodes.recommend_gatcha()
+    if node == 'recommend_gem':
+        text = nodes.recommend_gem(turn_times, not_enough_gem)
     action.update(text)
     return action
 
 
-def main(turn_times, node_key, user, total_ticket_amount):
+def main(turn_times, node_key, user, total_ticket_amount, intent, not_enough_gem):
     action = {
         'type': 'ganesha',
         'image_url': util.get_image('gods/ganesha'),
@@ -84,56 +87,48 @@ def main(turn_times, node_key, user, total_ticket_amount):
                                        extension='.jpg'),
         'set_should_end_session': False
     }
-
     if node_key == 'launch':
         node = nodes.launch()
     elif node_key == 'welcome':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.recommend_gatcha()
     elif node_key == 'recommend_gatcha':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.end()
     elif node_key == 'gatcha':
         if should_gatcha(turn_times):
-            gem_amount_map = {
-                1: 300,
-                10: 3000
-            }
-            is_paid = user.pay_gem(gem_amount_map[turn_times])
+            is_paid, not_enough_gem = user.pay_gem(consts.gem_amount_map[turn_times])
             if is_paid:
                 items = gatcha(turn_times)
                 node = nodes.gatcha(turn_times, items, user)
             else:
-                node = nodes.recommend_gem(turn_times)
+                node = nodes.recommend_gem(turn_times, not_enough_gem)
             node['is_paid'] = is_paid
         else:
             node = nodes.end()
     elif node_key == 'result':
         node = nodes.result(total_ticket_amount, turn_times, user)
+    elif node_key == 'recommend_gem':
+        if intent == 'AMAZON.NoIntent':
+            node = nodes.end()
+        else:
+            return re_ask('recommend_gem', turn_times, not_enough_gem)
     else:
         node = {
             'original_texts': [
@@ -164,6 +159,7 @@ def lambda_handler(event, context):
     user = User(event['alexa_user_id'], event['dynamo_attr'])
     total_ticket_amount = event.get('total_ticket_amount', 0)
     node_key = event.get('node', 'launch')
+    not_enough_gem = event.get('not_enough_gem')
 
     intent = event.get('intent')
     if intent == 'AMAZON.NoIntent':
@@ -180,5 +176,5 @@ def lambda_handler(event, context):
         if intent not in valid_intents:
             node_key = 'result'
 
-    response = main(turn_times, node_key, user, total_ticket_amount)
+    response = main(turn_times, node_key, user, total_ticket_amount, intent, not_enough_gem)
     return response

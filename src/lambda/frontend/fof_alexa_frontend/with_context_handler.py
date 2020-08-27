@@ -34,18 +34,24 @@ class WithContextIntentHandler(AbstractRequestHandler):
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
-
+        not_enough_gem = session.get('not_enough_gem')
+        intent = handler_input.request_envelope.request.intent.name
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'intent': handler_input.request_envelope.request.intent.name,
+            'intent': intent,
             'state': state,
             'node': node,
             'destinations_choice': destinations_choice,
             'total_ticket_amount': total_ticket_amount,
             'turn_times': turn_times,
+            'not_enough_gem': not_enough_gem,
             'env_type': util.get_env_type(handler_input)
         }
+
+        if (node == 'ask_ganesha' or node == 'ask_gem_pack') \
+                and intent == 'AMAZON.NoIntent':
+            fof_sfn_input['state'] = 'launch'
 
         if state == 'ganesha' and node == 'launch':
             if handler_input.request_envelope.request.intent.name == 'AMAZON.NoIntent':
@@ -87,14 +93,20 @@ class WithContextIntentHandler(AbstractRequestHandler):
         if 'total_ticket_amount' in response:
             session['total_ticket_amount'] = response['total_ticket_amount']
 
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
+
+        if 'not_enough_gem' in response:
+            session['not_enough_gem'] = response['not_enough_gem']
+
         speech_text = response["response_text"]
 
         image_url = response.get('image_url')
         if image_url:
             handler_input.response_builder.set_card(
                 ui.StandardCard(
-                    title='title sample',
-                    text='text sample',
+                    title='',
+                    text='',
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url

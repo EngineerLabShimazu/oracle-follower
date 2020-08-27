@@ -76,14 +76,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -196,14 +196,14 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -314,6 +314,7 @@ class UseIntentHandler(AbstractRequestHandler):
             fof_sfn_input = {
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
                 'IsPreResponse': True,
+                'state': state,
                 'intent': 'UseIntent',
                 'node': node,
                 'env_type': util.get_env_type(handler_input)
@@ -324,9 +325,9 @@ class UseIntentHandler(AbstractRequestHandler):
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
-                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                product_name = session.get('product_name')
                 skill_product = util.get_skill_product(
-                    in_skill_response, 'gem_300')
+                    in_skill_response, product_name)
 
                 return handler_input.response_builder.add_directive(
                     SendRequestDirective(
@@ -477,9 +478,13 @@ class YesIntentHandler(AbstractRequestHandler):
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
         node = session.get('node')
+        if node == 'ask_ganesha':
+            state = 'Ganesha'
+            node = 'launch'
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
+        not_enough_gem = session.get('not_enough_gem')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
@@ -489,19 +494,19 @@ class YesIntentHandler(AbstractRequestHandler):
             'destinations_choice': destinations_choice,
             'total_ticket_amount': total_ticket_amount,
             'turn_times': turn_times,
+            'not_enough_gem': not_enough_gem,
             'env_type': util.get_env_type(handler_input)
         }
 
-        node = session.get('node')
         if node:
             fof_sfn_input['node'] = node
-            if node == 'recommend_gem':
+            if node == 'recommend_gem' or node == 'ask_gem_pack':
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
-                # TODO: gem_3000/日 が実装されたら未購入なら3000を優先。
+                product_name = session.get('product_name')
                 skill_product = util.get_skill_product(
-                    in_skill_response, 'gem_300')
+                    in_skill_response, product_name)
 
                 return handler_input.response_builder.add_directive(
                     SendRequestDirective(
@@ -533,6 +538,12 @@ class YesIntentHandler(AbstractRequestHandler):
         if 'total_ticket_amount' in response:
             session['total_ticket_amount'] = response['total_ticket_amount']
 
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
+
+        if 'not_enough_gem' in response:
+            session['not_enough_gem'] = response['not_enough_gem']
+
         image_url = response.get('image_url')
         bg_image_url = response.get('bg_image_url')
         image_title = response.get('image_title')
@@ -547,14 +558,14 @@ class YesIntentHandler(AbstractRequestHandler):
                             back_button=BackButtonBehavior.VISIBLE,
                             image=img_obj,
                             background_image=bg_img_obj,
-                            title=image_title)
+                            title='')
                     )
                 )
             else:
                 handler_input.response_builder.set_card(
                     ui.StandardCard(
-                        title=image_title,
-                        text=image_text,
+                        title='',
+                        text='',
                         image=ui.Image(
                             small_image_url=image_url,
                             large_image_url=image_url
@@ -612,6 +623,35 @@ class YesIntentHandler(AbstractRequestHandler):
 #
 #         return handler_input.response_builder.response
 
+class WhatHaveIGotIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("WhatHaveIGotIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        session = handler_input.attributes_manager.session_attributes
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': True,
+            'intent': 'WhatHaveIGotIntent',
+            'env_type': util.get_env_type(handler_input)
+        }
+        response = sfn_ctl.execute(fof_sfn_input)
+
+        if 'state' in response:
+            session['state'] = response['state']
+
+        if 'node' in response:
+            session['node'] = response['node']
+
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
+
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -665,8 +705,8 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
         if image_url:
             handler_input.response_builder.set_card(
                 ui.StandardCard(
-                    title='title sample',
-                    text='text sample',
+                    title='',
+                    text='',
                     image=ui.Image(
                         small_image_url=image_url,
                         large_image_url=image_url
@@ -780,14 +820,14 @@ class BuyResponseHandler(AbstractRequestHandler):
                                 back_button=BackButtonBehavior.VISIBLE,
                                 image=img_obj,
                                 background_image=bg_img_obj,
-                                title=image_title)
+                                title='')
                         )
                     )
                 else:
                     handler_input.response_builder.set_card(
                         ui.StandardCard(
-                            title=image_title,
-                            text=image_text,
+                            title='',
+                            text='',
                             image=ui.Image(
                                 small_image_url=image_url,
                                 large_image_url=image_url
@@ -830,14 +870,14 @@ class BuyResponseHandler(AbstractRequestHandler):
                                 back_button=BackButtonBehavior.VISIBLE,
                                 image=img_obj,
                                 background_image=bg_img_obj,
-                                title=image_title)
+                                title='')
                         )
                     )
                 else:
                     handler_input.response_builder.set_card(
                         ui.StandardCard(
-                            title=image_title,
-                            text=image_text,
+                            title='',
+                            text='',
                             image=ui.Image(
                                 small_image_url=image_url,
                                 large_image_url=image_url
@@ -872,7 +912,7 @@ class WhatCanIBuyHandler(AbstractRequestHandler):
 
         purchasable_products = util.get_speakable_products(in_skill_response)
         speech = f'現在購入可能な商品は、{purchasable_products}です。' \
-                 f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
+            f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
         handler_input.response_builder.speak(speech)
 
         skill_product = util.get_skill_product(
@@ -905,6 +945,13 @@ class ProductDetailHandler(AbstractRequestHandler):
 
         purchase_product = util.get_purchase_product(
             handler_input, 'product_category')
+        if not purchase_product:
+            speech_text = 'すみません、分かりませんでした。'
+            ask = 'もう一度お願いできますか？'
+            handler_input.response_builder.speak(speech_text + ask).ask(
+                ask).set_should_end_session(False)
+            return handler_input.response_builder.response
+
         skill_product = util.get_skill_product(
             in_skill_response, purchase_product.id)
 
@@ -920,6 +967,53 @@ class ProductDetailHandler(AbstractRequestHandler):
                 token='correlationToken'
             )
         ).response
+
+
+class RefundProductHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name('RefundProductIntent')(handler_input)
+
+    def handle(self, handler_input):
+        in_skill_response = util.in_skill_product_response(handler_input)
+        if not in_skill_response:
+            handler_input.response_builder.speak('現在その商品は購入していません。')
+            handler_input.response_builder.set_should_end_session(True)
+            return handler_input.response_builder.response
+
+        purchase_product = util.get_purchase_product(
+            handler_input, 'product_category')
+
+        if not purchase_product:
+            handler_input.response_builder.speak('現在その商品は、スキル内で提供していません。')
+            handler_input.response_builder.set_should_end_session(True)
+            return handler_input.response_builder.response
+
+        skill_product = util.get_skill_product(
+            in_skill_response, purchase_product.id)
+
+        handler_input.response_builder.speak(skill_product.summary)
+        return handler_input.response_builder.add_directive(
+            SendRequestDirective(
+                name='Cancel',
+                payload={
+                    'InSkillProduct': {
+                        'productId': skill_product.product_id
+                    }
+                },
+                token='correlationToken'
+            )
+        ).response
+
+
+class CancelResponseHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return (is_request_type('Connections.Response')(
+            handler_input) and handler_input.request_envelope.request.name == 'Cancel')
+
+    def handle(self, handler_input):
+        return LaunchRequestHandler().handle(handler_input)
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
@@ -990,6 +1084,7 @@ sb.add_request_handler(UseIntentHandler())
 # sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())
 # sb.add_request_handler(NoIntentHandler())
+sb.add_request_handler(WhatHaveIGotIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
@@ -998,6 +1093,8 @@ sb.add_request_handler(BuyHandler())
 sb.add_request_handler(BuyResponseHandler())
 sb.add_request_handler(WhatCanIBuyHandler())
 sb.add_request_handler(ProductDetailHandler())
+sb.add_request_handler(RefundProductHandler())
+sb.add_request_handler(CancelResponseHandler())
 
 sb.add_request_handler(
     IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers

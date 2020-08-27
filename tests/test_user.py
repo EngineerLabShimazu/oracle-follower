@@ -50,16 +50,16 @@ class TestUser(TestCase):
 
     def test_pay_gem(self):
         tests = [
-            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 100, 'expected_result': True, 'remaining_free_gem': 100, 'remaining_paid_gem': 0},
-            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 100, 'expected_result': True, 'remaining_free_gem': 100, 'remaining_paid_gem': 200},
-            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 300, 'expected_result': True, 'remaining_free_gem': 0, 'remaining_paid_gem': 100},
-            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 300, 'expected_result': False, 'remaining_free_gem': 200, 'remaining_paid_gem': 0},
-            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 500, 'expected_result': False, 'remaining_free_gem': 200, 'remaining_paid_gem': 200},
-            {'free_gem': 0, 'paid_gem': 0, 'payment_amount': 100, 'expected_result': False, 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
-            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 100, 'expected_result': True, 'remaining_free_gem': 0, 'remaining_paid_gem': 100},
-            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 300, 'expected_result': False, 'remaining_free_gem': 0, 'remaining_paid_gem': 200},
-            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 200, 'expected_result': True, 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
-            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 200, 'expected_result': True, 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
+            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 100, 'expected_result': (True, 0), 'remaining_free_gem': 100, 'remaining_paid_gem': 0},
+            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 100, 'expected_result': (True, 0), 'remaining_free_gem': 100, 'remaining_paid_gem': 200},
+            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 300, 'expected_result': (True, 0), 'remaining_free_gem': 0, 'remaining_paid_gem': 100},
+            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 300, 'expected_result': (False, 100), 'remaining_free_gem': 200, 'remaining_paid_gem': 0},
+            {'free_gem': 200, 'paid_gem': 200, 'payment_amount': 500, 'expected_result': (False, 100), 'remaining_free_gem': 200, 'remaining_paid_gem': 200},
+            {'free_gem': 0, 'paid_gem': 0, 'payment_amount': 100, 'expected_result': (False, 100), 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
+            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 100, 'expected_result': (True, 0), 'remaining_free_gem': 0, 'remaining_paid_gem': 100},
+            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 30, 'expected_result': (False, 100), 'remaining_free_gem': 0, 'remaining_paid_gem': 200},
+            {'free_gem': 0, 'paid_gem': 200, 'payment_amount': 200, 'expected_result': (True, 0), 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
+            {'free_gem': 200, 'paid_gem': 0, 'payment_amount': 200, 'expected_result': (True, 0), 'remaining_free_gem': 0, 'remaining_paid_gem': 0},
         ]
 
         for test in tests:

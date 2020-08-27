@@ -24,12 +24,12 @@ def main(node, user, intent):
             ]
         }
     if intent not in ['AMAZON.YesIntent', 'UseIntent']:
-        return nodes.re_ask()
+        return nodes.re_ask(user, intent)
     _node_map = {
         'launch': nodes.launch,
         'use_ticket': nodes.use_ticket
     }
-    node_handler = _node_map.get(node)
+    node_handler = _node_map.get(node, nodes.re_ask)
     return node_handler(user, intent)
 
 
