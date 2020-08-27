@@ -13,6 +13,7 @@ resource "aws_sfn_state_machine" "fof_backend_core" {
     fof_text_translator_arn = module.fof_text_translator.arn
     fof_state_ganesha_shop_arn = module.fof_state_ganesha_shop.arn
     fof_intent_help_arn = module.fof_intent_help.arn
+    fof_intent_what_have_i_got_arn = module.fof_intent_what_have_i_got.arn
     fof_post_save_attr_arn = module.fof_post_save_attr.arn
   })
 }

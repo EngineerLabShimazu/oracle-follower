@@ -181,6 +181,20 @@ module "fof_intent_help" {
     "ASSETS_URL_PREFIX" = var.assets_url_prefix
   }
 }
+module "fof_intent_what_have_i_got" {
+  env = var.env
+  source = "./modules/lambda_with_env/"
+  source_dir = "fof_what_have_i_got"
+  function_name = "fof_intent_what_have_i_got_${var.env}"
+  memory = 128
+  description = ""
+  layer_arn = module.fof_sdk.arn
+  external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
+  role = var.lambda_role
+  environment = {
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
+  }
+}
 
 module "fof_post_save_attr" {
   env = var.env
