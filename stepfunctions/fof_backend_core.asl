@@ -78,7 +78,7 @@
     },
     "WhatHaveIGot": {
       "Type": "Task",
-      "Resource": "${fof_intent_what_have_i_got}",
+      "Resource": "${fof_intent_what_have_i_got_arn}",
       "Next": "PostProcess"
     },
     "文脈なしの返答": {
