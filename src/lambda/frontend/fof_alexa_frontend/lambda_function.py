@@ -477,6 +477,9 @@ class YesIntentHandler(AbstractRequestHandler):
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
         node = session.get('node')
+        if node == 'ask_ganesha':
+            state = 'ganesha'
+            node = 'launch'
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
@@ -494,10 +497,9 @@ class YesIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input)
         }
 
-        node = session.get('node')
         if node:
             fof_sfn_input['node'] = node
-            if node == 'recommend_gem':
+            if node == 'recommend_gem' or node == 'ask_gem_pack':
                 in_skill_response = util.in_skill_product_response(
                     handler_input)
 
@@ -637,6 +639,13 @@ class WhatHaveIGotIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input)
         }
         response = sfn_ctl.execute(fof_sfn_input)
+
+        if 'node' in response:
+            session['node'] = response['node']
+
+        if 'product_name' in response:
+            session['product_name'] = response['product_name']
+
         speech_text = response["response_text"]
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
