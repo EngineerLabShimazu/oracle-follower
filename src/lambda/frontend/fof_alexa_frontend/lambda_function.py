@@ -620,6 +620,27 @@ class YesIntentHandler(AbstractRequestHandler):
 #
 #         return handler_input.response_builder.response
 
+class WhatHaveIGotIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("WhatHaveIGotIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        session = handler_input.attributes_manager.session_attributes
+        # state = session.get('state')
+        # node = session.get('node')
+        fof_sfn_input = {
+            'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
+            'IsPreResponse': True,
+            'intent': 'WhatHaveIGotIntent',
+            'env_type': util.get_env_type(handler_input)
+        }
+        response = sfn_ctl.execute(fof_sfn_input)
+        speech_text = response["response_text"]
+        handler_input.response_builder.speak(speech_text).ask(speech_text)
+        return handler_input.response_builder.response
+
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -1005,6 +1026,7 @@ sb.add_request_handler(UseIntentHandler())
 # sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())
 # sb.add_request_handler(NoIntentHandler())
+sb.add_request_handler(WhatHaveIGotIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
