@@ -50,7 +50,7 @@ class WithContextIntentHandler(AbstractRequestHandler):
         }
 
         if node == 'ask_ganesha' or node == 'ask_gem_pack':
-            state = 'launch'
+            fof_sfn_input['state'] = 'launch'
 
         if state == 'ganesha' and node == 'launch':
             if handler_input.request_envelope.request.intent.name == 'AMAZON.NoIntent':
