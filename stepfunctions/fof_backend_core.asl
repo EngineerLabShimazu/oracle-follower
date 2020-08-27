@@ -114,6 +114,11 @@
           "Variable": "$.state",
           "StringEquals": "Use",
           "Next": "Use"
+        },
+        {
+          "Variable": "$.state",
+          "StringEquals": "WhatHaveIGot",
+          "Next": "WhatHaveIGot"
         }
       ],
       "Default": "Launch"

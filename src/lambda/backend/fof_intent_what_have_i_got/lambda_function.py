@@ -1,3 +1,4 @@
+import nodes
 from fof_sdk import util
 from fof_sdk.user import User
 
@@ -38,5 +39,11 @@ def main(user):
 
 def lambda_handler(event, context):
     user = User(event['alexa_user_id'], event['dynamo_attr'])
+    intent = event.get('intent')
+
+    if intent not in ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'BuyIntent']:
+        node = event.get('node')
+        return nodes.reask(node)
+
     response = main(user)
     return response

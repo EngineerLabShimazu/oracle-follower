@@ -640,6 +640,9 @@ class WhatHaveIGotIntentHandler(AbstractRequestHandler):
         }
         response = sfn_ctl.execute(fof_sfn_input)
 
+        if 'state' in response:
+            session['state'] = response['state']
+
         if 'node' in response:
             session['node'] = response['node']
 
