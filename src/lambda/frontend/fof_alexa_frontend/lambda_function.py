@@ -912,7 +912,7 @@ class WhatCanIBuyHandler(AbstractRequestHandler):
 
         purchasable_products = util.get_speakable_products(in_skill_response)
         speech = f'現在購入可能な商品は、{purchasable_products}です。' \
-                 f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
+            f'詳しく知りたい場合には、ジェムパック大について教えて、のように言ってください。'
         handler_input.response_builder.speak(speech)
 
         skill_product = util.get_skill_product(
@@ -967,6 +967,53 @@ class ProductDetailHandler(AbstractRequestHandler):
                 token='correlationToken'
             )
         ).response
+
+
+class RefundProductHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name('RefundProductIntent')(handler_input)
+
+    def handle(self, handler_input):
+        in_skill_response = util.in_skill_product_response(handler_input)
+        if not in_skill_response:
+            handler_input.response_builder.speak('現在その商品は購入していません。')
+            handler_input.response_builder.set_should_end_session(True)
+            return handler_input.response_builder.response
+
+        purchase_product = util.get_purchase_product(
+            handler_input, 'product_category')
+
+        if not purchase_product:
+            handler_input.response_builder.speak('現在その商品は、スキル内で提供していません。')
+            handler_input.response_builder.set_should_end_session(True)
+            return handler_input.response_builder.response
+
+        skill_product = util.get_skill_product(
+            in_skill_response, purchase_product.id)
+
+        handler_input.response_builder.speak(skill_product.summary)
+        return handler_input.response_builder.add_directive(
+            SendRequestDirective(
+                name='Cancel',
+                payload={
+                    'InSkillProduct': {
+                        'productId': skill_product.product_id
+                    }
+                },
+                token='correlationToken'
+            )
+        ).response
+
+
+class CancelResponseHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return (is_request_type('Connections.Response')(
+            handler_input) and handler_input.request_envelope.request.name == 'Cancel')
+
+    def handle(self, handler_input):
+        return LaunchRequestHandler().handle(handler_input)
 
 
 class SessionEndedRequestHandler(AbstractRequestHandler):
@@ -1046,6 +1093,8 @@ sb.add_request_handler(BuyHandler())
 sb.add_request_handler(BuyResponseHandler())
 sb.add_request_handler(WhatCanIBuyHandler())
 sb.add_request_handler(ProductDetailHandler())
+sb.add_request_handler(RefundProductHandler())
+sb.add_request_handler(CancelResponseHandler())
 
 sb.add_request_handler(
     IntentReflectorHandler())  # make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
