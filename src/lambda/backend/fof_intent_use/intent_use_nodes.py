@@ -4,7 +4,7 @@ from fof_sdk import util
 from fof_sdk.user import User
 
 
-def re_ask():
+def re_ask(_user, _intent):
     return {
         'type': 'use',
         'node': 'use_ticket',

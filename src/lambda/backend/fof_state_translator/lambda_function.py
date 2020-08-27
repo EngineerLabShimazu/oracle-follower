@@ -18,4 +18,4 @@ def lambda_handler(event, context):
     if not _state:
         return
     state = main(env, alexa_user_id, _state)
-    return state.capitalize()
+    return state

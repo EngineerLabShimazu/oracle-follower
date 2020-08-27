@@ -314,6 +314,7 @@ class UseIntentHandler(AbstractRequestHandler):
             fof_sfn_input = {
                 'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
                 'IsPreResponse': True,
+                'state': state,
                 'intent': 'UseIntent',
                 'node': node,
                 'env_type': util.get_env_type(handler_input)
@@ -478,7 +479,7 @@ class YesIntentHandler(AbstractRequestHandler):
         state = session.get('state')
         node = session.get('node')
         if node == 'ask_ganesha':
-            state = 'ganesha'
+            state = 'Ganesha'
             node = 'launch'
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
@@ -630,8 +631,6 @@ class WhatHaveIGotIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         session = handler_input.attributes_manager.session_attributes
-        # state = session.get('state')
-        # node = session.get('node')
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': True,

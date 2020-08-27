@@ -41,9 +41,10 @@ def lambda_handler(event, context):
     user = User(event['alexa_user_id'], event['dynamo_attr'])
     intent = event.get('intent')
 
-    if intent not in ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'BuyIntent']:
+    if intent not in ['AMAZON.YesIntent', 'AMAZON.NoIntent', 'BuyIntent',
+                      'WhatHaveIGotIntent']:
         node = event.get('node')
-        return nodes.reask(node)
+        return nodes.re_ask(node)
 
     response = main(user)
     return response
