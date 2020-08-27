@@ -184,7 +184,7 @@ module "fof_intent_help" {
 module "fof_intent_what_have_i_got" {
   env = var.env
   source = "./modules/lambda_with_env/"
-  source_dir = "fof_what_have_i_got"
+  source_dir = "fof_intent_what_have_i_got"
   function_name = "fof_intent_what_have_i_got_${var.env}"
   memory = 128
   description = ""
