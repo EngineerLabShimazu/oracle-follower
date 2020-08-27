@@ -35,11 +35,11 @@ class WithContextIntentHandler(AbstractRequestHandler):
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
         not_enough_gem = session.get('not_enough_gem')
-
+        intent = handler_input.request_envelope.request.intent.name
         fof_sfn_input = {
             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
             'IsPreResponse': False,
-            'intent': handler_input.request_envelope.request.intent.name,
+            'intent': intent,
             'state': state,
             'node': node,
             'destinations_choice': destinations_choice,
@@ -49,7 +49,8 @@ class WithContextIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input)
         }
 
-        if node == 'ask_ganesha' or node == 'ask_gem_pack':
+        if (node == 'ask_ganesha' or node == 'ask_gem_pack') \
+                and intent == 'AMAZON.NoIntent':
             fof_sfn_input['state'] = 'launch'
 
         if state == 'ganesha' and node == 'launch':
