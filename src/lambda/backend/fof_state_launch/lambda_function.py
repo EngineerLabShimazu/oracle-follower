@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import random
+import launch_nodes as nodes
 from fof_sdk import hero
 from fof_sdk.user import User
 from fof_sdk import util
@@ -15,12 +16,21 @@ def has_chronus_ticket(user: User):
     return True
 
 
-def main(user):
+def main(user, node, intent):
     action = {
         'type': 'launch',
         'image_url': util.get_image('hero/hero_stand'),
         'bg_image_url': util.get_image('bg/fof-map-gauss2', extension='.jpg')
     }
+
+    if node == 'buy_ticket':
+        if intent in ['AMAZON.YesIntent', 'BuyIntent']:
+            return nodes.ganesha()
+        elif intent == 'AMAZON.NoIntent':
+            return nodes.end()
+        else:
+            return nodes.re_ask()
+
     original_texts = [hero.message()]
 
     if user.is_first_launch_today:
@@ -58,8 +68,8 @@ def main(user):
             original_texts.append({
                 'text': 'RECOMMEND_CHRONUS_TICKET'
             })
-            action['type'] = 'ganesha'
-            action['node'] = 'launch'
+            action['type'] = 'launch'
+            action['node'] = 'buy_ticket'
         action['set_should_end_session'] = False
 
     else:
@@ -83,5 +93,7 @@ def main(user):
 
 def lambda_handler(event, context):
     user = User(event['alexa_user_id'], event['dynamo_attr'])
-    response = main(user)
+    node = event.get('node')
+    intent = event.get('intent')
+    response = main(user, node, intent)
     return response
