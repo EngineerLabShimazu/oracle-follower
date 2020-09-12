@@ -478,9 +478,6 @@ class YesIntentHandler(AbstractRequestHandler):
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
         node = session.get('node')
-        if node == 'ask_ganesha':
-            state = 'Ganesha'
-            node = 'launch'
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
