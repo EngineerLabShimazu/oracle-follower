@@ -49,10 +49,6 @@ class WithContextIntentHandler(AbstractRequestHandler):
             'env_type': util.get_env_type(handler_input)
         }
 
-        if (node == 'ask_ganesha' or node == 'ask_gem_pack') \
-                and intent == 'AMAZON.NoIntent':
-            fof_sfn_input['state'] = 'launch'
-
         if state == 'ganesha' and node == 'launch':
             if handler_input.request_envelope.request.intent.name == 'AMAZON.NoIntent':
                 speech = '本日も祈りを受け入れてくださり、ありがとうございました。 ' \

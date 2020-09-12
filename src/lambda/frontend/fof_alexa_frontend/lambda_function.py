@@ -97,58 +97,6 @@ class LaunchRequestHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-# class DestinationIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
-#         return is_intent_name("DestinationIntent")(handler_input)
-#
-#     def handle(self,
-#                handler_input):  # type: (HandlerInput) -> Union[None, Response]
-#         village = handler_input.request_envelope.request.intent.slots[
-#             'village'].value
-#         destinations_choice = handler_input.attributes_manager.session_attributes.get(
-#             'destinations_choice')
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': state,
-#             'destination': village,
-#             'destinations_choice': destinations_choice,
-#             'env_type': util.get_env_type(handler_input),
-#         }
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#         speech_text = response["response_text"]
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         image_url = response.get('image_url')
-#         if image_url:
-#             handler_input.response_builder.set_card(
-#                 ui.StandardCard(
-#                     title='title sample',
-#                     text='text sample',
-#                     image=ui.Image(
-#                         small_image_url=image_url,
-#                         large_image_url=image_url
-#                     )
-#                 )
-#             )
-#
-#         handler_input.response_builder.speak(speech_text).ask(
-#             speech_text).set_should_end_session(
-#             response.get('set_should_end_session', True))
-#         return handler_input.response_builder.response
-
-
 class GaneshaShopIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input: HandlerInput) -> bool:
         return is_intent_name("GaneshaShopIntent")(handler_input)
@@ -214,77 +162,6 @@ class GaneshaShopIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(
             speech_text)
         return handler_input.response_builder.response
-
-
-# class TurnTimesIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):  # type: (HandlerInput) -> bool
-#         return is_intent_name("TurnTimesIntent")(handler_input)
-#
-#     def valid_turn_times(self, turn_times: int) -> bool:
-#         if turn_times in [1, 10]:
-#             return True
-#         return False
-#
-#     def handle(self,
-#                handler_input):  # type: (HandlerInput) -> Union[None, Response]
-#         turn_times = int(handler_input.request_envelope.request.intent.slots[
-#                              'turn_times'].value)
-#         if not self.valid_turn_times(turn_times):
-#             speech_text = '一回か十回で！'
-#             handler_input.response_builder.speak(speech_text).ask(
-#                 speech_text)
-#             return handler_input.response_builder.response
-#
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': state,
-#             'turn_times': turn_times,
-#             'env_type': util.get_env_type(handler_input),
-#         }
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#         handler_input.attributes_manager.session_attributes['state'] = \
-#             response['state']
-#         speech_text = response["response_text"]
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         if response.get('turn_times'):
-#             handler_input.attributes_manager.session_attributes['turn_times'] = \
-#                 response['turn_times']
-#
-#         if response.get('total_ticket_amount'):
-#             handler_input.attributes_manager.session_attributes[
-#                 'total_ticket_amount'] = \
-#                 response['total_ticket_amount']
-#
-#         image_url = response.get('image_url')
-#         if image_url:
-#             handler_input.response_builder.set_card(
-#                 ui.StandardCard(
-#                     title='title sample',
-#                     text='text sample',
-#                     image=ui.Image(
-#                         small_image_url=image_url,
-#                         large_image_url=image_url
-#                     )
-#                 )
-#             )
-#
-#         handler_input.response_builder.speak(speech_text).ask(
-#             speech_text)
-#         return handler_input.response_builder.response
 
 
 class UseIntentHandler(AbstractRequestHandler):
@@ -361,113 +238,6 @@ class UseIntentHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-# class TurnIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("TurnIntent")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#
-#         turn_times = handler_input.attributes_manager.session_attributes.get(
-#             'turn_times', 0)
-#
-#         destinations_choice = handler_input.attributes_manager.session_attributes.get(
-#             'destinations_choice')
-#
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': state,
-#             'turn_times': turn_times,
-#             'destinations_choice': destinations_choice,
-#             'env_type': util.get_env_type(handler_input)
-#         }
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         if response.get('turn_times'):
-#             handler_input.attributes_manager.session_attributes['turn_times'] = \
-#                 response['turn_times']
-#
-#         speech_text = response["response_text"]
-#         handler_input.response_builder.speak(speech_text).ask(speech_text)
-#         return handler_input.response_builder.response
-
-
-# class ResultIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("ResultIntent")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#
-#         total_ticket_amount = handler_input.attributes_manager.session_attributes.get(
-#             'total_ticket_amount')
-#
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': state,
-#             'node': 'result',
-#             'total_ticket_amount': total_ticket_amount,
-#             'env_type': util.get_env_type(handler_input)
-#         }
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#
-#         speech_text = response["response_text"]
-#         handler_input.response_builder.speak(speech_text).ask(speech_text)
-#         return handler_input.response_builder.response
-
-
-# class SkipIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("SkipIntent")(handler_input) or is_intent_name(
-#             "AMAZON.NextIntent")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#
-#         total_ticket_amount = handler_input.attributes_manager.session_attributes.get(
-#             'total_ticket_amount')
-#
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'state': state,
-#             'node': 'result',
-#             'total_ticket_amount': total_ticket_amount,
-#             'env_type': util.get_env_type(handler_input)
-#         }
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#
-#         speech_text = response["response_text"]
-#         handler_input.response_builder.speak(speech_text).ask(speech_text)
-#         return handler_input.response_builder.response
-
-
 class YesIntentHandler(AbstractRequestHandler):
     """Handler for Yes Intent."""
 
@@ -478,9 +248,6 @@ class YesIntentHandler(AbstractRequestHandler):
         session = handler_input.attributes_manager.session_attributes
         state = session.get('state')
         node = session.get('node')
-        if node == 'ask_ganesha':
-            state = 'Ganesha'
-            node = 'launch'
         destinations_choice = session.get('destinations_choice')
         total_ticket_amount = session.get('total_ticket_amount')
         turn_times = session.get('turn_times')
@@ -577,51 +344,6 @@ class YesIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(speech_text)
         return handler_input.response_builder.response
 
-
-# class NoIntentHandler(AbstractRequestHandler):
-#     """Handler for Help Intent."""
-#
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         return is_intent_name("AMAZON.NoIntent")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         fof_sfn_input = {
-#             'alexa_user_id': handler_input.request_envelope.context.system.user.user_id,
-#             'IsPreResponse': False,
-#             'turn_times': 0,
-#             'intent': 'No',
-#             'env_type': util.get_env_type(handler_input)
-#         }
-#
-#         state = handler_input.attributes_manager.session_attributes.get(
-#             'state')
-#         if state:
-#             fof_sfn_input['state'] = state
-#
-#         node = handler_input.attributes_manager.session_attributes.get(
-#             'node')
-#         if node:
-#             fof_sfn_input['node'] = node
-#
-#         response = sfn_ctl.execute(fof_sfn_input)
-#
-#         if response.get('node'):
-#             handler_input.attributes_manager.session_attributes['node'] = \
-#                 response['node']
-#
-#         if response.get('turn_times'):
-#             handler_input.attributes_manager.session_attributes['turn_times'] = \
-#                 response['turn_times']
-#
-#         speech_text = response["response_text"]
-#         handler_input.response_builder.speak(speech_text).ask(speech_text)
-#
-#         end_session = response.get('set_should_end_session', False)
-#         handler_input.response_builder.set_should_end_session(end_session)
-#
-#         return handler_input.response_builder.response
 
 class WhatHaveIGotIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
@@ -1075,15 +797,9 @@ class ErrorHandler(AbstractExceptionHandler):
 sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(WithContextIntentHandler())
-# sb.add_request_handler(DestinationIntentHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
-# sb.add_request_handler(TurnTimesIntentHandler())
 sb.add_request_handler(UseIntentHandler())
-# sb.add_request_handler(TurnIntentHandler())
-# sb.add_request_handler(ResultIntentHandler())
-# sb.add_request_handler(SkipIntentHandler())
 sb.add_request_handler(YesIntentHandler())
-# sb.add_request_handler(NoIntentHandler())
 sb.add_request_handler(WhatHaveIGotIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
