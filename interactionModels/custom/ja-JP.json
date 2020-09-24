@@ -16,14 +16,321 @@
                     "samples": []
                 },
                 {
-                    "name": "HelloWorldIntent",
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "DestinationIntent",
+                    "slots": [
+                        {
+                            "name": "village",
+                            "type": "village"
+                        }
+                    ],
+                    "samples": [
+                        "{village}",
+                        "{village} に行け",
+                        "{village} へ向かいなさい",
+                        "{village} へ向かってください",
+                        "{village} に向かいなさい",
+                        "{village} へ行く",
+                        "{village} へ行け",
+                        "{village} へ行きなさい"
+                    ]
+                },
+                {
+                    "name": "AMAZON.MoreIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateSettingsIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollRightIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollLeftIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "BuyIntent",
+                    "slots": [
+                        {
+                            "name": "product_category",
+                            "type": "product_category"
+                        }
+                    ],
+                    "samples": [
+                        "{product_category} を購入します",
+                        "{product_category} を買います",
+                        "{product_category} が欲しい",
+                        "{product_category} を買う",
+                        "{product_category} を購入"
+                    ]
+                },
+                {
+                    "name": "WhatCanIBuyIntent",
                     "slots": [],
                     "samples": [
-                        "こんにちは"
+                        "どんな商品が買える",
+                        "どんなものが買える",
+                        "何があるの",
+                        "何が買える"
+                    ]
+                },
+                {
+                    "name": "ProductDetailIntent",
+                    "slots": [
+                        {
+                            "name": "product_category",
+                            "type": "product_category"
+                        }
+                    ],
+                    "samples": [
+                        "{product_category} って何",
+                        "{product_category} とは",
+                        "{product_category} について教えて",
+                        "{product_category} について",
+                        "課金について",
+                        "課金アイテム"
+                    ]
+                },
+                {
+                    "name": "GaneshaShopIntent",
+                    "slots": [],
+                    "samples": [
+                        "ガネーシャショップヘ行く",
+                        "ガネーシャショップ"
+                    ]
+                },
+                {
+                    "name": "TurnTimesIntent",
+                    "slots": [
+                        {
+                            "name": "turn_times",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        " {turn_times}",
+                        " {turn_times} 回",
+                        " {turn_times} 回回す",
+                        " {turn_times} 回まわす"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": [
+                        "行きたい",
+                        "行く",
+                        "購入します",
+                        "聞きます",
+                        "買います",
+                        "聞く",
+                        "買う"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": [
+                        "やだ",
+                        "購入しません",
+                        "購入しない",
+                        "回しません",
+                        "回さない",
+                        "買いません",
+                        "買わない",
+                        "聞かない"
+                    ]
+                },
+                {
+                    "name": "SkipIntent",
+                    "slots": [],
+                    "samples": [
+                        "飛ばして",
+                        "飛ばす"
+                    ]
+                },
+                {
+                    "name": "ResultIntent",
+                    "slots": [],
+                    "samples": [
+                        "結果",
+                        "result"
+                    ]
+                },
+                {
+                    "name": "UseIntent",
+                    "slots": [
+                        {
+                            "name": "item",
+                            "type": "item"
+                        }
+                    ],
+                    "samples": [
+                        "使用します",
+                        "使って",
+                        "使用する",
+                        "使いたい",
+                        "使う",
+                        "{item} 使用する",
+                        "{item} 使いたい",
+                        "{item} 使う"
+                    ]
+                },
+                {
+                    "name": "TurnIntent",
+                    "slots": [],
+                    "samples": [
+                        "回して",
+                        "まわす",
+                        "回す"
+                    ]
+                },
+                {
+                    "name": "RefundProductIntent",
+                    "slots": [
+                        {
+                            "name": "product_category",
+                            "type": "product_category"
+                        }
+                    ],
+                    "samples": [
+                        "{product_category} を返品したい",
+                        "{product_category} の返金を受けたい",
+                        "{product_category} を返金",
+                        "{product_category} を返品"
+                    ]
+                },
+                {
+                    "name": "WhatHaveIGotIntent",
+                    "slots": [],
+                    "samples": [
+                        "ジェム何個ある",
+                        "ジェムいくつ",
+                        "ジェム何個持ってる",
+                        "ジェム何個持ってたっけ"
                     ]
                 }
             ],
-            "types": []
+            "types": [
+                {
+                    "name": "village",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "ホワイトタウン",
+                                "synonyms": [
+                                    "white town"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "グリーンスター"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "マゼンタコート"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "レッドダム"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ブルードレス"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "product_category",
+                    "values": [
+                        {
+                            "id": "gem_300",
+                            "name": {
+                                "value": "ジェム三百個",
+                                "synonyms": [
+                                    "小",
+                                    "三百",
+                                    "ジェム300個",
+                                    "ジェムパック小"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "gem_500",
+                            "name": {
+                                "value": "ジェム五百個",
+                                "synonyms": [
+                                    "中",
+                                    "五百",
+                                    "ジェム500個",
+                                    "ジェムパック中"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "gem_1000",
+                            "name": {
+                                "value": "ジェム千個",
+                                "synonyms": [
+                                    "大",
+                                    "千",
+                                    "ジェム1000個",
+                                    "ジェムパック大",
+                                    "ジェム"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "item",
+                    "values": [
+                        {
+                            "id": "chronus_ticket",
+                            "name": {
+                                "value": "クロノスチケット",
+                                "synonyms": [
+                                    "クロノス",
+                                    "チケット"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     }
 }
