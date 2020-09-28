@@ -32,6 +32,7 @@ module "fof_alexa_frontend" {
   environment = {
     "BACKEND_SFN_ARN_STG" = var.backend_sfn_arn_stg
     "BACKEND_SFN_ARN_PRD" = var.backend_sfn_arn_prd
+    "ASSETS_URL_PREFIX" = var.assets_url_prefix
   }
   layer_arn = module.fof_sdk.arn
   external_module_layer_arn = data.aws_lambda_layer_version.external_module_layer.arn
