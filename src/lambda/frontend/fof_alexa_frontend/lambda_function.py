@@ -42,13 +42,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(False)
 
-        image_url = util.get_image('gods/ganesha'),
+        image_url = util.get_image('gods/ganesha')
 
         handler_input.response_builder.set_card(
             ui.StandardCard(
                 title='どの物語を遊びまちゅか？',
-                text='「拒否部下と魔王軍」<br>「魔女と猫と盲目の狩人」'
-                     '「夜道騒動フォリス」',
+                text='・拒否部下と魔王軍\r\n'
+                     '・魔女と猫と盲目の狩人\r\n'
+                     '・夜道騒動フォリス',
                 image=ui.Image(
                     small_image_url=image_url,
                     large_image_url=image_url
