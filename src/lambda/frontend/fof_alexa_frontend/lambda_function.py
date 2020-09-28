@@ -2,7 +2,6 @@
 
 # This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK.
 import logging
-from typing import Optional
 
 from ask_sdk.standard import StandardSkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
@@ -20,7 +19,9 @@ from ask_sdk_model.interfaces.monetization.v1 import PurchaseResult
 import sfn_ctl
 import util
 
+from scenes import Scenes
 from with_context_handler import WithContextIntentHandler
+from gods_world.ganesha_shop_handler import GaneshaShopIntentHandler
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -41,6 +42,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
         speech_text = 'どの物語を遊びまちゅか？'
         handler_input.response_builder.speak(speech_text).ask(
             speech_text).set_should_end_session(False)
+
+        session = handler_input.attributes_manager.session_attributes
+        session['scene'] = Scenes.gods_world
 
         image_url = util.get_image('gods/ganesha')
 
@@ -481,6 +485,7 @@ class ErrorHandler(AbstractExceptionHandler):
 # defined are included below. The order matters - they're processed top to bottom.
 sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
+sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(WithContextIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
