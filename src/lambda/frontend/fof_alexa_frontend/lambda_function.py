@@ -22,6 +22,7 @@ import util
 from scenes import Scenes
 from with_context_handler import WithContextIntentHandler
 from gods_world.ganesha_shop_handler import GaneshaShopIntentHandler
+from gods_world.help_handler import GodsWorldHelpIntentHandler
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -487,7 +488,7 @@ sb = StandardSkillBuilder()
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(GaneshaShopIntentHandler())
 sb.add_request_handler(WithContextIntentHandler())
-sb.add_request_handler(HelpIntentHandler())
+sb.add_request_handler(GodsWorldHelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 
